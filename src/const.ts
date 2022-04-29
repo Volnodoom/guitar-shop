@@ -1,7 +1,38 @@
+export const STRING_NUMBERS = [
+  4,
+  6,
+  7,
+  12,
+] as const;
+
+export const RATING_OPTIONS = [
+  {
+    rating: 5,
+    value: 'Отлично',
+  },
+  {
+    rating: 4,
+    value: 'Хорошо',
+  },
+  {
+    rating: 3,
+    value: 'Нормально',
+  },
+  {
+    rating: 2,
+    value: 'Плохо',
+  },
+  {
+    rating: 1,
+    value: 'Ужасно',
+  },
+];
+
 export const AppRoutes = {
-  Catalog: '/',
+  Root: '/',
+  Catalog: '/catalog',
   Guitar: (id: number | string = ':id') => `guitar/${id}`,
-  Cart: 'cart/',
+  Cart: 'cart',
   NotExisted: '*',
 } as const ;
 
@@ -27,9 +58,8 @@ export const GuitarSingleRu: {
   [KindOfGuitars.Ukulele]: 'Укулеле',
 } as const;
 
-export const STRING_NUMBERS = [
-  4,
-  6,
-  7,
-  12,
-] as const;
+export const StarSize = {
+  CardPreview: {width: 12, height: 11, name: 'CardPreview'},
+  CardDetailed: {width: 14, height: 14, name: 'CardDetailed'},
+  ReviewCardDetailed: {width: 16, height: 16, name: 'ReviewCardDetailed'},
+} as const;
