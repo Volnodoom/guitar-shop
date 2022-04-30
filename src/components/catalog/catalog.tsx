@@ -1,17 +1,13 @@
-import { Filtration, Pagination, Sorting } from './components/components';
-import { CardPreview } from '../card/card';
+import { PagesName } from '../../const';
+import { Breadcrumbs } from '../common/common';
+import { Filtration, Pagination, Sorting, CardPreview } from './components/components';
 
 function Catalog():JSX.Element {
   return(
     <main className="page-content">
       <div className="container">
         <h1 className="page-content__title title title--bigger">Каталог гитар</h1>
-        <ul className="breadcrumbs page-content__breadcrumbs">
-          <li className="breadcrumbs__item"><a className="link" href="./main.html">Главная</a>
-          </li>
-          <li className="breadcrumbs__item"><a className="link">Каталог</a>
-          </li>
-        </ul>
+        <Breadcrumbs pageContent={PagesName.Catalog.en}/>
         <div className="catalog">
           <Filtration />
           <Sorting />

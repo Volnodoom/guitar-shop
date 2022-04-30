@@ -1,4 +1,4 @@
-import { RATING_OPTIONS, StarSize } from '../../../../const';
+import { RATING_OPTIONS, StarSize } from '../../../const';
 
 type RatingStarsProps = {
   type:  keyof typeof StarSize,

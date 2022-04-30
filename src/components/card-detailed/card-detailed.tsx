@@ -1,5 +1,6 @@
-import { StarSize } from '../../../const';
-import { RatingStars } from '../components/components';
+
+import { PagesName, StarSize } from '../../const';
+import { Breadcrumbs, RatingStars } from '../common/common';
 import { CardReview } from './components/components';
 
 function CardDetailed():JSX.Element {
@@ -7,20 +8,10 @@ function CardDetailed():JSX.Element {
     <main className="page-content">
       <div className="container">
         <h1 className="page-content__title title title--bigger">Товар</h1>
-        <ul className="breadcrumbs page-content__breadcrumbs">
-          <li className="breadcrumbs__item">
-            <a className="link" href="./main.html">Главная</a>
-          </li>
-          <li className="breadcrumbs__item">
-            <a className="link" href="./main.html">Каталог</a>
-          </li>
-          <li className="breadcrumbs__item">
-            <a className="link">Товар</a>
-          </li>
-        </ul>
+        <Breadcrumbs pageContent={PagesName.Guitar.en}/>
 
         <div className="product-container">
-          <img className="product-container__img" src="img/content/catalog-product-2.jpg" srcSet="img/content/catalog-product-2@2x.jpg 2x" width="90" height="235" alt="" />
+          <img className="product-container__img" src="/img/content/catalog-product-2.jpg" srcSet="/img/content/catalog-product-2@2x.jpg 2x" width="90" height="235" alt="" />
           <div className="product-container__info-wrapper">
             <h2 className="product-container__title title title--big title--uppercase">СURT Z30 Plus</h2>
             <div className="rate product-container__rating">

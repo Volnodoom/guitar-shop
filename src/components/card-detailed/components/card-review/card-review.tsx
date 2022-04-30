@@ -1,5 +1,5 @@
-import { StarSize } from '../../../../../const';
-import { RatingStars } from '../../../components/components';
+import { StarSize } from '../../../../const';
+import { RatingStars } from '../../../common/common';
 
 function CardReview(): JSX.Element {
   return(

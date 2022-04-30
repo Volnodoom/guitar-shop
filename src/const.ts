@@ -30,7 +30,7 @@ export const RATING_OPTIONS = [
 
 export const AppRoutes = {
   Root: '/',
-  Catalog: '/catalog',
+  Catalog: 'catalog',
   Guitar: (id: number | string = ':id') => `guitar/${id}`,
   Cart: 'cart',
   NotExisted: '*',
@@ -62,4 +62,10 @@ export const StarSize = {
   CardPreview: {width: 12, height: 11, name: 'CardPreview'},
   CardDetailed: {width: 14, height: 14, name: 'CardDetailed'},
   ReviewCardDetailed: {width: 16, height: 16, name: 'ReviewCardDetailed'},
+} as const;
+
+export const PagesName = {
+  Catalog: {ru: 'Каталог', en: 'Catalog'},
+  Guitar: {ru: 'Товар', en: 'Guitar'},
+  Cart: {ru: 'Корзина', en: 'Cart'},
 } as const;
