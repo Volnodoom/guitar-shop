@@ -1,3 +1,8 @@
+export const JPG_ENDING_FORMAT ='.jpg';
+export const JPG_DOUBLE_DENSITY = '@2x.jpg 2x';
+export const LOCAL_RU = 'ru-RU';
+export const ONE = 1;
+export const REVIEW_SHOW_OFF_LIMITS = 3;
 export const STRING_NUMBERS = [
   4,
   6,
@@ -30,7 +35,7 @@ export const RATING_OPTIONS = [
 
 export const AppRoutes = {
   Root: '/',
-  Catalog: 'catalog',
+  Catalog: (pageNumber: number | string = ':pageNumber') => `catalog/page_${pageNumber}`,
   Guitar: (id: number | string = ':id') => `guitar/${id}`,
   Cart: 'cart',
   NotExisted: '*',
@@ -68,4 +73,9 @@ export const PagesName = {
   Catalog: {ru: 'Каталог', en: 'Catalog'},
   Guitar: {ru: 'Товар', en: 'Guitar'},
   Cart: {ru: 'Корзина', en: 'Cart'},
+} as const;
+
+export const ReviewDateTimeFormat = {
+  day: 'numeric',
+  month: 'long',
 } as const;

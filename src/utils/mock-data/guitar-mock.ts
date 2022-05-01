@@ -7,8 +7,9 @@ const guitar1 = {
   type: 'electric',
   description: 'Вариант для настоящих профессионалов. Двенадцатиструнный инструмент оснащён карбоновыми струнами и корпусом из массива ели.',
   previewImg: 'img/content/catalog-product-2.jpg',
-  rating: 7,
-  price: 17_500,
+  stringCount: 4,
+  rating: 2,
+  price: 7_500,
 };
 
 const guitar2 = {
@@ -18,6 +19,7 @@ const guitar2 = {
   type: 'mechanical',
   description: faker.lorem.sentence(),
   previewImg: 'img/content/catalog-product-4.jpg',
+  stringCount: 6,
   rating: 5,
   price: 12_843,
 };
@@ -29,7 +31,8 @@ const guitar3 = {
   type: 'glass',
   description: faker.lorem.sentence(),
   previewImg: 'img/content/catalog-product-8.jpg',
-  rating: 8,
+  stringCount: 7,
+  rating: 4,
   price: 17_950,
 };
 

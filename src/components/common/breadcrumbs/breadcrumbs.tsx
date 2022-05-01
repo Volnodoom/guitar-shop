@@ -1,20 +1,40 @@
-import { PagesName } from '../../../const';
+import { MouseEvent } from 'react';
+import { Link } from 'react-router-dom';
+import { AppRoutes, PagesName, ONE } from '../../../const';
 
-function Breadcrumbs(props: {pageContent: keyof typeof PagesName}) {
-  const {pageContent} = props;
+type BreadcrumbsProps = {
+  pageContent: keyof typeof PagesName,
+  ProductTitle?: string,
+};
+
+function Breadcrumbs(props: BreadcrumbsProps) {
+  const {pageContent, ProductTitle} = props;
+
+  const handleClick = (evt: MouseEvent<HTMLLIElement>) => {
+    if (evt.currentTarget as HTMLLIElement) {
+      evt.preventDefault();
+    }
+  };
 
   return(
-    <ul className="breadcrumbs page-content__breadcrumbs">
+    <ul className="breadcrumbs page-content__breadcrumbs" >
       <li className="breadcrumbs__item">
-        <a className="link" href="./main.html">Главная</a>
+        <Link className="link" to={AppRoutes.Root}>Главная</Link>
       </li>
       <li className="breadcrumbs__item">
-        <a className="link" href="./main.html">Каталог</a>
+        <Link className="link" to={`/${AppRoutes.Catalog(ONE)}`}>Каталог</Link>
       </li>
       {
         pageContent !== PagesName.Catalog.en &&
-        <li className="breadcrumbs__item">
-          <a className="link">{PagesName[pageContent].ru}</a>
+        <li className="breadcrumbs__item" onClick={handleClick} >
+          <Link className="link" to="">{
+            PagesName[pageContent].en === PagesName.Guitar.en
+              ?
+              ProductTitle
+              :
+              PagesName[pageContent].ru
+          }
+          </Link>
         </li>
       }
     </ul>
