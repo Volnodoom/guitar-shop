@@ -2,44 +2,53 @@
 import { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { LOCAL_RU, PagesName, REVIEW_SHOW_OFF_LIMITS, StarSize } from '../../const';
+import { useEscPress } from '../../hooks/use-esc-press/use-esc-press';
 import { basicGuitarMock } from '../../utils/mock-data/guitar-mock';
 import { basicReviewMock } from '../../utils/mock-data/review-mock';
 import { compareFunctionEarlyToLate, formatImgUrl } from '../../utils/utils-components';
 import { Breadcrumbs, RatingStars } from '../common/common';
 import NotAvailablePage from '../not-available-page/not-available-page';
 import { CardReview } from './components/components';
+import ModalReview from './components/modal-review/modal-review';
 
 function CardDetailed():JSX.Element {
   const {id} = useParams<{id: string}>();
-  const titleElement = useRef<HTMLHeadingElement | null>(null);
+  const mainElement = useRef<HTMLElement | null>(null);
   const [isCharacteristics, setIsCharacteristics] = useState(true);
   const [isDescription, setIsDescription] = useState(false);
   const [showOffLimit, setShowOffLimit] = useState(REVIEW_SHOW_OFF_LIMITS);
+  const [isModalActive, setIsModalActive] =useState(false);
   const guitars = basicGuitarMock;
   const result = guitars.find((line) => line.id === Number(id));
   const reviews = basicReviewMock;
-  const filtratedReviews = reviews
-    .slice()
-    .sort(compareFunctionEarlyToLate);
+  const filtratedReviews = reviews.slice().sort(compareFunctionEarlyToLate);
+
 
   const handleShowMoreClick = useCallback(() => {
     setShowOffLimit(showOffLimit + REVIEW_SHOW_OFF_LIMITS);
   }, [showOffLimit]);
 
   useEffect(() => {
-    document.addEventListener('scroll', () => {
+    const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight;
       const windowHeight = document.documentElement.clientHeight;
       const scrollTop = window.pageYOffset;
 
       const scrollBottom = scrollHeight - windowHeight - scrollTop;
 
-      if ((scrollBottom < 280) && (showOffLimit < filtratedReviews.length)) {
+      if (scrollBottom < 280 && showOffLimit < filtratedReviews.length) {
         handleShowMoreClick();
       }
-    });
+    };
+
+    document.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [filtratedReviews.length, handleShowMoreClick, showOffLimit]);
 
+  useEscPress(isModalActive, () => setIsModalActive(false));
 
   if (!result) {
     return <NotAvailablePage />;
@@ -56,6 +65,11 @@ function CardDetailed():JSX.Element {
     price
   } = result;
 
+  if(!isModalActive) {
+    document.body.classList.remove('scroll-lock');
+    document.body.classList.remove('scroll-lock-ios');
+  }
+
   const handleCharacteristicTabClick = () => {
     setIsCharacteristics(true);
     setIsDescription(false);
@@ -66,16 +80,22 @@ function CardDetailed():JSX.Element {
     setIsDescription(true);
   };
 
-
   const handleGoUpLink = (evt: MouseEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
-    titleElement.current?.scrollIntoView({behavior: 'smooth' });
+    mainElement.current?.scrollIntoView({behavior: 'smooth' });
+  };
+
+
+  const handleReviewModalClick = () => {
+    setIsModalActive(true);
+    document.body.classList.add('scroll-lock');
+    document.body.classList.add('scroll-lock-ios');
   };
 
   return(
-    <main className="page-content">
+    <main className="page-content" ref={mainElement}>
       <div className="container">
-        <h1 className="page-content__title title title--bigger" ref={titleElement}>Товар</h1>
+        <h1 className="page-content__title title title--bigger">Товар</h1>
         <Breadcrumbs ProductTitle={name} pageContent={PagesName.Guitar.en}/>
 
         <div className="product-container">
@@ -146,19 +166,41 @@ function CardDetailed():JSX.Element {
         </div>
 
         <section className="reviews">
-          <h3 className="reviews__title title title--bigger">Отзывы</h3><a className="button button--red-border button--big reviews__sumbit-button" href="#">Оставить отзыв</a>
+          <h3 className="reviews__title title title--bigger">Отзывы</h3>
+          <button
+            className="button button--red-border button--big reviews__sumbit-button"
+            type="button"
+            onClick={handleReviewModalClick}
+          >Оставить отзыв
+          </button>
+
           {filtratedReviews
             .slice(0, showOffLimit)
             .map((line) => <CardReview reviewInfo={line} key={line.id}/>)}
           {
             showOffLimit < filtratedReviews.length
               ?
-              <button className="button button--medium reviews__more-button" onClick={handleShowMoreClick}>Показать еще отзывы</button>
+              <button
+                className="button button--medium reviews__more-button"
+                type="button"
+                onClick={handleShowMoreClick}
+              >Показать еще отзывы
+              </button>
               :
               ''
           }
-          <Link className="button button--up button--red-border button--big reviews__up-button" to="#header" onClick={handleGoUpLink}>Наверх</Link>
+          <Link
+            className="button button--up button--red-border button--big reviews__up-button"
+            to="#header"
+            onClick={handleGoUpLink}
+          >Наверх
+          </Link>
         </section>
+        {
+          isModalActive
+          &&
+          <ModalReview isModalOpen={setIsModalActive} guitarInfo={{name, id: Number(id)}} />
+        }
       </div>
     </main>
   );

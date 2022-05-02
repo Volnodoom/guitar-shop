@@ -79,3 +79,7 @@ export const ReviewDateTimeFormat = {
   day: 'numeric',
   month: 'long',
 } as const;
+
+export const KeyBoardCode = {
+  Esc: {version1: 'Esc', version2: 'Escape'},
+} as const;
