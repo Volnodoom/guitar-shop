@@ -174,9 +174,17 @@ function CardDetailed():JSX.Element {
           >Оставить отзыв
           </button>
 
-          {filtratedReviews
-            .slice(0, showOffLimit)
-            .map((line) => <CardReview reviewInfo={line} key={line.id}/>)}
+          {
+            filtratedReviews.length > 0
+              ?
+              filtratedReviews
+                .slice(0, showOffLimit)
+                .map((line) => <CardReview reviewInfo={line} key={line.id}/>)
+              :
+              <div className="review">
+                <p className="review__value">Отзывов о данном товаре нет. Будь первым!</p>
+              </div>
+          }
           {
             showOffLimit < filtratedReviews.length
               ?

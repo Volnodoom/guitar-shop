@@ -83,3 +83,10 @@ export const ReviewDateTimeFormat = {
 export const KeyBoardCode = {
   Esc: {version1: 'Esc', version2: 'Escape'},
 } as const;
+
+export const ReviewFormIdFields = {
+  userName: 'user-name',
+  userAdv: 'adv',
+  userDisAdv: 'disadv',
+  userComment: 'comment',
+} as const;

@@ -13,10 +13,12 @@ export type GuitarType = {
 export type Review = {
   id: string,
   userName: string,
-  advantages: string,
+  advantage: string,
   disadvantage: string,
   comment: string,
   rating: number,
   createAt: string,
   guitarId: number,
 }
+
+export type UserReviewPost = Omit<Review, 'id' | 'createAt'>;

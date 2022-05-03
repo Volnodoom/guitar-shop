@@ -10,7 +10,7 @@ type CardReviewProps = {
 function CardReview(props: CardReviewProps): JSX.Element {
   const {
     userName,
-    advantages,
+    advantage,
     disadvantage,
     comment,
     rating,
@@ -27,7 +27,7 @@ function CardReview(props: CardReviewProps): JSX.Element {
         <RatingStars ratingValue={rating} type={StarSize.ReviewCardDetailed.name}/>
       </div>
       <h4 className="review__title title title--lesser">Достоинства:</h4>
-      <p className="review__value">{advantages}</p>
+      <p className="review__value">{advantage}</p>
       <h4 className="review__title title title--lesser">Недостатки:</h4>
       <p className="review__value">{disadvantage}</p>
       <h4 className="review__title title title--lesser">Комментарий:</h4>
