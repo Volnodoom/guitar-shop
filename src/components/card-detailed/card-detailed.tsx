@@ -1,15 +1,12 @@
-
 import { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { LOCAL_RU, PagesName, REVIEW_SHOW_OFF_LIMITS, StarSize } from '../../const';
-import { useEscPress } from '../../hooks/use-esc-press/use-esc-press';
+import { LOCAL_RU, ModalKind, PagesName, REVIEW_SHOW_OFF_LIMITS, StarSize } from '../../const';
 import { basicGuitarMock } from '../../utils/mock-data/guitar-mock';
 import { basicReviewMock } from '../../utils/mock-data/review-mock';
 import { compareFunctionEarlyToLate, formatImgUrl } from '../../utils/utils-components';
 import { Breadcrumbs, RatingStars } from '../common/common';
 import NotAvailablePage from '../not-available-page/not-available-page';
-import { CardReview } from './components/components';
-import ModalReview from './components/modal-review/modal-review';
+import { CardReview, ModalFrame } from './components/components';
 
 function CardDetailed():JSX.Element {
   const {id} = useParams<{id: string}>();
@@ -17,7 +14,8 @@ function CardDetailed():JSX.Element {
   const [isCharacteristics, setIsCharacteristics] = useState(true);
   const [isDescription, setIsDescription] = useState(false);
   const [showOffLimit, setShowOffLimit] = useState(REVIEW_SHOW_OFF_LIMITS);
-  const [isModalActive, setIsModalActive] =useState(false);
+  const [isModalActive, setIsModalActive] = useState(false);
+  const [modalInfo, setModalInfo] = useState<null | ModalKind>(null);
   const guitars = basicGuitarMock;
   const result = guitars.find((line) => line.id === Number(id));
   const reviews = basicReviewMock;
@@ -48,7 +46,6 @@ function CardDetailed():JSX.Element {
     };
   }, [filtratedReviews.length, handleShowMoreClick, showOffLimit]);
 
-  useEscPress(isModalActive, () => setIsModalActive(false));
 
   if (!result) {
     return <NotAvailablePage />;
@@ -65,10 +62,6 @@ function CardDetailed():JSX.Element {
     price
   } = result;
 
-  if(!isModalActive) {
-    document.body.classList.remove('scroll-lock');
-    document.body.classList.remove('scroll-lock-ios');
-  }
 
   const handleCharacteristicTabClick = () => {
     setIsCharacteristics(true);
@@ -85,11 +78,9 @@ function CardDetailed():JSX.Element {
     mainElement.current?.scrollIntoView({behavior: 'smooth' });
   };
 
-
   const handleReviewModalClick = () => {
     setIsModalActive(true);
-    document.body.classList.add('scroll-lock');
-    document.body.classList.add('scroll-lock-ios');
+    setModalInfo(ModalKind.Review);
   };
 
   return(
@@ -124,12 +115,12 @@ function CardDetailed():JSX.Element {
                 to="#characteristics"
               >Характеристики
               </Link>
-              <a
+              <Link
                 className={`button button--medium tabs__button ${!isDescription && 'button--black-border'}`}
                 onClick={handleDescriptionTabClick}
-                href="#description"
+                to="#description"
               >Описание
-              </a>
+              </Link>
 
               <div className="tabs__content" id="characteristics">
                 {
@@ -205,9 +196,12 @@ function CardDetailed():JSX.Element {
           </Link>
         </section>
         {
-          isModalActive
-          &&
-          <ModalReview isModalOpen={setIsModalActive} guitarInfo={{name, id: Number(id)}} />
+          <ModalFrame
+            setModalFrameStatus={setIsModalActive}
+            currentFrameStatus={isModalActive}
+            modalInfo={modalInfo}
+            setModalInfo={setModalInfo}
+          />
         }
       </div>
     </main>

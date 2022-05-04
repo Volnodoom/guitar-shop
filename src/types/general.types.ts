@@ -19,6 +19,8 @@ export type Review = {
   rating: number,
   createAt: string,
   guitarId: number,
-}
+};
+
+export type ModuleReviewStatus =  'openReview' | 'close' | 'success' | 'fail' | 'initial';
 
 export type UserReviewPost = Omit<Review, 'id' | 'createAt'>;

@@ -85,8 +85,21 @@ export const KeyBoardCode = {
 } as const;
 
 export const ReviewFormIdFields = {
-  userName: 'user-name',
-  userAdv: 'adv',
-  userDisAdv: 'disadv',
-  userComment: 'comment',
+  UserName: 'user-name',
+  UserAdv: 'adv',
+  UserDisAdv: 'disadv',
+  UserComment: 'comment',
 } as const;
+
+export enum ModalStatus {
+  Initial = 'initial',
+  OpenReview = 'openReview',
+  Close = 'close',
+  Success = 'success',
+  Fail = 'fail',
+}
+
+export enum ModalKind {
+  Review = 'review',
+  Null = 'null',
+}
