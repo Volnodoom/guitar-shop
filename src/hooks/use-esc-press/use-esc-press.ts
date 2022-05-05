@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { KeyBoardCode } from '../../const';
+import { EventListenerType, KeyBoardCode } from '../../const';
 
 export const useEscPress = (isHookActive: boolean, callback: () => void) => {
   useEffect(() => {
@@ -10,13 +10,13 @@ export const useEscPress = (isHookActive: boolean, callback: () => void) => {
     };
 
     if(isHookActive) {
-      document.addEventListener('keydown', handleDocumentKeyDown);
+      document.addEventListener(EventListenerType.KeyDown, handleDocumentKeyDown);
     } else {
-      document.removeEventListener('keydown', handleDocumentKeyDown);
+      document.removeEventListener(EventListenerType.KeyDown, handleDocumentKeyDown);
     }
 
     return () => {
-      document.removeEventListener('keydown', handleDocumentKeyDown);
+      document.removeEventListener(EventListenerType.KeyDown, handleDocumentKeyDown);
     };
   },[callback, isHookActive]);
 };

@@ -2,6 +2,7 @@ export const JPG_ENDING_FORMAT ='.jpg';
 export const JPG_DOUBLE_DENSITY = '@2x.jpg 2x';
 export const LOCAL_RU = 'ru-RU';
 export const ONE = 1;
+export const DOUBLE_STEP = 2;
 export const REVIEW_SHOW_OFF_LIMITS = 3;
 export const STRING_NUMBERS = [
   4,
@@ -102,4 +103,14 @@ export enum ModalStatus {
 export enum ModalKind {
   Review = 'review',
   Null = 'null',
+}
+
+export enum KeyBoardNames {
+  Tab = 'Tab',
+  Shift = 'Shift',
+}
+
+export enum EventListenerType {
+  KeyDown = 'keydown',
+  KeyUp = 'keyup',
 }

@@ -1,3 +1,5 @@
+import { KeyBoardNames } from '../const';
+
 export type GuitarType = {
   id: number,
   name: string,
@@ -24,3 +26,7 @@ export type Review = {
 export type ModuleReviewStatus =  'openReview' | 'close' | 'success' | 'fail' | 'initial';
 
 export type UserReviewPost = Omit<Review, 'id' | 'createAt'>;
+
+export type DiveRef = HTMLDivElement | null;
+
+export type KeyLogType = {[key in KeyBoardNames]: boolean };

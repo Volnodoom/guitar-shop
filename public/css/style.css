@@ -1332,6 +1332,10 @@ button,
   background-color: #fefafa;
 }
 
+.button:focus {
+  outline: #4481c3 solid 2px;
+}
+
 .button--mini {
   font-size: 12px;
 
@@ -1540,7 +1544,7 @@ button,
 
 .button-cross:focus {
   color: #c90606;
-  outline: none;
+  outline: #4481c3 solid 2px;
 }
 
 .button-cross__icon::before,

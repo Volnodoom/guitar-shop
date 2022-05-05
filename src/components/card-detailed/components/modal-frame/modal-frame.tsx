@@ -1,6 +1,8 @@
-import { Dispatch, MouseEvent, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, MouseEvent, SetStateAction, useEffect, useRef, useState } from 'react';
 import { ModalKind, ModalStatus } from '../../../../const';
 import { useEscPress } from '../../../../hooks/use-esc-press/use-esc-press';
+import { useFocusTrap } from '../../../../hooks/use-focus-trap/use-focus-trap';
+import { DiveRef } from '../../../../types/general.types';
 import { basicGuitarMock } from '../../../../utils/mock-data/guitar-mock';
 import { ModalReviewSuccess } from '../components';
 import ModalReview from '../modal-review/modal-review';
@@ -22,7 +24,7 @@ function ModalFrame(props:ModalFrameProps) {
   const guitarInfo = basicGuitarMock[0];
 
   const [modalStatus, setModalStatus] = useState<ModalStatus>(ModalStatus.Initial);
-
+  const modalRef = useRef<DiveRef>(null);
   const handleFrameClose = () => {
     setModalFrameStatus(false);
     document.body.classList.remove('scroll-lock');
@@ -38,6 +40,7 @@ function ModalFrame(props:ModalFrameProps) {
   };
 
   useEscPress(currentFrameStatus, handleFrameClose);
+  useFocusTrap(modalRef, modalStatus, currentFrameStatus);
 
   useEffect(() => {
     if(currentFrameStatus) {
@@ -64,6 +67,7 @@ function ModalFrame(props:ModalFrameProps) {
           modalStatus === ModalStatus.Success && 'modal--success'
         }`
       }
+      ref={modalRef}
     >
       <div className="modal__wrapper">
         <div className="modal__overlay" data-close-modal onClick={handleOverlayClick}></div>
