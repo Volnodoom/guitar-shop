@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { AppRoutes } from '../../const';
-import { nonAvailableDiv, nonAvailableLink, nonAvailableText } from './style-for-not-available-page';
+import { nonAvailableDiv, nonAvailableLink, nonAvailableText } from './style-not-available-page';
 
 function NotAvailablePage ():JSX.Element {
   return (

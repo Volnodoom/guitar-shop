@@ -4,6 +4,9 @@ export const LOCAL_RU = 'ru-RU';
 export const ONE = 1;
 export const DOUBLE_STEP = 2;
 export const REVIEW_SHOW_OFF_LIMITS = 3;
+export const BACKEND_URL = 'https://guitar-shop.accelerator.pages.academy';
+export const REQUEST_TIMEOUT = 5000;
+
 export const STRING_NUMBERS = [
   4,
   6,
@@ -113,4 +116,30 @@ export enum KeyBoardNames {
 export enum EventListenerType {
   KeyDown = 'keydown',
   KeyUp = 'keyup',
+}
+
+export enum NameSpace {
+  DataProducts = 'DATA_PRODUCTS',
+}
+
+export enum ApiAction {
+  GetGuitars = 'data/getGuitars',
+  GetOneGuitar = 'data/getOneGuitar',
+  GetProduct = 'data/getProduct',
+}
+
+export const ApiRoutes = {
+  Guitars: '/guitars',
+  Guitar: (id: number | string) => `/guitars/${id}`,
+  Reviews: (id: number | string) => `/guitars/${id}/comments`,
+  PostReview: '/comments',
+  PostCoupon: '/coupons',
+  PostOrder: '/orders',
+} as const;
+
+export enum LoadingStatus {
+  Idle = 'idle',
+  Loading = 'loading',
+  Succeeded = 'succeeded',
+  Failed = 'failed',
 }

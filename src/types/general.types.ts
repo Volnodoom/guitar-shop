@@ -1,4 +1,6 @@
+import { AxiosInstance } from 'axios';
 import { KeyBoardNames } from '../const';
+import { AppDispatch, State } from './state.types';
 
 export type GuitarType = {
   id: number,
@@ -22,6 +24,25 @@ export type Review = {
   createAt: string,
   guitarId: number,
 };
+
+export type GeneralApiConfig = {
+  dispatch: AppDispatch,
+  state: State,
+  extra: AxiosInstance,
+};
+
+export type ProductDataStore = {
+  [id in number]: {
+    guitar: GuitarType,
+    reviews: Review[],
+    }
+};
+
+export type GuitarDataStore = {
+  [id in number]: {
+    guitar: GuitarType,
+    }
+}
 
 export type ModuleReviewStatus =  'openReview' | 'close' | 'success' | 'fail' | 'initial';
 
