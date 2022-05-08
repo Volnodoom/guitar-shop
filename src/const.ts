@@ -119,20 +119,23 @@ export enum EventListenerType {
 }
 
 export enum NameSpace {
-  DataProducts = 'DATA_PRODUCTS',
+  DataGuitars = 'DATA_GUITARS',
+  DataReviews = 'DATA_REVIEWS',
 }
 
 export enum ApiAction {
-  GetGuitars = 'data/getGuitars',
-  GetOneGuitar = 'data/getOneGuitar',
-  GetProduct = 'data/getProduct',
+  FetchGuitars = 'guitars/fetchGuitars',
+  FetchOneGuitar = 'guitars/fetchOneGuitar',
+  FetchReviews = 'reviews/fetchReviews',
+  SaveComment = 'reviews/saveComment',
+  GetProduct = 'data/fetchProduct',
 }
 
 export const ApiRoutes = {
   Guitars: '/guitars',
   Guitar: (id: number | string) => `/guitars/${id}`,
   Reviews: (id: number | string) => `/guitars/${id}/comments`,
-  PostReview: '/comments',
+  PostComment: '/comments',
   PostCoupon: '/coupons',
   PostOrder: '/orders',
 } as const;

@@ -1,14 +1,17 @@
+import { EntityState } from '@reduxjs/toolkit';
 import { LoadingStatus } from '../const';
 import { store } from '../store';
-import { GuitarDataStore, ProductDataStore } from './general.types';
+import { GuitarType, Review } from './general.types';
 
 export type State = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export type DataProducts = {
-  products: ProductDataStore | GuitarDataStore | null,
+export interface GuitarState extends EntityState<GuitarType> {
   guitarsStatus: LoadingStatus,
   oneGuitarStatus: LoadingStatus,
-  productStatus: LoadingStatus,
+}
 
+export interface ReviewState extends EntityState<Review> {
+  reviewsStatus: LoadingStatus,
+  commentStatus: LoadingStatus,
 }

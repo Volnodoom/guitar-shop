@@ -1,7 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { NameSpace } from '../const';
-import { dataProducts } from './data-products/data-products';
+import { dataGuitars } from './data-guitars/data-guitars';
+import { dataReviews } from './data-reviews/data-reviews';
 
 export const reducerRoot = combineReducers({
-  [NameSpace.DataProducts]: dataProducts.reducer,
+  [NameSpace.DataGuitars]: dataGuitars.reducer,
+  [NameSpace.DataReviews]: dataReviews.reducer,
 });

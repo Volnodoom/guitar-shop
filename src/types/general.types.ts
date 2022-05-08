@@ -31,11 +31,9 @@ export type GeneralApiConfig = {
   extra: AxiosInstance,
 };
 
-export type ProductDataStore = {
-  [id in number]: {
+export type ProductType = {
     guitar: GuitarType,
     reviews: Review[],
-    }
 };
 
 export type GuitarDataStore = {
