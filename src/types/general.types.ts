@@ -49,3 +49,7 @@ export type UserReviewPost = Omit<Review, 'id' | 'createAt'>;
 export type DiveRef = HTMLDivElement | null;
 
 export type KeyLogType = {[key in KeyBoardNames]: boolean };
+
+export type DataCoupledType = 'comments' | null;
+
+export type CoupledProductData = GuitarType & {comments?: Review[]};

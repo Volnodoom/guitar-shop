@@ -2,7 +2,7 @@ import { CSSProperties } from 'react';
 
 export const nonAvailableDiv: CSSProperties = {
   minHeight: '100vh',
-  backgroundColor: '#4481c3',
+  backgroundColor: 'rgb(195 68 68)',
   color: '#dfcf77',
   display: 'flex',
   justifyContent: 'center',

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AppRoutes, LOCAL_RU, StarSize } from '../../../../const';
 import { GuitarType } from '../../../../types/general.types';
-import { formatImgUrl } from '../../../../utils/utils-components';
+import { formatBaseImgUrl, formatHighDensityImgUrl } from '../../../../utils/utils-components';
 import { RatingStars } from '../../../common/common';
 
 type CardPreviewProps = {
@@ -22,8 +22,8 @@ function CardPreview(props: CardPreviewProps) {
   return(
     <div className="product-card">
       <img
-        src={`/${previewImg}`}
-        srcSet={formatImgUrl(previewImg)}
+        src={`/${formatBaseImgUrl(previewImg)}`}
+        srcSet={`/${formatBaseImgUrl(formatHighDensityImgUrl(previewImg))}`}
         width="75"
         height="190"
         alt={`${name}.`}

@@ -4,8 +4,12 @@ export const LOCAL_RU = 'ru-RU';
 export const ONE = 1;
 export const DOUBLE_STEP = 2;
 export const REVIEW_SHOW_OFF_LIMITS = 3;
+export const GUITARS_PER_PAGE = 9;
 export const BACKEND_URL = 'https://guitar-shop.accelerator.pages.academy';
 export const REQUEST_TIMEOUT = 5000;
+export const APP_IMG_BASE = 'content/catalog-product';
+export const SERVER_IMG_BASE = 'guitar';
+export const COUPLED_DATA = 'comments';
 
 export const STRING_NUMBERS = [
   4,
@@ -121,6 +125,7 @@ export enum EventListenerType {
 export enum NameSpace {
   DataGuitars = 'DATA_GUITARS',
   DataReviews = 'DATA_REVIEWS',
+  QueryParams = 'QUERY_PARAMS',
 }
 
 export enum ApiAction {
@@ -145,4 +150,23 @@ export enum LoadingStatus {
   Loading = 'loading',
   Succeeded = 'succeeded',
   Failed = 'failed',
+}
+
+export const QueryRoutes = {
+  Name: 'name',
+  Type: 'type',
+  Sort: '_sort',
+  Order: '_order',
+  Start: '_start',
+  End: '_end',
+  Limit: '_limit',
+  PriceStart: 'price_gte',
+  PriceEnd: 'price_lte',
+  Like: 'name_like',
+  Embed: '_embed',
+};
+
+export enum SortingOrder {
+  Increase  = 'asc',
+  Decrease = 'desc',
 }

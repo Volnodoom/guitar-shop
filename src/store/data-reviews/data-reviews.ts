@@ -1,4 +1,4 @@
-import { createAsyncThunk, createEntityAdapter, createSlice, EntityAdapter } from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice, EntityAdapter, PayloadAction } from '@reduxjs/toolkit';
 import { ApiAction, ApiRoutes, LoadingStatus, NameSpace } from '../../const';
 import { GeneralApiConfig, Review, UserReviewPost } from '../../types/general.types';
 import { ReviewState, State } from '../../types/state.types';
@@ -37,13 +37,20 @@ export const saveCommentAction = createAsyncThunk<Review, UserReviewPost, Genera
 export const dataReviews = createSlice({
   name: NameSpace.DataReviews,
   initialState,
-  reducers: {},
+  reducers: {
+    setReviewStatus: (state, action: PayloadAction<LoadingStatus>) => {
+      state.reviewsStatus = action.payload;
+    },
+    setReviews: (state, action: PayloadAction<Review[]>) => {
+      reviewsAdapter.upsertMany(state, action);
+    }
+  },
   extraReducers: (builder) =>  {
     builder
       .addCase(fetchReviewsAction.pending, (state) => {
         state.reviewsStatus = LoadingStatus.Loading;
       })
-      .addCase(fetchReviewsAction.fulfilled, (state, action) => {
+      .addCase(fetchReviewsAction.fulfilled, (state, action: PayloadAction<Review[]>) => {
         reviewsAdapter.upsertMany(state, action.payload);
         state.reviewsStatus = LoadingStatus.Succeeded;
       })
@@ -53,7 +60,7 @@ export const dataReviews = createSlice({
       .addCase(saveCommentAction.pending, (state) => {
         state.commentStatus = LoadingStatus.Loading;
       })
-      .addCase(saveCommentAction.fulfilled, (state, action) => {
+      .addCase(saveCommentAction.fulfilled, (state, action: PayloadAction<Review>) => {
         reviewsAdapter.addOne(state, action.payload);
         state.commentStatus = LoadingStatus.Succeeded;
       })
@@ -64,3 +71,8 @@ export const dataReviews = createSlice({
 });
 
 export const rtkSelectorsReviews = reviewsAdapter.getSelectors((state: State) => state[NameSpace.DataReviews]);
+
+export const {
+  setReviewStatus,
+  setReviews,
+} = dataReviews.actions;

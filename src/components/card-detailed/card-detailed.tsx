@@ -1,54 +1,65 @@
 import { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { LOCAL_RU, ModalKind, PagesName, REVIEW_SHOW_OFF_LIMITS, StarSize } from '../../const';
-import { basicGuitarMock } from '../../utils/mock-data/guitar-mock';
-import { basicReviewMock } from '../../utils/mock-data/review-mock';
-import { compareFunctionEarlyToLate, formatImgUrl } from '../../utils/utils-components';
+import { LoadingStatus, LOCAL_RU, ModalKind, PagesName, REVIEW_SHOW_OFF_LIMITS, StarSize } from '../../const';
+import { useAppDispatch } from '../../hooks/hook';
+import { useReviewsOnScroll } from '../../hooks/use-reviews-on-scroll/use-reviews-on-scroll';
+import { fetchOneGuitarAction, setGuitarsStatus } from '../../store/data-guitars/data-guitars';
+import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
+import { fetchReviewsAction, setReviewStatus } from '../../store/data-reviews/data-reviews';
+import * as selectorReview from '../../store/data-reviews/selectors-reviews';
+import { compareFunctionEarlyToLate, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
 import { Breadcrumbs, RatingStars } from '../common/common';
+import LoadingScreen from '../loading-screen/loading-screen';
 import NotAvailablePage from '../not-available-page/not-available-page';
 import { CardReview, ModalFrame } from './components/components';
 
 function CardDetailed():JSX.Element {
   const {id} = useParams<{id: string}>();
   const mainElement = useRef<HTMLElement | null>(null);
+  const dispatch = useAppDispatch();
+
+  const reviews = useSelector(selectorReview.getReviewsByGuitar(Number(id)));
+  const reviewsStatus = useSelector(selectorReview.getReviewsStatus);
+
+  const guitar = useSelector(selectorGuitar.getOneGuitar(Number(id)));
+  const guitarStatus = useSelector(selectorGuitar.getOneGuitarStatus);
+
   const [isCharacteristics, setIsCharacteristics] = useState(true);
   const [isDescription, setIsDescription] = useState(false);
   const [showOffLimit, setShowOffLimit] = useState(REVIEW_SHOW_OFF_LIMITS);
   const [isModalActive, setIsModalActive] = useState(false);
   const [modalInfo, setModalInfo] = useState<null | ModalKind>(null);
-  const guitars = basicGuitarMock;
-  const result = guitars.find((line) => line.id === Number(id));
-  const reviews = basicReviewMock;
-  const filtratedReviews = reviews.slice().sort(compareFunctionEarlyToLate);
+
+  useEffect(() => {
+    dispatch(setReviewStatus(LoadingStatus.Idle));
+    dispatch(setGuitarsStatus(LoadingStatus.Idle));
+  }, [id]);
+
+  useEffect(() => {
+    if(!guitar && guitarStatus !== LoadingStatus.Failed ) {
+      dispatch(fetchOneGuitarAction(Number(id)));
+    }
+
+    if(reviews.length === 0 && reviewsStatus !== LoadingStatus.Succeeded && guitar) {
+      dispatch(fetchReviewsAction(Number(id)));
+    }
+  }, [dispatch, id, guitar, reviews.length, reviewsStatus, guitarStatus]);
 
 
   const handleShowMoreClick = useCallback(() => {
     setShowOffLimit(showOffLimit + REVIEW_SHOW_OFF_LIMITS);
   }, [showOffLimit]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const windowHeight = document.documentElement.clientHeight;
-      const scrollTop = window.pageYOffset;
+  const filtratedReviews = reviews.slice().sort(compareFunctionEarlyToLate);
+  useReviewsOnScroll(showOffLimit, filtratedReviews, handleShowMoreClick);
 
-      const scrollBottom = scrollHeight - windowHeight - scrollTop;
-
-      if (scrollBottom < 280 && showOffLimit < filtratedReviews.length) {
-        handleShowMoreClick();
-      }
-    };
-
-    document.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [filtratedReviews.length, handleShowMoreClick, showOffLimit]);
-
-
-  if (!result) {
+  if (!guitar) {
     return <NotAvailablePage />;
+  }
+
+  if(guitarStatus !== LoadingStatus.Succeeded && reviewsStatus !== LoadingStatus.Succeeded) {
+    return <LoadingScreen />;
   }
 
   const {
@@ -60,7 +71,7 @@ function CardDetailed():JSX.Element {
     stringCount,
     rating,
     price
-  } = result;
+  } = guitar;
 
 
   const handleCharacteristicTabClick = () => {
@@ -92,8 +103,8 @@ function CardDetailed():JSX.Element {
         <div className="product-container">
           <img
             className="product-container__img"
-            src={`/${previewImg}`}
-            srcSet={formatImgUrl(previewImg)}
+            src={`/${formatBaseImgUrl(previewImg)}`}
+            srcSet={`/${formatBaseImgUrl(formatHighDensityImgUrl(previewImg))}`}
             width="90"
             height="235"
             alt={name}
