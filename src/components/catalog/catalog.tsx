@@ -1,26 +1,54 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import {  LoadingStatus, PagesName } from '../../const';
+import { useParams } from 'react-router-dom';
+import {  LIMIT_GUITARS_PER_PAGE, LoadingStatus, PagesName, PAGE_EXIST } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
-import { fetchGuitarsAction } from '../../store/data-guitars/data-guitars';
-import * as selector from '../../store/data-guitars/selectors-guitars';
+import { useSetCatalogPageState } from '../../hooks/use-set-catalo-page/use-set-catalog-page';
+import { fetchProductsAction } from '../../store/data-guitars/data-guitars';
+import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 import { Breadcrumbs } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
+import NotAvailablePage from '../not-available-page/not-available-page';
 import { Filtration, Pagination, Sorting, CardPreview } from './components/components';
 
 function Catalog():JSX.Element {
+  const { pageNumber } = useParams<{pageNumber: string}>();
   const dispatch = useAppDispatch();
-  const guitars = useSelector(selector.getGuitars);
-  const isDataLoaded = useSelector(selector.getGuitarsStatus) === LoadingStatus.Succeeded;
+  const guitars = useSelector(selectorGuitar.getGuitars);
+  const isDataLoaded = useSelector(selectorGuitar.getGuitarsStatus) === LoadingStatus.Succeeded;
+  const totalGuitarsFromServer = useSelector(selectorGuitar.getTotalNumber);
+  const guitarsAccordingToPage = useSelector(selectorGuitar.getGuitarsPerPage);
+  const [setPageState] = useSetCatalogPageState();
 
+  const isPageExist = totalGuitarsFromServer && totalGuitarsFromServer/(Number(pageNumber) * LIMIT_GUITARS_PER_PAGE) >= PAGE_EXIST;
+  const numberGuitarsInTheStore = guitars.length;
 
   useEffect(() => {
-    dispatch(fetchGuitarsAction());
-  },[dispatch]);
+    if (pageNumber) {
+      setPageState(Number(pageNumber));
+
+      if(totalGuitarsFromServer === null || guitarsAccordingToPage === undefined
+      ) {
+        dispatch(fetchProductsAction());
+      }
+    }
+
+  },[
+    dispatch,
+    guitarsAccordingToPage,
+    numberGuitarsInTheStore,
+    totalGuitarsFromServer,
+    pageNumber,
+    setPageState,
+  ]);
 
 
-  if(!isDataLoaded) {
+  if(!isDataLoaded || totalGuitarsFromServer === null) {
     return <LoadingScreen />;
+  }
+
+  if(isPageExist === false) {
+    return <NotAvailablePage />;
   }
 
   return(
@@ -31,11 +59,27 @@ function Catalog():JSX.Element {
         <div className="catalog">
           <Filtration />
           <Sorting />
-          <div className="cards catalog__cards">
-            {
-              guitars.map((line) => <CardPreview itemInfo={line} key={line.id}/>)
-            }
-          </div>
+          {
+            guitarsAccordingToPage
+            &&
+            guitarsAccordingToPage.length > 0
+            &&
+            guitarsAccordingToPage.every((line) => line !== undefined)
+              ?
+              <div className="cards catalog__cards">
+                {
+                  guitarsAccordingToPage.map((line) => {
+                    if (line !== undefined) {
+                      return <CardPreview itemInfo={line} key={line.id}/>;
+                    }
+                  })
+                }
+              </div>
+              :
+              <div className='catalog__cards'>
+                <b>Товаров по вашему запросу не найдено</b>
+              </div>
+          }
           <Pagination />
         </div>
       </div>

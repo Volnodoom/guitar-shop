@@ -42,6 +42,11 @@ export type GuitarDataStore = {
     }
 }
 
+export type SeparatorType = {
+  guitars: GuitarType[],
+  reviews: Review[],
+}
+
 export type ModuleReviewStatus =  'openReview' | 'close' | 'success' | 'fail' | 'initial';
 
 export type UserReviewPost = Omit<Review, 'id' | 'createAt'>;
@@ -52,4 +57,6 @@ export type KeyLogType = {[key in KeyBoardNames]: boolean };
 
 export type DataCoupledType = 'comments' | null;
 
-export type CoupledProductData = GuitarType & {comments?: Review[]};
+export type CoupledProductData = GuitarType & {comments: Review[]};
+
+export type GuitarsIdsLineType = {[x: number]: number[]};

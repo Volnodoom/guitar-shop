@@ -1,6 +1,6 @@
-import { APP_IMG_BASE, JPG_DOUBLE_DENSITY, JPG_ENDING_FORMAT, LOCAL_RU, ReviewDateTimeFormat, SERVER_IMG_BASE } from '../const';
+import { APP_IMG_BASE, JPG_DOUBLE_DENSITY, JPG_ENDING_FORMAT, LoadingStatus, LOCAL_RU, ReviewDateTimeFormat, SERVER_IMG_BASE } from '../const';
 import dayjs from 'dayjs';
-import { CoupledProductData, GuitarType, Review, UserReviewPost } from '../types/general.types';
+import { CoupledProductData, Review, SeparatorType, UserReviewPost } from '../types/general.types';
 
 export const formatBaseImgUrl = (url: string) => url.replace(SERVER_IMG_BASE, APP_IMG_BASE);
 export const formatHighDensityImgUrl = (url: string) => url.replace(JPG_ENDING_FORMAT, JPG_DOUBLE_DENSITY);
@@ -9,17 +9,18 @@ export const compareFunctionEarlyToLate = (reviewA: Review, reviewB: Review) => 
 
 export const checkIsReviewFormValid = (data:UserReviewPost): boolean =>  Object.values(data).every((line) => line !== '');
 
-type SeparatorType = {
-  guitars: GuitarType[],
-  reviews: Review[],
-}
+export const checkStatusSuccess = (status: LoadingStatus) => status === LoadingStatus.Succeeded;
+export const checkStatusFailed = (status: LoadingStatus) => status === LoadingStatus.Failed;
 
 export const separateGuitarAndReviews = (data: CoupledProductData[]) => data
-  .reduce((previousValue:SeparatorType , currentValue:CoupledProductData) => {
+  .reduce((previousValue:SeparatorType, currentValue:CoupledProductData) => {
     const reviews = previousValue.reviews;
     const guitars = previousValue.guitars;
-    reviews.push(...(currentValue.comments as Review[]));
-    delete currentValue.comments;
-    guitars.push({...currentValue});
+
+    const {comments, ...rest}: CoupledProductData = currentValue;
+
+    reviews.push(...comments);
+    guitars.push(rest);
+
     return {guitars, reviews};
   }, {guitars: [], reviews: []});

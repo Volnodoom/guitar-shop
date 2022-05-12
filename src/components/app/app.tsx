@@ -9,9 +9,10 @@ import NotAvailablePage from '../not-available-page/not-available-page';
 function App(): JSX.Element {
   return(
     <Routes>
-      <Route path={AppRoutes.Root} element={<Navigate to={AppRoutes.Catalog(ONE)} replace/>}/>
-      <Route path={AppRoutes.Catalog(ONE)} element={<Layout />}>
-        <Route index element={<Catalog />} />
+      <Route path={AppRoutes.Root} element={<Navigate to={AppRoutes.PseudoRoot} replace/>}/>
+      <Route path={AppRoutes.PseudoRoot} element={<Layout />}>
+        <Route index element={<Navigate to={AppRoutes.CatalogPage(ONE)} replace/>} />
+        <Route path={AppRoutes.CatalogPage()} element={<Catalog />} />
         <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
         <Route path={AppRoutes.Cart} element={<Cart />} />
       </Route>

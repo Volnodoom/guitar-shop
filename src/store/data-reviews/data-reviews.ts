@@ -42,7 +42,7 @@ export const dataReviews = createSlice({
       state.reviewsStatus = action.payload;
     },
     setReviews: (state, action: PayloadAction<Review[]>) => {
-      reviewsAdapter.upsertMany(state, action);
+      reviewsAdapter.addMany(state, action);
     }
   },
   extraReducers: (builder) =>  {
@@ -51,7 +51,7 @@ export const dataReviews = createSlice({
         state.reviewsStatus = LoadingStatus.Loading;
       })
       .addCase(fetchReviewsAction.fulfilled, (state, action: PayloadAction<Review[]>) => {
-        reviewsAdapter.upsertMany(state, action.payload);
+        reviewsAdapter.addMany(state, action.payload);
         state.reviewsStatus = LoadingStatus.Succeeded;
       })
       .addCase(fetchReviewsAction.rejected, (state) => {

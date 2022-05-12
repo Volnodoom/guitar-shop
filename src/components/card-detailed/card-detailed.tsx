@@ -1,14 +1,15 @@
 import { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { LoadingStatus, LOCAL_RU, ModalKind, PagesName, REVIEW_SHOW_OFF_LIMITS, StarSize } from '../../const';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { HashKind, LOCAL_RU, ModalKind, PageScrollOptions, PagesName, REVIEW_SHOW_OFF_LIMITS, StarSize } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
 import { useReviewsOnScroll } from '../../hooks/use-reviews-on-scroll/use-reviews-on-scroll';
-import { fetchOneGuitarAction, setGuitarsStatus } from '../../store/data-guitars/data-guitars';
+import { fetchOneGuitarAction } from '../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
-import { fetchReviewsAction, setReviewStatus } from '../../store/data-reviews/data-reviews';
+import { fetchReviewsAction } from '../../store/data-reviews/data-reviews';
 import * as selectorReview from '../../store/data-reviews/selectors-reviews';
-import { compareFunctionEarlyToLate, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
+import { GuitarType } from '../../types/general.types';
+import { checkStatusFailed, checkStatusSuccess, compareFunctionEarlyToLate, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
 import { Breadcrumbs, RatingStars } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
 import NotAvailablePage from '../not-available-page/not-available-page';
@@ -16,14 +17,20 @@ import { CardReview, ModalFrame } from './components/components';
 
 function CardDetailed():JSX.Element {
   const {id} = useParams<{id: string}>();
-  const mainElement = useRef<HTMLElement | null>(null);
+  const location = useLocation();
   const dispatch = useAppDispatch();
 
-  const reviews = useSelector(selectorReview.getReviewsByGuitar(Number(id)));
-  const reviewsStatus = useSelector(selectorReview.getReviewsStatus);
+  const mainElement = useRef<HTMLElement | null>(null);
+  const tabRef = useRef<HTMLDivElement | null>(null);
 
   const guitar = useSelector(selectorGuitar.getOneGuitar(Number(id)));
   const guitarStatus = useSelector(selectorGuitar.getOneGuitarStatus);
+  const isGuitarSuccess = checkStatusSuccess(guitarStatus);
+  const isGuitarFailed = checkStatusFailed(guitarStatus);
+
+  const reviews = useSelector(selectorReview.getReviewsByGuitarId(Number(id)));
+  const reviewsStatus = useSelector(selectorReview.getReviewsStatus);
+  const isReviewsSuccess = checkStatusSuccess(reviewsStatus);
 
   const [isCharacteristics, setIsCharacteristics] = useState(true);
   const [isDescription, setIsDescription] = useState(false);
@@ -32,20 +39,41 @@ function CardDetailed():JSX.Element {
   const [modalInfo, setModalInfo] = useState<null | ModalKind>(null);
 
   useEffect(() => {
-    dispatch(setReviewStatus(LoadingStatus.Idle));
-    dispatch(setGuitarsStatus(LoadingStatus.Idle));
-  }, [id]);
-
-  useEffect(() => {
-    if(!guitar && guitarStatus !== LoadingStatus.Failed ) {
+    if(!guitar && !isGuitarFailed ) {
       dispatch(fetchOneGuitarAction(Number(id)));
     }
 
-    if(reviews.length === 0 && reviewsStatus !== LoadingStatus.Succeeded && guitar) {
+    if(reviews.length === 0 && !isReviewsSuccess && guitar) {
       dispatch(fetchReviewsAction(Number(id)));
     }
-  }, [dispatch, id, guitar, reviews.length, reviewsStatus, guitarStatus]);
+  }, [
+    dispatch,
+    id,
+    guitar,
+    reviews.length,
+    reviewsStatus,
+    guitarStatus,
+    isGuitarFailed,
+    isReviewsSuccess
+  ]);
 
+  const handleCharacteristicTabClick = () => {
+    setIsCharacteristics(true);
+    setIsDescription(false);
+  };
+
+  const handleDescriptionTabClick = () => {
+    setIsCharacteristics(false);
+    setIsDescription(true);
+  };
+
+  useEffect(() => {
+    if (location.hash) {
+      location.hash === HashKind.Characteristics ? handleCharacteristicTabClick() : handleDescriptionTabClick();
+      tabRef.current?.scrollIntoView({behavior: PageScrollOptions.Smooth});
+    }
+
+  },[location.hash]);
 
   const handleShowMoreClick = useCallback(() => {
     setShowOffLimit(showOffLimit + REVIEW_SHOW_OFF_LIMITS);
@@ -54,11 +82,11 @@ function CardDetailed():JSX.Element {
   const filtratedReviews = reviews.slice().sort(compareFunctionEarlyToLate);
   useReviewsOnScroll(showOffLimit, filtratedReviews, handleShowMoreClick);
 
-  if (!guitar) {
+  if (!guitar && isGuitarFailed) {
     return <NotAvailablePage />;
   }
 
-  if(guitarStatus !== LoadingStatus.Succeeded && reviewsStatus !== LoadingStatus.Succeeded) {
+  if(!guitar && !isGuitarSuccess && !isReviewsSuccess) {
     return <LoadingScreen />;
   }
 
@@ -71,22 +99,11 @@ function CardDetailed():JSX.Element {
     stringCount,
     rating,
     price
-  } = guitar;
-
-
-  const handleCharacteristicTabClick = () => {
-    setIsCharacteristics(true);
-    setIsDescription(false);
-  };
-
-  const handleDescriptionTabClick = () => {
-    setIsCharacteristics(false);
-    setIsDescription(true);
-  };
+  } = guitar as GuitarType;
 
   const handleGoUpLink = (evt: MouseEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
-    mainElement.current?.scrollIntoView({behavior: 'smooth' });
+    mainElement.current?.scrollIntoView({behavior: PageScrollOptions.Smooth });
   };
 
   const handleReviewModalClick = () => {
@@ -133,7 +150,11 @@ function CardDetailed():JSX.Element {
               >Описание
               </Link>
 
-              <div className="tabs__content" id="characteristics">
+              <div
+                className="tabs__content"
+                id={isCharacteristics ? HashKind.Characteristics : HashKind.Description}
+                ref={tabRef}
+              >
                 {
                   isCharacteristics
                     ?
@@ -154,7 +175,10 @@ function CardDetailed():JSX.Element {
                       </tbody>
                     </table>
                     :
-                    <p className={`tabs__product-description ${!isDescription && 'hidden'}`}>{description}</p>
+                    <p
+                      className={`tabs__product-description ${!isDescription && 'hidden'}`}
+                    >{description}
+                    </p>
                 }
               </div>
             </div>

@@ -4,12 +4,16 @@ export const LOCAL_RU = 'ru-RU';
 export const ONE = 1;
 export const DOUBLE_STEP = 2;
 export const REVIEW_SHOW_OFF_LIMITS = 3;
-export const GUITARS_PER_PAGE = 9;
+export const LIMIT_GUITARS_PER_PAGE = 9;
+export const LIMIT_GUITARS_PER_PAGE_DOUBLE = 18;
 export const BACKEND_URL = 'https://guitar-shop.accelerator.pages.academy';
 export const REQUEST_TIMEOUT = 5000;
 export const APP_IMG_BASE = 'content/catalog-product';
 export const SERVER_IMG_BASE = 'guitar';
 export const COUPLED_DATA = 'comments';
+export const HEADER_TOTAL_NUMBER = 'x-total-count';
+//PAGE_EXIST depends on the product item per page
+export const PAGE_EXIST = 0.77;
 
 export const STRING_NUMBERS = [
   4,
@@ -43,8 +47,11 @@ export const RATING_OPTIONS = [
 
 export const AppRoutes = {
   Root: '/',
-  Catalog: (pageNumber: number | string = ':pageNumber') => `catalog/page_${pageNumber}`,
+  PseudoRoot: 'catalog',
+  CatalogPage: (pageNumber: number | string = ':pageNumber') => `page/${pageNumber}`,
+  CatalogPageAbsolute: (pageNumber: number | string = ':pageNumber') => `/catalog/page/${pageNumber}`,
   Guitar: (id: number | string = ':id') => `guitar/${id}`,
+  GuitarAbsolute: (id: number | string = ':id') => `/catalog/guitar/${id}`,
   Cart: 'cart',
   NotExisted: '*',
 } as const ;
@@ -169,4 +176,14 @@ export const QueryRoutes = {
 export enum SortingOrder {
   Increase  = 'asc',
   Decrease = 'desc',
+}
+
+export enum PageScrollOptions {
+  Smooth = 'smooth',
+  Start = 'start',
+}
+
+export enum HashKind {
+  Characteristics = '#characteristics',
+  Description = '#description'
 }

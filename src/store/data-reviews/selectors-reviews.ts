@@ -9,6 +9,6 @@ const {
 export const getReviewsStatus = (state: State) => state[NameSpace.DataReviews].reviewsStatus;
 export const getSaveCommentStatus = (state: State) => state[NameSpace.DataReviews].commentStatus;
 
-export const getReviewsByGuitar = (id: number) => (state: State) => entireReviews(state)
+export const getReviewsByGuitarId = (id: number) => (state: State) => entireReviews(state)
   .filter((line) => line.guitarId === id);
 
