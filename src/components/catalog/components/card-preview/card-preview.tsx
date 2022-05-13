@@ -1,7 +1,9 @@
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { AppRoutes, LOCAL_RU, StarSize } from '../../../../const';
+import { getReviewsByGuitarId } from '../../../../store/data-reviews/selectors-reviews';
 import { GuitarType } from '../../../../types/general.types';
-import { formatImgUrl } from '../../../../utils/utils-components';
+import { formatBaseImgUrl, formatHighDensityImgUrl } from '../../../../utils/utils-components';
 import { RatingStars } from '../../../common/common';
 
 type CardPreviewProps = {
@@ -17,13 +19,17 @@ function CardPreview(props: CardPreviewProps) {
     price,
   } = props.itemInfo;
 
-  const reviewNumber = 9;
+  const reviewNumber = useSelector(getReviewsByGuitarId(id)).length;
+
+  const handleLinkClick = () => {
+    document.body.scrollIntoView({inline: 'start'});
+  };
 
   return(
     <div className="product-card">
       <img
-        src={`/${previewImg}`}
-        srcSet={formatImgUrl(previewImg)}
+        src={`/${formatBaseImgUrl(previewImg)}`}
+        srcSet={`/${formatBaseImgUrl(formatHighDensityImgUrl(previewImg))}`}
         width="75"
         height="190"
         alt={`${name}.`}
@@ -42,7 +48,7 @@ function CardPreview(props: CardPreviewProps) {
         </p>
       </div>
       <div className="product-card__buttons">
-        <Link className="button button--mini" to={AppRoutes.Guitar(id)}>Подробнее</Link>
+        <Link className="button button--mini" to={AppRoutes.GuitarAbsolute(id)} onClick={handleLinkClick}>Подробнее</Link>
         <Link className="button button--red button--mini button--add-to-cart" to={AppRoutes.Cart}>Купить</Link>
       </div>
     </div>

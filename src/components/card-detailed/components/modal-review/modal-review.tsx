@@ -1,29 +1,43 @@
-import { ChangeEvent, Dispatch, FormEventHandler, Fragment, MouseEvent, SetStateAction, useState } from 'react';
+import { ChangeEvent, Dispatch, FormEventHandler, Fragment, MouseEvent, SetStateAction, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { ModalStatus, RATING_OPTIONS, ReviewFormIdFields } from '../../../../const';
-import { UserReviewPost } from '../../../../types/general.types';
-import { checkIsReviewFormValid } from '../../../../utils/utils-components';
+import { useAppDispatch } from '../../../../hooks/hook';
+import { useIdGetProductInfo } from '../../../../hooks/use-id-get-product-info/use-id-get-product-info';
+import { saveCommentAction } from '../../../../store/data-reviews/data-reviews';
+import * as selector from '../../../../store/data-reviews/selectors-reviews';
+import { GuitarType, UserReviewPost } from '../../../../types/general.types';
+import { checkIsReviewFormValid, checkStatusLoading, checkStatusSuccess } from '../../../../utils/utils-components';
 import { blockMargin } from './modal-review.style';
 
 type ModalReviewProps = {
-  guitarInfo: {
-    name: string,
-    id: number,
-  },
   setStatus: Dispatch<SetStateAction<ModalStatus>>,
   onClose: () => void,
 }
 
 function ModalReview(props: ModalReviewProps) {
+  const dispatch = useAppDispatch();
+  const [guitar] = useIdGetProductInfo();
+
+  const commentStatus = useSelector(selector.getSaveCommentStatus);
+  const isCommentSuccess = checkStatusSuccess(commentStatus);
+  const isCommentLoading = checkStatusLoading(commentStatus);
+
   const [userName, setUserName] = useState('');
   const [userRating, setUserRating] = useState<string | number>('');
   const [userAdvantages, setUserAdvantages] = useState('');
   const [userDisadvantages, setUserDisadvantages] = useState('');
   const [userComments, setUserComments] = useState('');
 
+  useEffect(() => {
+    if (isCommentSuccess) {
+      setStatus(ModalStatus.Success);
+    }
+  }, [isCommentSuccess]);
+
   const {
     name,
     id,
-  } = props.guitarInfo;
+  } = guitar as GuitarType;
 
   const {
     setStatus,
@@ -42,8 +56,7 @@ function ModalReview(props: ModalReviewProps) {
     };
 
     if(checkIsReviewFormValid(userReview)) {
-      // send data to server
-      setStatus(ModalStatus.Success);
+      dispatch(saveCommentAction(userReview));
     }
   };
 
@@ -146,7 +159,7 @@ function ModalReview(props: ModalReviewProps) {
           {userComments.trim() === '' && <p className="form-review__warning">Заполните поле</p>}
         </div>
 
-        <button className="button button--medium-20 form-review__button" type="submit">Отправить отзыв</button>
+        <button className="button button--medium-20 form-review__button" type="submit">{isCommentLoading ? 'Отправляем...' : 'Отправить отзыв'}</button>
       </form>
       <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={onClose}>
         <span className="button-cross__icon"></span>

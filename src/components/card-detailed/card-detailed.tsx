@@ -1,90 +1,70 @@
-import { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { LOCAL_RU, ModalKind, PagesName, REVIEW_SHOW_OFF_LIMITS, StarSize } from '../../const';
-import { basicGuitarMock } from '../../utils/mock-data/guitar-mock';
-import { basicReviewMock } from '../../utils/mock-data/review-mock';
-import { compareFunctionEarlyToLate, formatImgUrl } from '../../utils/utils-components';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { LOCAL_RU, ModalKind, PagesName, StarSize } from '../../const';
+import { useAppDispatch } from '../../hooks/hook';
+import { useIdGetProductInfo } from '../../hooks/use-id-get-product-info/use-id-get-product-info';
+import { fetchOneGuitarAction } from '../../store/data-guitars/data-guitars';
+import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
+import { fetchReviewsAction } from '../../store/data-reviews/data-reviews';
+import * as selectorReview from '../../store/data-reviews/selectors-reviews';
+import { GuitarType } from '../../types/general.types';
+import { checkStatusFailed, checkStatusSuccess, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
+import { ReviewsListInteraction, Tabs } from '../catalog/components/components';
 import { Breadcrumbs, RatingStars } from '../common/common';
+import LoadingScreen from '../loading-screen/loading-screen';
 import NotAvailablePage from '../not-available-page/not-available-page';
-import { CardReview, ModalFrame } from './components/components';
+import { ModalFrame } from './components/components';
 
 function CardDetailed():JSX.Element {
-  const {id} = useParams<{id: string}>();
-  const mainElement = useRef<HTMLElement | null>(null);
-  const [isCharacteristics, setIsCharacteristics] = useState(true);
-  const [isDescription, setIsDescription] = useState(false);
-  const [showOffLimit, setShowOffLimit] = useState(REVIEW_SHOW_OFF_LIMITS);
+  const [guitar, reviews, id] = useIdGetProductInfo();
+  const dispatch = useAppDispatch();
+
+  const guitarStatus = useSelector(selectorGuitar.getOneGuitarStatus);
+  const isGuitarSuccess = checkStatusSuccess(guitarStatus);
+  const isGuitarFailed = checkStatusFailed(guitarStatus);
+
+  const reviewsStatus = useSelector(selectorReview.getReviewsStatus);
+  const isReviewsSuccess = checkStatusSuccess(reviewsStatus);
+
   const [isModalActive, setIsModalActive] = useState(false);
   const [modalInfo, setModalInfo] = useState<null | ModalKind>(null);
-  const guitars = basicGuitarMock;
-  const result = guitars.find((line) => line.id === Number(id));
-  const reviews = basicReviewMock;
-  const filtratedReviews = reviews.slice().sort(compareFunctionEarlyToLate);
-
-
-  const handleShowMoreClick = useCallback(() => {
-    setShowOffLimit(showOffLimit + REVIEW_SHOW_OFF_LIMITS);
-  }, [showOffLimit]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const windowHeight = document.documentElement.clientHeight;
-      const scrollTop = window.pageYOffset;
+    if(!guitar && !isGuitarFailed ) {
+      dispatch(fetchOneGuitarAction(Number(id)));
+    }
 
-      const scrollBottom = scrollHeight - windowHeight - scrollTop;
+    if(reviews.length === 0 && !isReviewsSuccess && guitar) {
+      dispatch(fetchReviewsAction(Number(id)));
+    }
+  }, [
+    dispatch,
+    id,
+    guitar,
+    reviews.length,
+    reviewsStatus,
+    guitarStatus,
+    isGuitarFailed,
+    isReviewsSuccess
+  ]);
 
-      if (scrollBottom < 280 && showOffLimit < filtratedReviews.length) {
-        handleShowMoreClick();
-      }
-    };
-
-    document.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [filtratedReviews.length, handleShowMoreClick, showOffLimit]);
-
-
-  if (!result) {
+  if (!guitar && isGuitarFailed) {
     return <NotAvailablePage />;
+  }
+
+  if(!guitar && !isGuitarSuccess && !isReviewsSuccess) {
+    return <LoadingScreen />;
   }
 
   const {
     name,
-    vendorCode,
-    type,
-    description,
     previewImg,
-    stringCount,
     rating,
     price
-  } = result;
-
-
-  const handleCharacteristicTabClick = () => {
-    setIsCharacteristics(true);
-    setIsDescription(false);
-  };
-
-  const handleDescriptionTabClick = () => {
-    setIsCharacteristics(false);
-    setIsDescription(true);
-  };
-
-  const handleGoUpLink = (evt: MouseEvent<HTMLAnchorElement>) => {
-    evt.preventDefault();
-    mainElement.current?.scrollIntoView({behavior: 'smooth' });
-  };
-
-  const handleReviewModalClick = () => {
-    setIsModalActive(true);
-    setModalInfo(ModalKind.Review);
-  };
+  } = guitar as GuitarType;
 
   return(
-    <main className="page-content" ref={mainElement}>
+    <main className="page-content">
       <div className="container">
         <h1 className="page-content__title title title--bigger">Товар</h1>
         <Breadcrumbs ProductTitle={name} pageContent={PagesName.Guitar.en}/>
@@ -92,8 +72,8 @@ function CardDetailed():JSX.Element {
         <div className="product-container">
           <img
             className="product-container__img"
-            src={`/${previewImg}`}
-            srcSet={formatImgUrl(previewImg)}
+            src={`/${formatBaseImgUrl(previewImg)}`}
+            srcSet={`/${formatBaseImgUrl(formatHighDensityImgUrl(previewImg))}`}
             width="90"
             height="235"
             alt={name}
@@ -107,48 +87,9 @@ function CardDetailed():JSX.Element {
                 {reviews.length}
               </p>
             </div>
-
-            <div className="tabs">
-              <Link
-                className={`button button--medium tabs__button ${!isCharacteristics && 'button--black-border'}`}
-                onClick={handleCharacteristicTabClick}
-                to="#characteristics"
-              >Характеристики
-              </Link>
-              <Link
-                className={`button button--medium tabs__button ${!isDescription && 'button--black-border'}`}
-                onClick={handleDescriptionTabClick}
-                to="#description"
-              >Описание
-              </Link>
-
-              <div className="tabs__content" id="characteristics">
-                {
-                  isCharacteristics
-                    ?
-                    <table className="tabs__table">
-                      <tbody>
-                        <tr className="tabs__table-row">
-                          <td className="tabs__title">Артикул:</td>
-                          <td className="tabs__value">{vendorCode}</td>
-                        </tr>
-                        <tr className="tabs__table-row">
-                          <td className="tabs__title">Тип:</td>
-                          <td className="tabs__value">{type}</td>
-                        </tr>
-                        <tr className="tabs__table-row">
-                          <td className="tabs__title">Количество струн:</td>
-                          <td className="tabs__value">{stringCount} струнная</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    :
-                    <p className={`tabs__product-description ${!isDescription && 'hidden'}`}>{description}</p>
-                }
-              </div>
-            </div>
-
+            <Tabs />
           </div>
+
           <div className="product-container__price-wrapper">
             <p className="product-container__price-info product-container__price-info--title">Цена:</p>
             <p className="product-container__price-info product-container__price-info--value">{price.toLocaleString(LOCAL_RU)} ₽</p>
@@ -156,53 +97,15 @@ function CardDetailed():JSX.Element {
           </div>
         </div>
 
-        <section className="reviews">
-          <h3 className="reviews__title title title--bigger">Отзывы</h3>
-          <button
-            className="button button--red-border button--big reviews__sumbit-button"
-            type="button"
-            onClick={handleReviewModalClick}
-          >Оставить отзыв
-          </button>
+        <ReviewsListInteraction setModalFrameStatus={setIsModalActive} setModalInfo={setModalInfo}/>
 
-          {
-            filtratedReviews.length > 0
-              ?
-              filtratedReviews
-                .slice(0, showOffLimit)
-                .map((line) => <CardReview reviewInfo={line} key={line.id}/>)
-              :
-              <div className="review">
-                <p className="review__value">Отзывов о данном товаре нет. Будь первым!</p>
-              </div>
-          }
-          {
-            showOffLimit < filtratedReviews.length
-              ?
-              <button
-                className="button button--medium reviews__more-button"
-                type="button"
-                onClick={handleShowMoreClick}
-              >Показать еще отзывы
-              </button>
-              :
-              ''
-          }
-          <Link
-            className="button button--up button--red-border button--big reviews__up-button"
-            to="#header"
-            onClick={handleGoUpLink}
-          >Наверх
-          </Link>
-        </section>
-        {
-          <ModalFrame
-            setModalFrameStatus={setIsModalActive}
-            currentFrameStatus={isModalActive}
-            modalInfo={modalInfo}
-            setModalInfo={setModalInfo}
-          />
-        }
+        <ModalFrame
+          setModalFrameStatus={setIsModalActive}
+          currentFrameStatus={isModalActive}
+          modalInfo={modalInfo}
+          setModalInfo={setModalInfo}
+        />
+
       </div>
     </main>
   );
