@@ -12,8 +12,6 @@ export const APP_IMG_BASE = 'content/catalog-product';
 export const SERVER_IMG_BASE = 'guitar';
 export const COUPLED_DATA = 'comments';
 export const HEADER_TOTAL_NUMBER = 'x-total-count';
-//PAGE_EXIST depends on the product item per page
-export const PAGE_EXIST = 0.77;
 
 export const STRING_NUMBERS = [
   4,

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import {  LIMIT_GUITARS_PER_PAGE, LoadingStatus, PagesName, PAGE_EXIST } from '../../const';
+import {  LIMIT_GUITARS_PER_PAGE, LoadingStatus, PagesName } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
 import { useSetCatalogPageState } from '../../hooks/use-set-catalo-page/use-set-catalog-page';
 import { fetchProductsAction } from '../../store/data-guitars/data-guitars';
@@ -14,32 +14,30 @@ import { Filtration, Pagination, Sorting, CardPreview } from './components/compo
 function Catalog():JSX.Element {
   const { pageNumber } = useParams<{pageNumber: string}>();
   const dispatch = useAppDispatch();
-  const guitars = useSelector(selectorGuitar.getGuitars);
   const isDataLoaded = useSelector(selectorGuitar.getGuitarsStatus) === LoadingStatus.Succeeded;
   const totalGuitarsFromServer = useSelector(selectorGuitar.getTotalNumber);
   const guitarsAccordingToPage = useSelector(selectorGuitar.getGuitarsPerPage);
   const [setPageState] = useSetCatalogPageState();
 
-  const isPageExist = totalGuitarsFromServer && totalGuitarsFromServer/(Number(pageNumber) * LIMIT_GUITARS_PER_PAGE) >= PAGE_EXIST;
-  const numberGuitarsInTheStore = guitars.length;
+  const isPageExist = totalGuitarsFromServer && Number(pageNumber) * LIMIT_GUITARS_PER_PAGE <= totalGuitarsFromServer;
 
   useEffect(() => {
     if (pageNumber) {
       setPageState(Number(pageNumber));
-
-      if(totalGuitarsFromServer === null || guitarsAccordingToPage === undefined
-      ) {
-        dispatch(fetchProductsAction());
-      }
     }
+  }, [pageNumber, setPageState]);
+
+  useEffect(() => {
+
+    if(totalGuitarsFromServer === null || guitarsAccordingToPage === undefined) {
+      dispatch(fetchProductsAction());
+    }
+
 
   },[
     dispatch,
     guitarsAccordingToPage,
-    numberGuitarsInTheStore,
     totalGuitarsFromServer,
-    pageNumber,
-    setPageState,
   ]);
 
 
