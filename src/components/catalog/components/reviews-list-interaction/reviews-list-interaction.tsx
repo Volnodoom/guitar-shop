@@ -1,10 +1,8 @@
 import { Dispatch, MouseEvent, SetStateAction, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import { ModalKind, PageScrollOptions, REVIEW_SHOW_OFF_LIMITS } from '../../../../const';
+import { ModalKind, ONE, PageScrollOptions, REVIEW_SHOW_OFF_LIMITS } from '../../../../const';
+import { useIdGetProductInfo } from '../../../../hooks/use-id-get-product-info/use-id-get-product-info';
 import { useReviewsOnScroll } from '../../../../hooks/use-reviews-on-scroll/use-reviews-on-scroll';
-import * as selector from '../../../../store/data-reviews/selectors-reviews';
 import { compareFunctionEarlyToLate } from '../../../../utils/utils-components';
 import { CardReview } from '../../../card-detailed/components/components';
 
@@ -14,8 +12,7 @@ type ReviewsListInteractionProps = {
 }
 
 function ReviewsListInteraction ({setModalFrameStatus, setModalInfo}: ReviewsListInteractionProps): JSX.Element {
-  const {id} = useParams<{id: string}>();
-  const reviews = useSelector(selector.getReviewsByGuitarId(Number(id)));
+  const  reviews = useIdGetProductInfo()[ONE];
   const [showOffLimit, setShowOffLimit] = useState(REVIEW_SHOW_OFF_LIMITS);
 
   const handleShowMoreClick = useCallback(() => {

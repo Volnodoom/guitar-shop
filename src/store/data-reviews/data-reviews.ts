@@ -1,5 +1,6 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, EntityAdapter, PayloadAction } from '@reduxjs/toolkit';
 import { ApiAction, ApiRoutes, LoadingStatus, NameSpace } from '../../const';
+import { handleError } from '../../services/handle-error';
 import { GeneralApiConfig, Review, UserReviewPost } from '../../types/general.types';
 import { ReviewState, State } from '../../types/state.types';
 
@@ -16,7 +17,8 @@ export const fetchReviewsAction = createAsyncThunk<Review[], number, GeneralApiC
       const {data} = await api.get<Review[]>(ApiRoutes.Reviews(id));
       return data;
     } catch (error) {
-      throw Error(`Faced problem during your request ${error}`);
+      handleError(error);
+      throw error;
     }
   }
 );
@@ -28,7 +30,8 @@ export const saveCommentAction = createAsyncThunk<Review, UserReviewPost, Genera
       const {data} = await api.post<Review>(ApiRoutes.PostComment, userComment);
       return data;
     } catch (error) {
-      throw Error(`Faced problem during your request ${error}`);
+      handleError(error);
+      throw error;
     }
   }
 );

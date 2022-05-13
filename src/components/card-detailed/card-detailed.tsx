@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { LOCAL_RU, ModalKind, PagesName, StarSize } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
+import { useIdGetProductInfo } from '../../hooks/use-id-get-product-info/use-id-get-product-info';
 import { fetchOneGuitarAction } from '../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 import { fetchReviewsAction } from '../../store/data-reviews/data-reviews';
@@ -16,15 +16,13 @@ import NotAvailablePage from '../not-available-page/not-available-page';
 import { ModalFrame } from './components/components';
 
 function CardDetailed():JSX.Element {
-  const {id} = useParams<{id: string}>();
+  const [guitar, reviews, id] = useIdGetProductInfo();
   const dispatch = useAppDispatch();
 
-  const guitar = useSelector(selectorGuitar.getOneGuitar(Number(id)));
   const guitarStatus = useSelector(selectorGuitar.getOneGuitarStatus);
   const isGuitarSuccess = checkStatusSuccess(guitarStatus);
   const isGuitarFailed = checkStatusFailed(guitarStatus);
 
-  const reviews = useSelector(selectorReview.getReviewsByGuitarId(Number(id)));
   const reviewsStatus = useSelector(selectorReview.getReviewsStatus);
   const isReviewsSuccess = checkStatusSuccess(reviewsStatus);
 

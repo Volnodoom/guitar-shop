@@ -12,6 +12,8 @@ export const APP_IMG_BASE = 'content/catalog-product';
 export const SERVER_IMG_BASE = 'guitar';
 export const COUPLED_DATA = 'comments';
 export const HEADER_TOTAL_NUMBER = 'x-total-count';
+export const BAD_REQUEST = 400;
+export const UNDEFINED_ERROR = 'Ваш запрос сталкнулся с проблемами. Пожалуйста, проверьте ваше интернет соединение и попробуйте повторить ваш запрос.';
 
 export const STRING_NUMBERS = [
   4,

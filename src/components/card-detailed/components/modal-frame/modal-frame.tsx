@@ -3,7 +3,6 @@ import { ModalKind, ModalStatus } from '../../../../const';
 import { useEscPress } from '../../../../hooks/use-esc-press/use-esc-press';
 import { useFocusTrap } from '../../../../hooks/use-focus-trap/use-focus-trap';
 import { DiveRef } from '../../../../types/general.types';
-import { basicGuitarMock } from '../../../../utils/mock-data/guitar-mock';
 import { ModalReviewSuccess } from '../components';
 import ModalReview from '../modal-review/modal-review';
 
@@ -21,7 +20,6 @@ function ModalFrame(props:ModalFrameProps) {
     modalInfo,
     setModalInfo,
   } = props;
-  const guitarInfo = basicGuitarMock[0];
 
   const [modalStatus, setModalStatus] = useState<ModalStatus>(ModalStatus.Initial);
   const modalRef = useRef<DiveRef>(null);
@@ -43,11 +41,8 @@ function ModalFrame(props:ModalFrameProps) {
   useFocusTrap(modalRef, modalStatus, currentFrameStatus);
 
   useEffect(() => {
-    if(currentFrameStatus) {
-      switch(modalInfo){
-        case ModalKind.Review:
-          handleReviewOpen();
-      }
+    if(currentFrameStatus && modalInfo === ModalKind.Review) {
+      handleReviewOpen();
     }
   },[currentFrameStatus, modalInfo]);
 
@@ -77,7 +72,6 @@ function ModalFrame(props:ModalFrameProps) {
           <ModalReview
             onClose={handleFrameClose}
             setStatus={setModalStatus}
-            guitarInfo={{name: guitarInfo.name, id: guitarInfo.id}}
           />
         }
         {

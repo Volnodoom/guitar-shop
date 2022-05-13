@@ -28,12 +28,9 @@ function Catalog():JSX.Element {
   }, [pageNumber, setPageState]);
 
   useEffect(() => {
-
     if(totalGuitarsFromServer === null || guitarsAccordingToPage === undefined) {
       dispatch(fetchProductsAction());
     }
-
-
   },[
     dispatch,
     guitarsAccordingToPage,

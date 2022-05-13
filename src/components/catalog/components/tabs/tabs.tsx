@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { HashKind, PageScrollOptions } from '../../../../const';
-import * as selectorGuitar  from '../../../../store/data-guitars/selectors-guitars';
+import { useIdGetProductInfo } from '../../../../hooks/use-id-get-product-info/use-id-get-product-info';
 import { GuitarType } from '../../../../types/general.types';
 
 function Tabs (): JSX.Element {
-  const {id} = useParams<{id: string}>();
+  const [guitar] = useIdGetProductInfo();
   const tabRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
-  const guitar = useSelector(selectorGuitar.getOneGuitar(Number(id)));
   const [isCharacteristics, setIsCharacteristics] = useState(true);
   const [isDescription, setIsDescription] = useState(false);
 

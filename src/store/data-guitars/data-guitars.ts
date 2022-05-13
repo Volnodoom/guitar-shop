@@ -1,5 +1,6 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace, QueryRoutes, ONE } from '../../const';
+import { handleError } from '../../services/handle-error';
 import { CoupledProductData, GeneralApiConfig, GuitarsIdsLineType, GuitarType } from '../../types/general.types';
 import {  GuitarState, State } from '../../types/state.types';
 import { separateGuitarAndReviews } from '../../utils/utils-components';
@@ -34,7 +35,8 @@ export const fetchProductsAction = createAsyncThunk<GuitarType[], undefined, Gen
 
       return guitars;
     } catch (error) {
-      throw Error(`Faced problem during your request ${error}`);
+      handleError(error);
+      throw error;
     }
   }
 );
@@ -46,7 +48,8 @@ export const fetchOneGuitarAction = createAsyncThunk<GuitarType, number, General
       const {data} = await api.get<GuitarType>(ApiRoutes.Guitar(id));
       return data;
     } catch (error) {
-      throw Error(`Faced problem during your request ${error}`);
+      handleError(error);
+      throw error;
     }
   }
 );

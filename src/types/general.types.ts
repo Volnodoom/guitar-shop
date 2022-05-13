@@ -60,3 +60,5 @@ export type DataCoupledType = 'comments' | null;
 export type CoupledProductData = GuitarType & {comments: Review[]};
 
 export type GuitarsIdsLineType = {[x: number]: number[]};
+
+export type ErrorType = unknown;
