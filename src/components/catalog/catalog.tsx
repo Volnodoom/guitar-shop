@@ -25,16 +25,22 @@ function Catalog():JSX.Element {
     if (pageNumber) {
       setPageState(Number(pageNumber));
     }
-  }, [pageNumber, setPageState]);
+  },[
+    pageNumber,
+    setPageState
+  ]);
 
   useEffect(() => {
-    if(totalGuitarsFromServer === null || guitarsAccordingToPage === undefined) {
-      dispatch(fetchProductsAction());
+    if (pageNumber) {
+      if(totalGuitarsFromServer === null || !guitarsAccordingToPage) {
+        dispatch(fetchProductsAction());
+      }
     }
   },[
     dispatch,
     guitarsAccordingToPage,
     totalGuitarsFromServer,
+    pageNumber,
   ]);
 
 

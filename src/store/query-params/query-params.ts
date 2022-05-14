@@ -3,12 +3,12 @@ import { NameSpace, SortingOrder } from '../../const';
 import { DataCoupledType } from '../../types/general.types';
 import { QueryParamsState } from '../../types/state.types';
 
-const initialState: QueryParamsState = {
+export const initialState: QueryParamsState = {
   filterByName: null,
   filterByType: null,
   sortBy: null,
   orderBy: null,
-  itemRangeStart: null,
+  itemRangeStart: 0,
   itemRangeEnd: null,
   priceRangeStart: null,
   priceRangeEnd: null,

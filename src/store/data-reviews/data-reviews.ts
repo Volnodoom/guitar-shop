@@ -5,7 +5,7 @@ import { GeneralApiConfig, Review, UserReviewPost } from '../../types/general.ty
 import { ReviewState, State } from '../../types/state.types';
 
 const reviewsAdapter: EntityAdapter<Review> = createEntityAdapter();
-const initialState: ReviewState = reviewsAdapter.getInitialState({
+export const initialState: ReviewState = reviewsAdapter.getInitialState({
   reviewsStatus: LoadingStatus.Idle,
   commentStatus: LoadingStatus.Idle,
 });

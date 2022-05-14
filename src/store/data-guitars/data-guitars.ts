@@ -1,5 +1,5 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace, QueryRoutes, ONE } from '../../const';
+import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace, QueryRoutes, ONE, COUPLED_DATA } from '../../const';
 import { handleError } from '../../services/handle-error';
 import { CoupledProductData, GeneralApiConfig, GuitarsIdsLineType, GuitarType } from '../../types/general.types';
 import {  GuitarState, State } from '../../types/state.types';
@@ -8,7 +8,7 @@ import { setReviews } from '../data-reviews/data-reviews';
 
 const guitarsAdapter = createEntityAdapter<GuitarType>();
 
-const initialState: GuitarState = guitarsAdapter.getInitialState({
+export const initialState: GuitarState = guitarsAdapter.getInitialState({
   totalGuitars: null,
   guitarsIdPerPage: {} as GuitarsIdsLineType,
   currentPage: ONE,
@@ -24,7 +24,7 @@ export const fetchProductsAction = createAsyncThunk<GuitarType[], undefined, Gen
         params: {
           [QueryRoutes.Start]: getState()[NameSpace.QueryParams].itemRangeStart,
           [QueryRoutes.Limit]: LIMIT_GUITARS_PER_PAGE,
-          [QueryRoutes.Embed]: 'comments',
+          [QueryRoutes.Embed]: COUPLED_DATA,
         }
       });
 
@@ -58,9 +58,6 @@ export const dataGuitars = createSlice({
   name: NameSpace.DataGuitars,
   initialState,
   reducers: {
-    setGuitarsStatus: (state, action: PayloadAction<LoadingStatus>) => {
-      state.guitarsStatus = action.payload;
-    },
     setTotalGuitars: (state, action: PayloadAction<null | number>) => {
       state.totalGuitars = action.payload;
     },
@@ -101,7 +98,6 @@ export const dataGuitars = createSlice({
 });
 
 export const {
-  setGuitarsStatus,
   setTotalGuitars,
   setCurrentPage,
 } = dataGuitars.actions;
