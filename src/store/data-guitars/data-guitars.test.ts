@@ -7,7 +7,7 @@ import { dataGuitars, fetchOneGuitarAction, fetchProductsAction, initialState as
 import { createAPI } from '../../services/api';
 import { GuitarState, State } from '../../types/state.types';
 import { Action } from '@reduxjs/toolkit';
-import { createMockState, makeMockGuitarArray, makeMockProducts } from '../../utils/mock-faker';
+import { createMockState, makeMockGuitarArray, makeMockProducts, mockGuitar } from '../../utils/mock-faker';
 import { setReviews } from '../data-reviews/data-reviews';
 
 const fakeNumber = datatype.number();
@@ -23,12 +23,12 @@ describe('Store: DATA_GUITARS', () => {
       expect(dataGuitars.reducer(void 0, {type: 'UNKNOWN_ACTION'})).toEqual(initialStateGuitars);
     });
 
-    it('action setTotalGuitars -- update state field: totalGuitars', () => {
+    it('setTotalGuitars -- update state field: totalGuitars', () => {
       expect(dataGuitars.reducer(initialStateGuitars, setTotalGuitars(fakeNumber)))
         .toEqual({...initialStateGuitars, totalGuitars: fakeNumber});
     });
 
-    it('action setCurrentPage -- update state field: currentPage', () => {
+    it('setCurrentPage -- update state field: currentPage', () => {
       expect(dataGuitars.reducer(initialStateGuitars, setCurrentPage(fakeNumber)))
         .toEqual({...initialStateGuitars, currentPage: fakeNumber});
     });
@@ -77,7 +77,6 @@ describe('Store: DATA_GUITARS', () => {
       const mockState = createMockState();
       const actionLoading = {
         type: fetchProductsAction.pending.type,
-        payload: LoadingStatus.Loading,
       };
 
       expect(dataGuitars.reducer(mockState[NameSpace.DataGuitars], actionLoading))
@@ -91,7 +90,6 @@ describe('Store: DATA_GUITARS', () => {
       const mockState = createMockState();
       const action = {
         type: fetchProductsAction.rejected.type,
-        payload: LoadingStatus.Failed,
       };
 
       expect(dataGuitars.reducer(mockState[NameSpace.DataGuitars], action))
@@ -104,9 +102,10 @@ describe('Store: DATA_GUITARS', () => {
     it('fetchOneGuitarAction -- on success: update state guitarsStatus on succeeded', async () => {
       const mockState = createMockState();
       const store = mockStore(mockState);
+      const serverResponse = mockGuitar();
       const action = {
         type: fetchOneGuitarAction.fulfilled.type,
-        payload: LoadingStatus.Succeeded,
+        payload: serverResponse,
       };
 
       expect(dataGuitars.reducer(store.getState()[NameSpace.DataGuitars] as GuitarState, action).oneGuitarStatus)
@@ -117,7 +116,6 @@ describe('Store: DATA_GUITARS', () => {
       const mockState = createMockState();
       const actionLoading = {
         type: fetchOneGuitarAction.pending.type,
-        payload: LoadingStatus.Loading,
       };
 
       expect(dataGuitars.reducer(mockState[NameSpace.DataGuitars], actionLoading))
@@ -131,7 +129,6 @@ describe('Store: DATA_GUITARS', () => {
       const mockState = createMockState();
       const action = {
         type: fetchOneGuitarAction.rejected.type,
-        payload: LoadingStatus.Failed,
       };
 
       expect(dataGuitars.reducer(mockState[NameSpace.DataGuitars], action))

@@ -17,7 +17,7 @@ export const createMockState = () => ({
   },
 });
 
-const mockGuitar = (): GuitarType => ({
+export const mockGuitar = (): GuitarType => ({
   id: datatype.number(),
   name: address.cityName(),
   vendorCode: datatype.hexaDecimal(10),
@@ -34,7 +34,7 @@ export const makeMockGuitarArray = (number: number, ids: number[]): GuitarType[]
   id: ids[index],
 }));
 
-const mockReview = (): Review => ({
+export const mockReview = (): Review => ({
   id: datatype.uuid(),
   userName: internet.userName(),
   advantage: lorem.words(),
@@ -44,6 +44,11 @@ const mockReview = (): Review => ({
   createAt: datatype.datetime().toDateString(),
   guitarId: datatype.number(),
 });
+
+export const makeMockReviewsArray = (number: number, ids: number[]) => Array.from({length: number}, (line, index) => ({
+  ...mockReview(),
+  guitarId: ids[index],
+}));
 
 const mockCoupledData = (): CoupledProductData => ({
   ...mockGuitar(),

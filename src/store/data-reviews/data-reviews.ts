@@ -41,9 +41,6 @@ export const dataReviews = createSlice({
   name: NameSpace.DataReviews,
   initialState,
   reducers: {
-    setReviewStatus: (state, action: PayloadAction<LoadingStatus>) => {
-      state.reviewsStatus = action.payload;
-    },
     setReviews: (state, action: PayloadAction<Review[]>) => {
       reviewsAdapter.addMany(state, action);
     }
@@ -76,6 +73,5 @@ export const dataReviews = createSlice({
 export const rtkSelectorsReviews = reviewsAdapter.getSelectors((state: State) => state[NameSpace.DataReviews]);
 
 export const {
-  setReviewStatus,
   setReviews,
 } = dataReviews.actions;
