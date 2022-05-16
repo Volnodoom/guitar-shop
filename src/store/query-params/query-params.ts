@@ -20,7 +20,6 @@ export const queryParams = createSlice({
   name: NameSpace.QueryParams,
   initialState,
   reducers: {
-
     setFilterByName: (state, action: PayloadAction<null | string>) => {
       state.filterByName = action.payload;
     },
