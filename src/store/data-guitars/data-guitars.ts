@@ -1,5 +1,5 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace, QueryRoutes, ONE, COUPLED_DATA } from '../../const';
+import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace, QueryRoutes, ONE, COUPLED_DATA, PagesName } from '../../const';
 import { handleError } from '../../services/handle-error';
 import { CoupledProductData, GeneralApiConfig, GuitarsIdsLineType, GuitarType } from '../../types/general.types';
 import {  GuitarState, State } from '../../types/state.types';
@@ -12,6 +12,7 @@ export const initialState: GuitarState = guitarsAdapter.getInitialState({
   totalGuitars: null,
   guitarsIdPerPage: {} as GuitarsIdsLineType,
   currentPage: ONE,
+  activeTab: PagesName.Catalog.en,
   guitarsStatus: LoadingStatus.Idle,
   oneGuitarStatus: LoadingStatus.Idle,
 });
@@ -64,6 +65,9 @@ export const dataGuitars = createSlice({
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
     },
+    setActiveTab: (state, action: PayloadAction<string>) => {
+      state.activeTab = action.payload;
+    },
   },
   extraReducers: (builder) =>  {
     builder
@@ -100,6 +104,7 @@ export const dataGuitars = createSlice({
 export const {
   setTotalGuitars,
   setCurrentPage,
+  setActiveTab,
 } = dataGuitars.actions;
 
 export const rtkSelectorsGuitars = guitarsAdapter.getSelectors((state: State) => state[NameSpace.DataGuitars]);

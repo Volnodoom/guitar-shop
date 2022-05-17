@@ -1,20 +1,63 @@
+import { MouseEvent, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
+import { AppRoutes, CART_LINK, LINK_CURRENT, NAV_LINK, PagesName } from '../../../const';
+import { useAppDispatch } from '../../../hooks/hook';
+import { setActiveTab } from '../../../store/data-guitars/data-guitars';
+import * as selectorGuitar from '../../../store/data-guitars/selectors-guitars';
+
 function Header (): JSX.Element {
+  const dispatch = useAppDispatch();
+  const tabHead = useSelector(selectorGuitar.getActiveTab);
+  const location = useLocation();
+
+  const isCart = location.pathname.includes(PagesName.Cart.en.toLowerCase());
+
+  useEffect(() => {
+    if(isCart) {
+      dispatch(setActiveTab(PagesName.Cart.en));
+    }
+  });
+
+  const handleCatalogClick = () => dispatch(setActiveTab(PagesName.Catalog.en));
+  const handleCartClick = () => dispatch(setActiveTab(PagesName.Cart.en));
+  const handleInactiveLink = (evt: MouseEvent<HTMLAnchorElement>) => evt.preventDefault();
+
   return (
     <header className="header" id="header">
       <div className="container header__wrapper">
-        <a className="header__logo logo">
+        <Link className="header__logo logo" to={AppRoutes.Root}>
           <img className="logo__img" width="70" height="70" src="/img/svg/logo.svg" alt="Логотип" />
-        </a>
+        </Link>
         <nav className="main-nav">
           <ul className="main-nav__list">
             <li>
-              <a className="link main-nav__link link--current" href="#">Каталог</a>
+              <Link
+                className={
+                  tabHead === PagesName.Catalog.en ? `${NAV_LINK} ${LINK_CURRENT}` : NAV_LINK
+                }
+                to={AppRoutes.Root}
+                onClick={handleCatalogClick}
+              >Каталог
+              </Link>
             </li>
             <li>
-              <a className="link main-nav__link" href="#">Где купить?</a>
+              <Link
+                className="link main-nav__link"
+                to={AppRoutes.Root}
+                data-inactive
+                onClick={handleInactiveLink}
+              >Где купить?
+              </Link>
             </li>
             <li>
-              <a className="link main-nav__link" href="#">О компании</a>
+              <Link
+                className="link main-nav__link"
+                to={AppRoutes.Root}
+                data-inactive
+                onClick={handleInactiveLink}
+              >О компании
+              </Link>
             </li>
           </ul>
         </nav>
@@ -43,13 +86,20 @@ function Header (): JSX.Element {
             </svg><span className="visually-hidden">Сбросить поиск</span>
           </button>
         </div>
-        <a className="header__cart-link" href="#" aria-label="Корзина">
+        <Link
+          className={
+            tabHead === PagesName.Cart.en ? `${CART_LINK} ${LINK_CURRENT}` : CART_LINK
+          }
+          to={AppRoutes.Cart}
+          aria-label="Корзина"
+          onClick={handleCartClick}
+        >
           <svg className="header__cart-icon" width="14" height="14" aria-hidden="true">
             <use xlinkHref="#icon-basket"></use>
           </svg>
           <span className="visually-hidden">Перейти в корзину</span>
           <span className="header__cart-count">2</span>
-        </a>
+        </Link>
       </div>
     </header>
   );

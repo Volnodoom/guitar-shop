@@ -10,6 +10,7 @@ export interface GuitarState extends EntityState<GuitarType> {
   totalGuitars: null | number,
   guitarsIdPerPage: GuitarsIdsLineType,
   currentPage: number,
+  activeTab: string,
   guitarsStatus: LoadingStatus,
   oneGuitarStatus: LoadingStatus,
 }
