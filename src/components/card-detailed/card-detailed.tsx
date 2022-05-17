@@ -67,7 +67,7 @@ function CardDetailed():JSX.Element {
     <main className="page-content">
       <div className="container">
         <h1 className="page-content__title title title--bigger">Товар</h1>
-        <Breadcrumbs ProductTitle={name} pageContent={PagesName.Guitar.en}/>
+        <Breadcrumbs productTitle={name} pageContent={PagesName.Guitar.en}/>
 
         <div className="product-container">
           <img
