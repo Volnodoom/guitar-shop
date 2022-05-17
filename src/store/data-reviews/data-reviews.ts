@@ -6,6 +6,8 @@ import { ReviewState, State } from '../../types/state.types';
 
 const reviewsAdapter: EntityAdapter<Review> = createEntityAdapter();
 export const initialState: ReviewState = reviewsAdapter.getInitialState({
+  ids: [],
+  entities: {},
   reviewsStatus: LoadingStatus.Idle,
   commentStatus: LoadingStatus.Idle,
 });

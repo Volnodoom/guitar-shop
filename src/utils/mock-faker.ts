@@ -3,7 +3,7 @@ import { NameSpace } from '../const';
 import { initialState as initialStateGuitars } from '../store/data-guitars/data-guitars';
 import { initialState as initialStateReviews } from '../store/data-reviews/data-reviews';
 import { initialState as initialStateQuery } from '../store/query-params/query-params';
-import { CoupledProductData, GuitarType, Review } from '../types/general.types';
+import { CoupledProductData, GuitarType, Review, UserReviewPost } from '../types/general.types';
 
 export const createMockState = () => ({
   [NameSpace.DataGuitars]: {
@@ -50,9 +50,14 @@ export const mockReview = (): Review => ({
   guitarId: datatype.number(),
 });
 
-export const makeMockReviewsArray = (number: number, ids: number[]) => Array.from({length: number}, (line, index) => ({
+export const makeMockOneReviewWitId = (idString: string) => ({
   ...mockReview(),
-  guitarId: ids[index],
+  id: idString,
+});
+
+export const makeMockReviewsArray = (lengthNumber: number, ids: string[]) => Array.from({length: lengthNumber}, (line, index) => ({
+  ...mockReview(),
+  id: ids[index],
 }));
 
 const mockCoupledData = (): CoupledProductData => ({
@@ -62,3 +67,12 @@ const mockCoupledData = (): CoupledProductData => ({
 
 export const makeMockProducts = (numberProducts: number): CoupledProductData[] =>
   Array.from({length: numberProducts}, () => mockCoupledData());
+
+export const mockUserComment = (): UserReviewPost => ({
+  userName: internet.userName(),
+  advantage: internet.userName(),
+  disadvantage: internet.userName(),
+  comment: internet.userName(),
+  rating: datatype.number(5),
+  guitarId:  datatype.number(),
+});

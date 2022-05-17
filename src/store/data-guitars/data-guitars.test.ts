@@ -83,7 +83,7 @@ describe('Store: DATA_GUITARS', () => {
   });
 
   describe('Check async actions', () => {
-    it('fetchProductsAction -- on success (200): UPDATE state line guitarsStatus and DISPATCH setReviews, setTotalGuitars, setGuitarsIdPerPage, setGuitarsDetails', async () => {
+    it('fetchProductsAction -- on success (200): UPDATE state line guitarsStatus with success and DISPATCH setReviews, setTotalGuitars, setGuitarsIdPerPage, setGuitarsDetails', async () => {
       const mockState = createMockState();
       const store = mockStore(mockState);
       const mockServerProductData = makeMockProducts(ARRAY_LENGTH);
@@ -114,7 +114,7 @@ describe('Store: DATA_GUITARS', () => {
         .toBe(LoadingStatus.Succeeded);
     });
 
-    it('fetchProductsAction -- on pending: update state guitarsStatus', async () => {
+    it('fetchProductsAction -- on pending: update state guitarsStatus with loading', async () => {
       const mockState = createMockState();
       const actionLoading = {
         type: fetchProductsAction.pending.type,
@@ -127,7 +127,7 @@ describe('Store: DATA_GUITARS', () => {
         });
     });
 
-    it('fetchProductsAction -- on fail: update state guitarsStatus', async () => {
+    it('fetchProductsAction -- on fail: update state guitarsStatus with fail', async () => {
       const mockState = createMockState();
       const action = {
         type: fetchProductsAction.rejected.type,
@@ -140,7 +140,7 @@ describe('Store: DATA_GUITARS', () => {
         });
     });
 
-    it('fetchOneGuitarAction -- on success (200): update state guitarsStatus AND dispatch setOneGuitarDetails', async () => {
+    it('fetchOneGuitarAction -- on success (200): update state guitarsStatus with success AND dispatch setOneGuitarDetails', async () => {
       const mockState = createMockState();
       const store = mockStore(mockState);
       const serverResponse = mockGuitar();
@@ -163,7 +163,7 @@ describe('Store: DATA_GUITARS', () => {
         .toBe(LoadingStatus.Succeeded);
     });
 
-    it('fetchOneGuitarAction -- on pending: update state guitarsStatus', async () => {
+    it('fetchOneGuitarAction -- on pending: update state guitarsStatus with loading', async () => {
       const mockState = createMockState();
       const actionLoading = {
         type: fetchOneGuitarAction.pending.type,
@@ -176,7 +176,7 @@ describe('Store: DATA_GUITARS', () => {
         });
     });
 
-    it('fetchOneGuitarAction -- on fail: update state guitarsStatus', async () => {
+    it('fetchOneGuitarAction -- on fail: update state guitarsStatus with fail', async () => {
       const mockState = createMockState();
       const action = {
         type: fetchOneGuitarAction.rejected.type,
