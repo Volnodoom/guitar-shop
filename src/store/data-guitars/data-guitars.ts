@@ -9,6 +9,8 @@ import { setReviews } from '../data-reviews/data-reviews';
 const guitarsAdapter = createEntityAdapter<GuitarType>();
 
 export const initialState: GuitarState = guitarsAdapter.getInitialState({
+  ids: [],
+  entities: {},
   totalGuitars: null,
   guitarsIdPerPage: {} as GuitarsIdsLineType,
   currentPage: ONE,
@@ -17,7 +19,7 @@ export const initialState: GuitarState = guitarsAdapter.getInitialState({
   oneGuitarStatus: LoadingStatus.Idle,
 });
 
-export const fetchProductsAction = createAsyncThunk<GuitarType[], undefined, GeneralApiConfig>(
+export const fetchProductsAction = createAsyncThunk<void, undefined, GeneralApiConfig>(
   ApiAction.FetchGuitars,
   async (_arg, {dispatch, getState, extra: api}) => {
     try{
@@ -32,9 +34,10 @@ export const fetchProductsAction = createAsyncThunk<GuitarType[], undefined, Gen
       dispatch(setTotalGuitars(response.headers[HEADER_TOTAL_NUMBER]));
 
       const {guitars, reviews} = separateGuitarAndReviews(response.data);
-      dispatch(setReviews(reviews));
+      dispatch(setGuitarsDetails(guitars));
+      dispatch(setGuitarsIdPerPage(guitars));
 
-      return guitars;
+      dispatch(setReviews(reviews));
     } catch (error) {
       handleError(error);
       throw error;
@@ -42,12 +45,12 @@ export const fetchProductsAction = createAsyncThunk<GuitarType[], undefined, Gen
   }
 );
 
-export const fetchOneGuitarAction = createAsyncThunk<GuitarType, number, GeneralApiConfig>(
+export const fetchOneGuitarAction = createAsyncThunk<void, number, GeneralApiConfig>(
   ApiAction.FetchOneGuitar,
   async (id, {dispatch, extra: api}) => {
     try {
       const {data} = await api.get<GuitarType>(ApiRoutes.Guitar(id));
-      return data;
+      dispatch(setOneGuitarDetails(data));
     } catch (error) {
       handleError(error);
       throw error;
@@ -68,21 +71,26 @@ export const dataGuitars = createSlice({
     setActiveTab: (state, action: PayloadAction<string>) => {
       state.activeTab = action.payload;
     },
+    setGuitarsDetails: (state, action: PayloadAction<GuitarType[]>) => {
+      guitarsAdapter.addMany(state, action.payload);
+    },
+    setOneGuitarDetails: (state, action: PayloadAction<GuitarType>) => {
+      guitarsAdapter.addOne(state, action.payload);
+    },
+    setGuitarsIdPerPage: (state, action: PayloadAction<GuitarType[]>) => {
+      const ids = action.payload.map((line) => line.id);
+      state.guitarsIdPerPage = {
+        ...state.guitarsIdPerPage,
+        [state.currentPage]: ids,
+      };
+    },
   },
   extraReducers: (builder) =>  {
     builder
       .addCase(fetchProductsAction.pending, (state) => {
         state.guitarsStatus = LoadingStatus.Loading;
       })
-      .addCase(fetchProductsAction.fulfilled, (state, action: PayloadAction<GuitarType[]>) => {
-        guitarsAdapter.addMany(state, action.payload);
-
-        const ids = action.payload.map((line) => line.id);
-        state.guitarsIdPerPage = {
-          ...state.guitarsIdPerPage,
-          [state.currentPage]: ids,
-        };
-
+      .addCase(fetchProductsAction.fulfilled, (state) => {
         state.guitarsStatus = LoadingStatus.Succeeded;
       })
       .addCase(fetchProductsAction.rejected, (state) => {
@@ -91,8 +99,7 @@ export const dataGuitars = createSlice({
       .addCase(fetchOneGuitarAction.pending, (state) => {
         state.oneGuitarStatus = LoadingStatus.Loading;
       })
-      .addCase(fetchOneGuitarAction.fulfilled, (state, action: PayloadAction<GuitarType>) => {
-        guitarsAdapter.addOne(state, action.payload);
+      .addCase(fetchOneGuitarAction.fulfilled, (state) => {
         state.oneGuitarStatus = LoadingStatus.Succeeded;
       })
       .addCase(fetchOneGuitarAction.rejected, (state) => {
@@ -105,6 +112,9 @@ export const {
   setTotalGuitars,
   setCurrentPage,
   setActiveTab,
+  setGuitarsDetails,
+  setOneGuitarDetails,
+  setGuitarsIdPerPage,
 } = dataGuitars.actions;
 
 export const rtkSelectorsGuitars = guitarsAdapter.getSelectors((state: State) => state[NameSpace.DataGuitars]);
