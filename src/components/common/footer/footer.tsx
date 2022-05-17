@@ -1,34 +1,24 @@
+import { FooterSocialLinks, LogoPosition } from '../../../const';
+import { Logo } from '../common';
+
 function Footer (): JSX.Element {
   return(
     <footer className="footer">
       <div className="footer__container container">
-        <a className="footer__logo logo">
-          <img className="logo__img" width="70" height="70" src="/img/svg/logo.svg" alt="Логотип" />
-        </a>
-
+        <Logo position={LogoPosition.Footer} />
         <div className="socials footer__socials">
           <ul className="socials__list">
-            <li className="socials-item">
-              <a className="socials__link" href="https://www.skype.com/" aria-label="skype">
-                <svg className="socials__icon" width="24" height="24" aria-hidden="true">
-                  <use xlinkHref="#icon-skype"></use>
-                </svg>
-              </a>
-            </li>
-            <li className="socials-item">
-              <a className="socials__link" href="https://www.vsco.co/" aria-label="vsco">
-                <svg className="socials__icon" width="24" height="24" aria-hidden="true">
-                  <use xlinkHref="#icon-vsco"></use>
-                </svg>
-              </a>
-            </li>
-            <li className="socials-item">
-              <a className="socials__link" href="https://www.pinterest.com/" aria-label="pinterest">
-                <svg className="socials__icon" width="24" height="24" aria-hidden="true">
-                  <use xlinkHref="#icon-pinterest"></use>
-                </svg>
-              </a>
-            </li>
+            {
+              FooterSocialLinks.map(({ref, text}) => (
+                <li className="socials-item" key={text}>
+                  <a className="socials__link" href={ref} target='_blank' aria-label={text} rel="noreferrer">
+                    <svg className="socials__icon" width="24" height="24" aria-hidden="true">
+                      <use xlinkHref={`#icon-${text}`}></use>
+                    </svg>
+                  </a>
+                </li>
+              ))
+            }
           </ul>
         </div>
 

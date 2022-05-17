@@ -190,3 +190,23 @@ export enum HashKind {
   Characteristics = '#characteristics',
   Description = '#description'
 }
+
+export enum LogoPosition {
+  Header = 'header',
+  Footer = 'footer',
+}
+
+export const FooterSocialLinks = [
+  {
+    ref: 'https://www.skype.com/',
+    text: 'skype',
+  },
+  {
+    ref: 'https://www.vsco.co/',
+    text: 'vsco',
+  },
+  {
+    ref: 'https://www.pinterest.com/',
+    text: 'pinterest',
+  },
+];

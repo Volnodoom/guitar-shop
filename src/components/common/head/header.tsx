@@ -1,10 +1,11 @@
 import { MouseEvent, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-import { AppRoutes, CART_LINK, LINK_CURRENT, NAV_LINK, PagesName } from '../../../const';
+import { AppRoutes, CART_LINK, LINK_CURRENT, LogoPosition, NAV_LINK, PagesName } from '../../../const';
 import { useAppDispatch } from '../../../hooks/hook';
 import { setActiveTab } from '../../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../../store/data-guitars/selectors-guitars';
+import { Logo } from '../common';
 
 function Header (): JSX.Element {
   const dispatch = useAppDispatch();
@@ -26,9 +27,7 @@ function Header (): JSX.Element {
   return (
     <header className="header" id="header">
       <div className="container header__wrapper">
-        <Link className="header__logo logo" to={AppRoutes.Root}>
-          <img className="logo__img" width="70" height="70" src="/img/svg/logo.svg" alt="Логотип" />
-        </Link>
+        <Logo position={LogoPosition.Header} />
         <nav className="main-nav">
           <ul className="main-nav__list">
             <li>
