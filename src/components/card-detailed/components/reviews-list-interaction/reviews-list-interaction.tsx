@@ -4,7 +4,8 @@ import { ModalKind, ONE, PageScrollOptions, REVIEW_SHOW_OFF_LIMITS } from '../..
 import { useIdGetProductInfo } from '../../../../hooks/use-id-get-product-info/use-id-get-product-info';
 import { useReviewsOnScroll } from '../../../../hooks/use-reviews-on-scroll/use-reviews-on-scroll';
 import { compareFunctionEarlyToLate } from '../../../../utils/utils-components';
-import { CardReview } from '../../../card-detailed/components/components';
+import { CardReview } from '../components';
+import { zIndexPosition } from './style-reviews-list-interaction';
 
 type ReviewsListInteractionProps = {
   setModalFrameStatus: Dispatch<SetStateAction<boolean>>,
@@ -69,6 +70,7 @@ function ReviewsListInteraction ({setModalFrameStatus, setModalInfo}: ReviewsLis
       <Link
         className="button button--up button--red-border button--big reviews__up-button"
         to="#header"
+        style={zIndexPosition}
         onClick={handleGoUpLink}
       >Наверх
       </Link>

@@ -9,11 +9,10 @@ import { fetchReviewsAction } from '../../store/data-reviews/data-reviews';
 import * as selectorReview from '../../store/data-reviews/selectors-reviews';
 import { GuitarType } from '../../types/general.types';
 import { checkStatusFailed, checkStatusSuccess, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
-import { ReviewsListInteraction, Tabs } from '../catalog/components/components';
 import { Breadcrumbs, RatingStars } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
 import NotAvailablePage from '../not-available-page/not-available-page';
-import { ModalFrame } from './components/components';
+import { ModalFrame, ReviewsListInteraction, Tabs } from './components/components';
 
 function CardDetailed():JSX.Element {
   const [guitar, reviews, id] = useIdGetProductInfo();
