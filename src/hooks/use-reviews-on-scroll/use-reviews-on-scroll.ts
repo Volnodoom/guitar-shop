@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { SCROLL_LIMIT } from '../../const';
 import { Review } from '../../types/general.types';
 
 export const useReviewsOnScroll = (
@@ -14,7 +15,7 @@ export const useReviewsOnScroll = (
 
       const scrollBottom = scrollHeight - windowHeight - scrollTop;
 
-      if (scrollBottom < 280 && showOffLimit < filtratedReviews.length) {
+      if (scrollBottom < SCROLL_LIMIT && showOffLimit < filtratedReviews.length) {
         callback();
       }
     };

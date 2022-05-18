@@ -93,7 +93,7 @@ function Header (): JSX.Element {
           aria-label="Корзина"
           onClick={handleCartClick}
         >
-          <svg className="header__cart-icon" width="14" height="14" aria-hidden="true">
+          <svg className="header__cart-icon" width="14" height="14" aria-hidden="true" data-testid={'icon-basket'}>
             <use xlinkHref="#icon-basket"></use>
           </svg>
           <span className="visually-hidden">Перейти в корзину</span>

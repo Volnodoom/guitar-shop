@@ -17,6 +17,7 @@ export const UNDEFINED_ERROR = 'Ваш запрос сталкнулся с пр
 export const LINK_CURRENT = 'link--current';
 export const NAV_LINK = 'link main-nav__link';
 export const CART_LINK = 'header__cart-link';
+export const SCROLL_LIMIT = 250;
 
 export const STRING_NUMBERS = [
   4,

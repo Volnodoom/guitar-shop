@@ -20,7 +20,11 @@ function RatingStars(props: RatingStarsProps) {
               aria-hidden="true"
               key={`star-rating-${line.rating}`}
             >
-              <use xlinkHref={line.rating <= ratingValue ? '#icon-full-star' : '#icon-star'}></use>
+              <use
+                xlinkHref={line.rating <= ratingValue ? '#icon-full-star' : '#icon-star'}
+                data-testid={line.rating <= ratingValue ? 'icon-full-star' : ''}
+              >
+              </use>
             </svg>
           ))
       }
