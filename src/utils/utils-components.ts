@@ -1,5 +1,5 @@
 import { APP_IMG_BASE, JPG_DOUBLE_DENSITY, JPG_ENDING_FORMAT, LoadingStatus, LOCAL_RU, ReviewDateTimeFormat, SERVER_IMG_BASE } from '../const';
-import { CoupledProductData, Review, SeparatorType, UserReviewPost } from '../types/general.types';
+import { CoupledProductData, GuitarType, Review, SeparatorType, UserReviewPost } from '../types/general.types';
 
 export const formatBaseImgUrl = (url: string) => url.replace(SERVER_IMG_BASE, APP_IMG_BASE);
 export const formatHighDensityImgUrl = (url: string) => url.replace(JPG_ENDING_FORMAT, JPG_DOUBLE_DENSITY);
@@ -24,3 +24,10 @@ export const separateGuitarAndReviews = (data: CoupledProductData[]) => data
 
     return {guitars, reviews};
   }, {guitars: [], reviews: []});
+
+export const mockEntity = <T extends GuitarType[] | Review[]> (ids: string[], data: T) => ids
+  .map((line, index) => ({[line]: data[index]}))
+  .reduce((prev, current) => ({
+    ...current,
+    ...prev,
+  }), {});

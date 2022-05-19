@@ -57,6 +57,7 @@ export const AppRoutes = {
   Guitar: (id: number | string = ':id') => `guitar/${id}`,
   GuitarAbsolute: (id: number | string = ':id') => `/catalog/guitar/${id}`,
   Cart: 'cart',
+  CartAbsolute: '/catalog/cart',
   NotExisted: '*',
 } as const ;
 

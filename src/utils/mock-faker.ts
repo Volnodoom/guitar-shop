@@ -25,7 +25,7 @@ export const mockGuitar = (): GuitarType => ({
   description: lorem.text(),
   previewImg: image.imageUrl(),
   stringCount: datatype.number(),
-  rating: datatype.number(),
+  rating: datatype.number({max: 5}),
   price: datatype.number(),
 });
 
@@ -58,6 +58,11 @@ export const makeMockOneReviewWitId = (idString: string) => ({
 export const makeMockReviewsArray = (lengthNumber: number, ids: string[]) => Array.from({length: lengthNumber}, (line, index) => ({
   ...mockReview(),
   id: ids[index],
+}));
+
+export const makeMockReviewsForSpecificGuitar = (lengthNumber: number, id: number) => Array.from({length: lengthNumber}, (line, index) => ({
+  ...mockReview(),
+  guitarId: id,
 }));
 
 const mockCoupledData = (): CoupledProductData => ({

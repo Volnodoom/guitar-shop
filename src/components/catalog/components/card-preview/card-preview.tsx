@@ -22,7 +22,7 @@ function CardPreview(props: CardPreviewProps) {
   const reviewNumber = useSelector(getReviewsByGuitarId(id)).length;
 
   const handleLinkClick = () => {
-    document.body.scrollIntoView({inline: 'start'});
+    document.body.scrollIntoView();
   };
 
   return(
@@ -34,10 +34,11 @@ function CardPreview(props: CardPreviewProps) {
         height="190"
         alt={`${name}.`}
       />
+
       <div className="product-card__info">
         <div className="rate product-card__rate">
           <RatingStars ratingValue={rating} type={StarSize.CardPreview.name}/>
-          <p className="rate__count">
+          <p className="rate__count" data-testid={'review-number'}>
             <span className="visually-hidden">Всего оценок:</span>
             {reviewNumber}
           </p>
@@ -47,9 +48,19 @@ function CardPreview(props: CardPreviewProps) {
           <span className="visually-hidden">Цена:</span>{price.toLocaleString(LOCAL_RU)} ₽
         </p>
       </div>
+
       <div className="product-card__buttons">
-        <Link className="button button--mini" to={AppRoutes.GuitarAbsolute(id)} onClick={handleLinkClick}>Подробнее</Link>
-        <Link className="button button--red button--mini button--add-to-cart" to={AppRoutes.Cart}>Купить</Link>
+        <Link className="button button--mini"
+          to={AppRoutes.GuitarAbsolute(id)}
+          onClick={handleLinkClick}
+        >Подробнее
+        </Link>
+        <Link
+          className="button button--red button--mini button--add-to-cart"
+          to={AppRoutes.CartAbsolute}
+          onClick={handleLinkClick}
+        >Купить
+        </Link>
       </div>
     </div>
   );
