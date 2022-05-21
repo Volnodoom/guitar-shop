@@ -62,6 +62,11 @@ function CardDetailed():JSX.Element {
     price
   } = guitar as GuitarType;
 
+  const handleReviewModalClick = () => {
+    setIsModalActive(true);
+    setModalInfo(ModalKind.Review);
+  };
+
   return(
     <main className="page-content">
       <div className="container">
@@ -96,7 +101,7 @@ function CardDetailed():JSX.Element {
           </div>
         </div>
 
-        <ReviewsListInteraction setModalFrameStatus={setIsModalActive} setModalInfo={setModalInfo}/>
+        <ReviewsListInteraction onCreateReviewClick={handleReviewModalClick}/>
 
         <ModalFrame
           setModalFrameStatus={setIsModalActive}
