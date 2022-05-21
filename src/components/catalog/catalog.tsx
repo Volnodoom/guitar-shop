@@ -19,19 +19,12 @@ function Catalog():JSX.Element {
   const guitarsAccordingToPage = useSelector(selectorGuitar.getGuitarsPerPage);
   const [setPageState] = useSetCatalogPageState();
 
-  const isPageExist = totalGuitarsFromServer && Number(pageNumber) * LIMIT_GUITARS_PER_PAGE <= totalGuitarsFromServer;
+  const isPageExist = totalGuitarsFromServer
+    && Number(pageNumber) <= Math.ceil(totalGuitarsFromServer/LIMIT_GUITARS_PER_PAGE);
 
   useEffect(() => {
     if (pageNumber) {
       setPageState(Number(pageNumber));
-    }
-  },[
-    pageNumber,
-    setPageState
-  ]);
-
-  useEffect(() => {
-    if (pageNumber) {
       if(totalGuitarsFromServer === null || !guitarsAccordingToPage) {
         dispatch(fetchProductsAction());
       }
@@ -41,6 +34,7 @@ function Catalog():JSX.Element {
     guitarsAccordingToPage,
     totalGuitarsFromServer,
     pageNumber,
+    setPageState,
   ]);
 
 

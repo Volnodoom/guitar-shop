@@ -19,6 +19,9 @@ export const initialState: GuitarState = guitarsAdapter.getInitialState({
   oneGuitarStatus: LoadingStatus.Idle,
 });
 
+//params are crucial because only hare we spread data into slices with limit
+//(setGuitarsIdPerPage it is sets how many products will be displayed)
+//no where in the code we control this number and relying on server response
 export const fetchProductsAction = createAsyncThunk<void, undefined, GeneralApiConfig>(
   ApiAction.FetchGuitars,
   async (_arg, {dispatch, getState, extra: api}) => {

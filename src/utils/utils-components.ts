@@ -25,9 +25,25 @@ export const separateGuitarAndReviews = (data: CoupledProductData[]) => data
     return {guitars, reviews};
   }, {guitars: [], reviews: []});
 
-export const mockEntity = <T extends GuitarType[] | Review[]> (ids: string[], data: T) => ids
-  .map((line, index) => ({[line]: data[index]}))
-  .reduce((prev, current) => ({
-    ...current,
-    ...prev,
-  }), {});
+export const mockEntity = <T extends GuitarType[] | Review[]> (ids: string[] | number[], data: T) => {
+  let restructuredIds = ids;
+  if(ids instanceof Number) {
+    restructuredIds = ids.map((line) => String(line));
+  }
+
+  if((data[0] as Review).guitarId) {
+    return restructuredIds
+      .map((line, index) => ({[line]: data[index] as Review}))
+      .reduce((prev, current) => ({
+        ...current,
+        ...prev,
+      }), {});
+  } else {
+    return restructuredIds
+      .map((line, index) => ({[line]: data[index] as GuitarType}))
+      .reduce((prev, current) => ({
+        ...current,
+        ...prev,
+      }), {});
+  }
+};

@@ -61,4 +61,8 @@ export type CoupledProductData = GuitarType & {comments: Review[]};
 
 export type GuitarsIdsLineType = {[x: number]: number[]};
 
+export type EntityGuitarType = {[x: string]: GuitarType};
+
+export type EntityReviewType = {[x: string]: Review};
+
 export type ErrorType = unknown;

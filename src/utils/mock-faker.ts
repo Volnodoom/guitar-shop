@@ -29,12 +29,12 @@ export const mockGuitar = (): GuitarType => ({
   price: datatype.number(),
 });
 
-export const makeMockOneGuitarWitId = (idNumber: number) => ({
+export const makeMockOneGuitarWitId = (idNumber: number): GuitarType => ({
   ...mockGuitar(),
   id: idNumber,
 });
 
-export const makeMockGuitarArray = (number: number, ids: number[]): GuitarType[] => Array.from({length: number}, (line, index) => ({
+export const makeMockGuitarArray = (lengthNumber: number, ids: number[]): GuitarType[] => Array.from({length: lengthNumber}, (line, index) => ({
   ...mockGuitar(),
   id: ids[index],
 }));
@@ -50,7 +50,7 @@ export const mockReview = (): Review => ({
   guitarId: datatype.number(),
 });
 
-export const makeMockOneReviewWitId = (idString: string) => ({
+export const makeMockOneReviewWitId = (idString: string): Review => ({
   ...mockReview(),
   id: idString,
 });
