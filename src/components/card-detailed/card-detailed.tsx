@@ -8,7 +8,7 @@ import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 import { fetchReviewsAction } from '../../store/data-reviews/data-reviews';
 import * as selectorReview from '../../store/data-reviews/selectors-reviews';
 import { GuitarType } from '../../types/general.types';
-import { checkStatusFailed, checkStatusSuccess, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
+import { checkStatusFailed, checkStatusLoading, checkStatusSuccess, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
 import { Breadcrumbs, RatingStars } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
 import NotAvailablePage from '../not-available-page/not-available-page';
@@ -20,6 +20,7 @@ function CardDetailed():JSX.Element {
 
   const guitarStatus = useSelector(selectorGuitar.getOneGuitarStatus);
   const isGuitarSuccess = checkStatusSuccess(guitarStatus);
+  const isGuitarLoading = checkStatusLoading(guitarStatus);
   const isGuitarFailed = checkStatusFailed(guitarStatus);
 
   const reviewsStatus = useSelector(selectorReview.getReviewsStatus);
@@ -27,6 +28,8 @@ function CardDetailed():JSX.Element {
 
   const [isModalActive, setIsModalActive] = useState(false);
   const [modalInfo, setModalInfo] = useState<null | ModalKind>(null);
+
+  const isComponentLoading = (!guitar && !isGuitarSuccess && !isReviewsSuccess) || isGuitarLoading;
 
   useEffect(() => {
     if(!guitar && !isGuitarFailed ) {
@@ -51,7 +54,7 @@ function CardDetailed():JSX.Element {
     return <NotAvailablePage />;
   }
 
-  if(!guitar && !isGuitarSuccess && !isReviewsSuccess) {
+  if(isComponentLoading) {
     return <LoadingScreen />;
   }
 
