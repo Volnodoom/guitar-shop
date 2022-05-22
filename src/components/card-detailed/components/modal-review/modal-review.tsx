@@ -131,6 +131,7 @@ function ModalReview(props: ModalReviewProps) {
                         value={line.rating}
                         onClick={handleRatingClick}
                         defaultChecked={line.value === userRating}
+                        data-testid={`rate-star-${line.rating}`}
                       />
                       <label className="rate__label" htmlFor={`star-${line.rating}`} title={line.value} ></label>
                     </Fragment>

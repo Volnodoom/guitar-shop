@@ -9,7 +9,7 @@ import { createMockState, makeMockOneGuitarWitId } from '../../../../utils/mock-
 import ModalReview from './modal-review';
 
 
-describe('Component: ReviewListInteraction', () => {
+describe('Component: ModalREview', () => {
   it('Render correctly', () => {
     const SPECIFIC_GUITAR_ID = 5;
     const FIELDS_NUMBER = 4;

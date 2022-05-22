@@ -67,6 +67,11 @@ function CardDetailed():JSX.Element {
     setModalInfo(ModalKind.Review);
   };
 
+  const handleModalFrameOnClose = () => {
+    setIsModalActive(false);
+    setModalInfo(ModalKind.Null);
+  };
+
   return(
     <main className="page-content">
       <div className="container">
@@ -104,10 +109,9 @@ function CardDetailed():JSX.Element {
         <ReviewsListInteraction onCreateReviewClick={handleReviewModalClick}/>
 
         <ModalFrame
-          setModalFrameStatus={setIsModalActive}
+          onClose={handleModalFrameOnClose}
           currentFrameStatus={isModalActive}
           modalInfo={modalInfo}
-          setModalInfo={setModalInfo}
         />
 
       </div>

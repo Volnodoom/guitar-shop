@@ -1,4 +1,4 @@
-import { Dispatch, MouseEvent, SetStateAction, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { ModalKind, ModalStatus } from '../../../../const';
 import { useEscPress } from '../../../../hooks/use-esc-press/use-esc-press';
 import { useFocusTrap } from '../../../../hooks/use-focus-trap/use-focus-trap';
@@ -7,28 +7,26 @@ import { ModalReviewSuccess } from '../components';
 import ModalReview from '../modal-review/modal-review';
 
 type ModalFrameProps = {
+  onClose: () => void,
   currentFrameStatus: boolean,
-  setModalFrameStatus: Dispatch<SetStateAction<boolean>>,
   modalInfo: ModalKind | null,
-  setModalInfo: Dispatch<SetStateAction<ModalKind | null>>,
 }
 
 function ModalFrame(props:ModalFrameProps) {
   const {
+    onClose,
     currentFrameStatus,
-    setModalFrameStatus,
     modalInfo,
-    setModalInfo,
   } = props;
 
   const [modalStatus, setModalStatus] = useState<ModalStatus>(ModalStatus.Initial);
   const modalRef = useRef<DiveRef>(null);
+
   const handleFrameClose = () => {
-    setModalFrameStatus(false);
+    onClose();
     document.body.classList.remove('scroll-lock');
     document.body.classList.remove('scroll-lock-ios');
     setModalStatus(ModalStatus.Initial);
-    setModalInfo(ModalKind.Null);
   };
 
   const handleReviewOpen = () => {
@@ -69,7 +67,13 @@ function ModalFrame(props:ModalFrameProps) {
       ref={modalRef}
     >
       <div className="modal__wrapper">
-        <div className="modal__overlay" data-close-modal onClick={handleOverlayClick}></div>
+        <div
+          className="modal__overlay"
+          data-close-modal
+          onClick={handleOverlayClick}
+          data-testid={'overlay'}
+        >
+        </div>
         {
           modalStatus === ModalStatus.OpenReview
           &&
