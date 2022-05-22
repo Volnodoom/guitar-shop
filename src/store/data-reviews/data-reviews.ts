@@ -48,7 +48,10 @@ export const dataReviews = createSlice({
     },
     addOneReview: (state, action: PayloadAction<Review>) => {
       reviewsAdapter.addOne(state, action.payload);
-    }
+    },
+    setCommentStatus: (state, action: PayloadAction<LoadingStatus>) => {
+      state.commentStatus = action.payload;
+    },
   },
   extraReducers: (builder) =>  {
     builder
@@ -78,4 +81,5 @@ export const rtkSelectorsReviews = reviewsAdapter.getSelectors((state: State) =>
 export const {
   setReviews,
   addOneReview,
+  setCommentStatus,
 } = dataReviews.actions;

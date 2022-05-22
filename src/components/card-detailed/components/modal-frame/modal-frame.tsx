@@ -53,6 +53,10 @@ function ModalFrame(props:ModalFrameProps) {
     }
   };
 
+  const handleModalReviewSuccess = () => {
+    setModalStatus(ModalStatus.Success);
+  };
+
   return(
     <div
       className={
@@ -71,7 +75,7 @@ function ModalFrame(props:ModalFrameProps) {
           &&
           <ModalReview
             onClose={handleFrameClose}
-            setStatus={setModalStatus}
+            onSuccess={handleModalReviewSuccess}
           />
         }
         {

@@ -1,48 +1,65 @@
-import { ChangeEvent, Dispatch, FormEventHandler, Fragment, MouseEvent, SetStateAction, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { ChangeEvent, FormEventHandler, Fragment, MouseEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ModalStatus, RATING_OPTIONS, ReviewFormIdFields } from '../../../../const';
+import { LoadingStatus, RATING_OPTIONS, ReviewFormIdFields } from '../../../../const';
 import { useAppDispatch } from '../../../../hooks/hook';
 import { useIdGetProductInfo } from '../../../../hooks/use-id-get-product-info/use-id-get-product-info';
-import { saveCommentAction } from '../../../../store/data-reviews/data-reviews';
+import { saveCommentAction, setCommentStatus } from '../../../../store/data-reviews/data-reviews';
 import * as selector from '../../../../store/data-reviews/selectors-reviews';
 import { GuitarType, UserReviewPost } from '../../../../types/general.types';
-import { checkIsReviewFormValid, checkStatusLoading, checkStatusSuccess } from '../../../../utils/utils-components';
+import { checkIsReviewFormValid, checkStatusFailed, checkStatusLoading, checkStatusSuccess } from '../../../../utils/utils-components';
 import { blockMargin } from './modal-review.style';
 
 type ModalReviewProps = {
-  setStatus: Dispatch<SetStateAction<ModalStatus>>,
+  onSuccess: () => void,
   onClose: () => void,
 }
 
 function ModalReview(props: ModalReviewProps) {
+  const {
+    onSuccess,
+    onClose,
+  } = props;
+
   const dispatch = useAppDispatch();
   const [guitar] = useIdGetProductInfo();
 
   const commentStatus = useSelector(selector.getSaveCommentStatus);
   const isCommentSuccess = checkStatusSuccess(commentStatus);
   const isCommentLoading = checkStatusLoading(commentStatus);
+  const isCommentFailed = checkStatusFailed(commentStatus);
 
   const [userName, setUserName] = useState('');
   const [userRating, setUserRating] = useState<string | number>('');
   const [userAdvantages, setUserAdvantages] = useState('');
   const [userDisadvantages, setUserDisadvantages] = useState('');
   const [userComments, setUserComments] = useState('');
+  const [isDisabled, setIsDisabled] = useState(false);
 
   useEffect(() => {
-    if (isCommentSuccess) {
-      setStatus(ModalStatus.Success);
+    if(isCommentLoading) {
+      setIsDisabled(true);
     }
-  }, [isCommentSuccess]);
+    if (isCommentSuccess) {
+      onSuccess();
+      setIsDisabled(false);
+      dispatch(setCommentStatus(LoadingStatus.Idle));
+    }
+    if(isCommentFailed) {
+      setIsDisabled(false);
+      toast.error('Не удалось отправить отзыв');
+    }
+  }, [dispatch,
+    isCommentFailed,
+    isCommentLoading,
+    isCommentSuccess,
+    onSuccess
+  ]);
 
   const {
     name,
     id,
   } = guitar as GuitarType;
-
-  const {
-    setStatus,
-    onClose,
-  } = props;
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
@@ -96,6 +113,7 @@ function ModalReview(props: ModalReviewProps) {
               type="text"
               autoComplete="off"
               onChange={handleFieldChange}
+              data-testid={'input-name'}
             />
             {userName.trim() === '' && <p className="form-review__warning">Заполните поле</p>}
           </div>
@@ -122,6 +140,7 @@ function ModalReview(props: ModalReviewProps) {
             </div>
           </div>
         </div>
+
         <div style={blockMargin}>
           <label className="form-review__label form-review__label--required" htmlFor="adv">Достоинства</label>
           <input
@@ -130,6 +149,7 @@ function ModalReview(props: ModalReviewProps) {
             type="text"
             autoComplete="off"
             onChange={handleFieldChange}
+            data-testid={'input-adv'}
           />
           {userAdvantages.trim() === '' && <p className="form-review__warning">Заполните поле</p>}
         </div>
@@ -142,6 +162,7 @@ function ModalReview(props: ModalReviewProps) {
             type="text"
             autoComplete="off"
             onChange={handleFieldChange}
+            data-testid={'input-disadv'}
           />
           {userDisadvantages.trim() === '' && <p className="form-review__warning">Заполните поле</p>}
         </div>
@@ -154,12 +175,18 @@ function ModalReview(props: ModalReviewProps) {
             rows={10}
             autoComplete="off"
             onChange={handleFieldChange}
+            data-testid={'input-textarea'}
           >
           </textarea>
           {userComments.trim() === '' && <p className="form-review__warning">Заполните поле</p>}
         </div>
 
-        <button className="button button--medium-20 form-review__button" type="submit">{isCommentLoading ? 'Отправляем...' : 'Отправить отзыв'}</button>
+        <button
+          className="button button--medium-20 form-review__button"
+          type="submit"
+          disabled={isDisabled}
+        >{isCommentLoading ? 'Отправляем...' : 'Отправить отзыв'}
+        </button>
       </form>
       <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={onClose}>
         <span className="button-cross__icon"></span>
