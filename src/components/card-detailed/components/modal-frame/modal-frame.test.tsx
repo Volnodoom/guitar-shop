@@ -23,7 +23,7 @@ const updatedState = {
   }
 };
 
-describe('Component: ReviewListInteraction', () => {
+describe('Component: ModalFrame', () => {
   it('render correctly ModalReview', () => {
     const FRAME_ACTIVE = true;
     const MODAL_REVIEW = ModalKind.Review;
