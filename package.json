@@ -3,7 +3,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",
     "axios": "0.21.1",
-    "history": "4.10.1",
+    "history": "^5.3.0",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-redux": "^8.0.1",
@@ -14,10 +14,10 @@
   },
   "devDependencies": {
     "@jedmao/redux-mock-store": "3.0.5",
-    "@testing-library/jest-dom": "5.11.0",
-    "@testing-library/react": "11.2.0",
-    "@testing-library/react-hooks": "5.1.0",
-    "@testing-library/user-event": "12.8.0",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.2.0",
+    "@testing-library/react-hooks": "^5.1.0",
+    "@testing-library/user-event": "^14.2.0",
     "@types/faker": "5.5.8",
     "@types/jest": "26.0.24",
     "@types/node": "12.20.37",

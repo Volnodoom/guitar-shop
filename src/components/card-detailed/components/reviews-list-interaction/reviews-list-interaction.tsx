@@ -1,17 +1,17 @@
-import { Dispatch, MouseEvent, SetStateAction, useCallback, useState } from 'react';
+import { MouseEvent, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ModalKind, ONE, PageScrollOptions, REVIEW_SHOW_OFF_LIMITS } from '../../../../const';
+import { ONE, PageScrollOptions, REVIEW_SHOW_OFF_LIMITS } from '../../../../const';
 import { useIdGetProductInfo } from '../../../../hooks/use-id-get-product-info/use-id-get-product-info';
 import { useReviewsOnScroll } from '../../../../hooks/use-reviews-on-scroll/use-reviews-on-scroll';
 import { compareFunctionEarlyToLate } from '../../../../utils/utils-components';
-import { CardReview } from '../../../card-detailed/components/components';
+import { CardReview } from '../components';
+import { zIndexPosition } from './style-reviews-list-interaction';
 
 type ReviewsListInteractionProps = {
-  setModalFrameStatus: Dispatch<SetStateAction<boolean>>,
-  setModalInfo: Dispatch<SetStateAction<ModalKind | null>>,
+  onCreateReviewClick: () => void,
 }
 
-function ReviewsListInteraction ({setModalFrameStatus, setModalInfo}: ReviewsListInteractionProps): JSX.Element {
+function ReviewsListInteraction ({onCreateReviewClick}: ReviewsListInteractionProps): JSX.Element {
   const  reviews = useIdGetProductInfo()[ONE];
   const [showOffLimit, setShowOffLimit] = useState(REVIEW_SHOW_OFF_LIMITS);
 
@@ -27,19 +27,13 @@ function ReviewsListInteraction ({setModalFrameStatus, setModalInfo}: ReviewsLis
     document.body.scrollIntoView({behavior: PageScrollOptions.Smooth });
   };
 
-  const handleReviewModalClick = () => {
-    setModalFrameStatus(true);
-    setModalInfo(ModalKind.Review);
-  };
-
-
   return(
     <section className="reviews">
       <h3 className="reviews__title title title--bigger">Отзывы</h3>
       <button
         className="button button--red-border button--big reviews__sumbit-button"
         type="button"
-        onClick={handleReviewModalClick}
+        onClick={onCreateReviewClick}
       >Оставить отзыв
       </button>
 
@@ -69,6 +63,7 @@ function ReviewsListInteraction ({setModalFrameStatus, setModalInfo}: ReviewsLis
       <Link
         className="button button--up button--red-border button--big reviews__up-button"
         to="#header"
+        style={zIndexPosition}
         onClick={handleGoUpLink}
       >Наверх
       </Link>

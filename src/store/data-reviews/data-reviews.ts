@@ -5,17 +5,19 @@ import { GeneralApiConfig, Review, UserReviewPost } from '../../types/general.ty
 import { ReviewState, State } from '../../types/state.types';
 
 const reviewsAdapter: EntityAdapter<Review> = createEntityAdapter();
-const initialState: ReviewState = reviewsAdapter.getInitialState({
+export const initialState: ReviewState = reviewsAdapter.getInitialState({
+  ids: [],
+  entities: {},
   reviewsStatus: LoadingStatus.Idle,
   commentStatus: LoadingStatus.Idle,
 });
 
-export const fetchReviewsAction = createAsyncThunk<Review[], number, GeneralApiConfig>(
+export const fetchReviewsAction = createAsyncThunk<void, number, GeneralApiConfig>(
   ApiAction.FetchReviews,
   async (id, {dispatch, extra: api}) => {
     try {
       const {data} = await api.get<Review[]>(ApiRoutes.Reviews(id));
-      return data;
+      dispatch(setReviews(data));
     } catch (error) {
       handleError(error);
       throw error;
@@ -23,12 +25,12 @@ export const fetchReviewsAction = createAsyncThunk<Review[], number, GeneralApiC
   }
 );
 
-export const saveCommentAction = createAsyncThunk<Review, UserReviewPost, GeneralApiConfig>(
+export const saveCommentAction = createAsyncThunk<void, UserReviewPost, GeneralApiConfig>(
   ApiAction.SaveComment,
   async (userComment, {dispatch, extra: api}) => {
     try {
       const {data} = await api.post<Review>(ApiRoutes.PostComment, userComment);
-      return data;
+      dispatch(addOneReview(data));
     } catch (error) {
       handleError(error);
       throw error;
@@ -41,20 +43,22 @@ export const dataReviews = createSlice({
   name: NameSpace.DataReviews,
   initialState,
   reducers: {
-    setReviewStatus: (state, action: PayloadAction<LoadingStatus>) => {
-      state.reviewsStatus = action.payload;
-    },
     setReviews: (state, action: PayloadAction<Review[]>) => {
       reviewsAdapter.addMany(state, action);
-    }
+    },
+    addOneReview: (state, action: PayloadAction<Review>) => {
+      reviewsAdapter.addOne(state, action.payload);
+    },
+    setCommentStatus: (state, action: PayloadAction<LoadingStatus>) => {
+      state.commentStatus = action.payload;
+    },
   },
   extraReducers: (builder) =>  {
     builder
       .addCase(fetchReviewsAction.pending, (state) => {
         state.reviewsStatus = LoadingStatus.Loading;
       })
-      .addCase(fetchReviewsAction.fulfilled, (state, action: PayloadAction<Review[]>) => {
-        reviewsAdapter.addMany(state, action.payload);
+      .addCase(fetchReviewsAction.fulfilled, (state) => {
         state.reviewsStatus = LoadingStatus.Succeeded;
       })
       .addCase(fetchReviewsAction.rejected, (state) => {
@@ -63,8 +67,7 @@ export const dataReviews = createSlice({
       .addCase(saveCommentAction.pending, (state) => {
         state.commentStatus = LoadingStatus.Loading;
       })
-      .addCase(saveCommentAction.fulfilled, (state, action: PayloadAction<Review>) => {
-        reviewsAdapter.addOne(state, action.payload);
+      .addCase(saveCommentAction.fulfilled, (state) => {
         state.commentStatus = LoadingStatus.Succeeded;
       })
       .addCase(saveCommentAction.rejected, (state) => {
@@ -76,6 +79,7 @@ export const dataReviews = createSlice({
 export const rtkSelectorsReviews = reviewsAdapter.getSelectors((state: State) => state[NameSpace.DataReviews]);
 
 export const {
-  setReviewStatus,
   setReviews,
+  addOneReview,
+  setCommentStatus,
 } = dataReviews.actions;

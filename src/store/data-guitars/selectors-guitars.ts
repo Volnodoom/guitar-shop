@@ -12,6 +12,7 @@ export const getOneGuitar = (id: number) => (state: State) => selectById(state, 
 export const getTotalNumber = (state: State) => state[NameSpace.DataGuitars].totalGuitars;
 export const getIdsGuitarsPerPage = (state: State) => state[NameSpace.DataGuitars].guitarsIdPerPage;
 export const getCurrentPage = (state: State) => state[NameSpace.DataGuitars].currentPage;
+export const getActiveTab = (state: State) => state[NameSpace.DataGuitars].activeTab;
 export const getGuitarsStatus = (state: State) => state[NameSpace.DataGuitars].guitarsStatus;
 export const getOneGuitarStatus = (state: State) => state[NameSpace.DataGuitars].oneGuitarStatus;
 

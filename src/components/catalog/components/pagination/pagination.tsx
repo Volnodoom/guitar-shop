@@ -11,10 +11,10 @@ function Pagination() {
   const nextPage = currentPage + ONE;
   const previousPage = currentPage - ONE;
 
-  const isPreviousBtnVisible = currentPage !== ONE && totalGuitar !== LIMIT_GUITARS_PER_PAGE_DOUBLE;
+  const isPreviousBtnVisible = currentPage !== ONE && (totalGuitar as number) > LIMIT_GUITARS_PER_PAGE_DOUBLE;
   const isNextBtnVisible = (totalGuitar as number)/(currentPage*LIMIT_GUITARS_PER_PAGE) > ONE
     &&
-    totalGuitar !== LIMIT_GUITARS_PER_PAGE_DOUBLE;
+    (totalGuitar as number) > LIMIT_GUITARS_PER_PAGE_DOUBLE;
 
   return(
     <div className="pagination page-content__pagination">

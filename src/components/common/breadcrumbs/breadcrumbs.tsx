@@ -6,11 +6,11 @@ import * as selector from '../../../store/data-guitars/selectors-guitars';
 
 type BreadcrumbsProps = {
   pageContent: keyof typeof PagesName,
-  ProductTitle?: string,
+  productTitle?: string,
 };
 
 function Breadcrumbs(props: BreadcrumbsProps) {
-  const {pageContent, ProductTitle} = props;
+  const {pageContent, productTitle} = props;
   const currentPage = useSelector(selector.getCurrentPage);
 
   const handleClick = (evt: MouseEvent<HTMLLIElement>) => {
@@ -33,7 +33,7 @@ function Breadcrumbs(props: BreadcrumbsProps) {
           <Link className="link" to="">{
             PagesName[pageContent].en === PagesName.Guitar.en
               ?
-              ProductTitle
+              productTitle
               :
               PagesName[pageContent].ru
           }

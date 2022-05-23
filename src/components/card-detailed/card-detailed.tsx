@@ -8,12 +8,11 @@ import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 import { fetchReviewsAction } from '../../store/data-reviews/data-reviews';
 import * as selectorReview from '../../store/data-reviews/selectors-reviews';
 import { GuitarType } from '../../types/general.types';
-import { checkStatusFailed, checkStatusSuccess, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
-import { ReviewsListInteraction, Tabs } from '../catalog/components/components';
+import { checkStatusFailed, checkStatusLoading, checkStatusSuccess, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
 import { Breadcrumbs, RatingStars } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
 import NotAvailablePage from '../not-available-page/not-available-page';
-import { ModalFrame } from './components/components';
+import { ModalFrame, ReviewsListInteraction, Tabs } from './components/components';
 
 function CardDetailed():JSX.Element {
   const [guitar, reviews, id] = useIdGetProductInfo();
@@ -21,6 +20,7 @@ function CardDetailed():JSX.Element {
 
   const guitarStatus = useSelector(selectorGuitar.getOneGuitarStatus);
   const isGuitarSuccess = checkStatusSuccess(guitarStatus);
+  const isGuitarLoading = checkStatusLoading(guitarStatus);
   const isGuitarFailed = checkStatusFailed(guitarStatus);
 
   const reviewsStatus = useSelector(selectorReview.getReviewsStatus);
@@ -28,6 +28,8 @@ function CardDetailed():JSX.Element {
 
   const [isModalActive, setIsModalActive] = useState(false);
   const [modalInfo, setModalInfo] = useState<null | ModalKind>(null);
+
+  const isComponentLoading = (!guitar && !isGuitarSuccess && !isReviewsSuccess) || isGuitarLoading;
 
   useEffect(() => {
     if(!guitar && !isGuitarFailed ) {
@@ -52,7 +54,7 @@ function CardDetailed():JSX.Element {
     return <NotAvailablePage />;
   }
 
-  if(!guitar && !isGuitarSuccess && !isReviewsSuccess) {
+  if(isComponentLoading) {
     return <LoadingScreen />;
   }
 
@@ -63,11 +65,21 @@ function CardDetailed():JSX.Element {
     price
   } = guitar as GuitarType;
 
+  const handleReviewModalClick = () => {
+    setIsModalActive(true);
+    setModalInfo(ModalKind.Review);
+  };
+
+  const handleModalFrameOnClose = () => {
+    setIsModalActive(false);
+    setModalInfo(ModalKind.Null);
+  };
+
   return(
     <main className="page-content">
       <div className="container">
         <h1 className="page-content__title title title--bigger">Товар</h1>
-        <Breadcrumbs ProductTitle={name} pageContent={PagesName.Guitar.en}/>
+        <Breadcrumbs productTitle={name} pageContent={PagesName.Guitar.en}/>
 
         <div className="product-container">
           <img
@@ -97,13 +109,12 @@ function CardDetailed():JSX.Element {
           </div>
         </div>
 
-        <ReviewsListInteraction setModalFrameStatus={setIsModalActive} setModalInfo={setModalInfo}/>
+        <ReviewsListInteraction onCreateReviewClick={handleReviewModalClick}/>
 
         <ModalFrame
-          setModalFrameStatus={setIsModalActive}
+          onClose={handleModalFrameOnClose}
           currentFrameStatus={isModalActive}
           modalInfo={modalInfo}
-          setModalInfo={setModalInfo}
         />
 
       </div>
