@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { LOCAL_RU, ModalKind, PagesName, StarSize } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
 import { useIdGetProductInfo } from '../../hooks/use-id-get-product-info/use-id-get-product-info';
@@ -105,7 +106,7 @@ function CardDetailed():JSX.Element {
           <div className="product-container__price-wrapper">
             <p className="product-container__price-info product-container__price-info--title">Цена:</p>
             <p className="product-container__price-info product-container__price-info--value">{price.toLocaleString(LOCAL_RU)} ₽</p>
-            <a className="button button--red button--big product-container__button" href="#">Добавить в корзину</a>
+            <Link className="button button--red button--big product-container__button" to="#">Добавить в корзину</Link>
           </div>
         </div>
 

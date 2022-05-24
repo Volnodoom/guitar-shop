@@ -9,7 +9,7 @@ function CartCardPreview(): JSX.Element {
       <div className="cart-item__image">
         <img
           src="/img/content/catalog-product-2.jpg"
-          srcSet="img/content/catalog-product-2@2x.jpg 2x"
+          srcSet="/img/content/catalog-product-2@2x.jpg 2x"
           width="55"
           height="130"
           alt="ЭлектроГитара Честер bass"

@@ -6,6 +6,7 @@ import { useAppDispatch } from '../../../hooks/hook';
 import { setActiveTab } from '../../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../../store/data-guitars/selectors-guitars';
 import { Logo } from '../common';
+import { zIndexPosition } from './style-header';
 
 function Header (): JSX.Element {
   const dispatch = useAppDispatch();
@@ -92,6 +93,7 @@ function Header (): JSX.Element {
           to={AppRoutes.Cart}
           aria-label="Корзина"
           onClick={handleCartClick}
+          style={zIndexPosition}
         >
           <svg className="header__cart-icon" width="14" height="14" aria-hidden="true" data-testid={'icon-basket'}>
             <use xlinkHref="#icon-basket"></use>

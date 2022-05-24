@@ -26,7 +26,7 @@ export const useFocusTrap = (
 
       elementContainer.current.focus();
     }
-  },[statusOfModal]);
+  },[elementContainer, statusOfModal]);
 
   useEffect(() => {
     const focusNexElement = () => {
@@ -97,5 +97,5 @@ export const useFocusTrap = (
       document.removeEventListener(EventListenerType.KeyDown, handleKeyDown);
       document.removeEventListener(EventListenerType.KeyUp, handleKeyUp);
     };
-  },[statusOfModal]);
+  },[isHookActive, statusOfModal]);
 };

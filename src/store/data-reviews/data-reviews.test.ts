@@ -3,7 +3,7 @@ import { datatype, lorem } from 'faker';
 import { ApiRoutes, LoadingStatus, NameSpace } from '../../const';
 import { createAPI } from '../../services/api';
 import { createMockState, makeMockOneReviewWitId, makeMockReviewsArray, mockUserComment } from '../../utils/mock-faker';
-import { addOneReview, dataReviews, fetchReviewsAction, initialState as initialStateReviews, saveCommentAction, setReviews } from './data-reviews';
+import { addOneReview, dataReviews, fetchReviewsAction, initialState as initialStateReviews, saveCommentAction, setCommentStatus, setReviews } from './data-reviews';
 import { State } from '../../types/state.types';
 import { Action } from '@reduxjs/toolkit';
 import { configureMockStore } from '@jedmao/redux-mock-store';
@@ -20,7 +20,7 @@ const middlewares = [thunk.withExtraArgument(api)];
 const mockStore = configureMockStore<State, Action, ThunkDispatch<State, typeof api, Action>>(middlewares);
 
 describe('Store: DATA_REVIEWS', () => {
-  describe('Check sliceREducer actions', () => {
+  describe('Check sliceReducer actions', () => {
     it('unknown action -- return initial state', () => {
       expect(dataReviews.reducer(void 0, {type: 'UNKNOWN_ACTION'})).toEqual(initialStateReviews);
     });
@@ -49,6 +49,14 @@ describe('Store: DATA_REVIEWS', () => {
           ...initialStateReviews,
           ids: [fakeWord],
           entities: {[fakeWord]: oneReview}
+        });
+    });
+
+    it('setCommentStatus -- set LoadingStatus to the line commentStatus of the store', () => {
+      expect(dataReviews.reducer(initialStateReviews, setCommentStatus(LoadingStatus.Succeeded)))
+        .toEqual({
+          ...initialStateReviews,
+          commentStatus: LoadingStatus.Succeeded,
         });
     });
   });
@@ -126,7 +134,7 @@ describe('Store: DATA_REVIEWS', () => {
         .toBe(LoadingStatus.Succeeded);
     });
 
-    it('saveCommentAction -- on fail: UPDATE commentStatus with Loading', () => {
+    it('saveCommentAction -- on loading: UPDATE commentStatus with Loading', () => {
       const mockState = createMockState();
       const actionPending = {
         type: saveCommentAction.pending.type,
