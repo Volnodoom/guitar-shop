@@ -63,11 +63,8 @@ function Catalog():JSX.Element {
               ?
               <div className="cards catalog__cards">
                 {
-                  guitarsAccordingToPage.map((line) => {
-                    if (line !== undefined) {
-                      return <CardPreview itemInfo={line} key={line.id}/>;
-                    }
-                  })
+                  guitarsAccordingToPage
+                    .map((line) => (line && <CardPreview itemInfo={line} key={line.id}/>))
                 }
               </div>
               :

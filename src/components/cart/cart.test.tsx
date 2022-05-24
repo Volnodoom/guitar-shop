@@ -19,6 +19,6 @@ describe('Component: CartCardPreview', () => {
       </Provider>
     );
 
-    expect(screen.getByAltText(/Корзина/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Корзина/i)).toHaveLength(2);
   });
 });
