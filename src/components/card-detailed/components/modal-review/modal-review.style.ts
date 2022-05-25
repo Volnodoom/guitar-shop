@@ -12,3 +12,7 @@ export const positionWaringAbsolute: CSSProperties = {
 export const positionRelative: CSSProperties = {
   position: 'relative',
 };
+
+export const elementHidden: CSSProperties = {
+  display: 'none',
+};

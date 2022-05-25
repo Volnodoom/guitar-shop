@@ -107,9 +107,12 @@ describe('Component: ModalREview', () => {
     userEvent.type(screen.getByTestId(/input-disadv/i), 'disadv');
     userEvent.type(screen.getByTestId(/input-textarea/i), 'textarea');
 
-    await waitFor(() => {expect(screen.getByText(/Поставьте оценку/i)).toBeInTheDocument();});
-    await waitFor(() => {expect(screen.queryAllByText(/Заполните поле/i)).toHaveLength(0);});
     userEvent.click(screen.getByRole('button', {name: /Отправить отзыв/i}));
+    await waitFor(() => {expect(screen.getByText(/Поставьте оценку/i)).not.toBeVisible();});
+    await waitFor(() => {
+      const fillTheField = screen.queryAllByText(/Заполните поле/i);
+      fillTheField.every((line) => expect(line).not.toBeVisible());
+    });
     await waitFor(() => {expect(fakeOnSuccess).not.toHaveBeenCalled();});
   });
 

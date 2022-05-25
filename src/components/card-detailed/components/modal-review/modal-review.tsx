@@ -8,7 +8,7 @@ import { saveCommentAction, setCommentStatus } from '../../../../store/data-revi
 import * as selector from '../../../../store/data-reviews/selectors-reviews';
 import { GuitarType, InvalidFormArray, UserReviewPost } from '../../../../types/general.types';
 import { checkIsReviewFormValid, checkStatusFailed, checkStatusLoading, checkStatusSuccess } from '../../../../utils/utils-components';
-import { blockMargin, positionRelative, positionWaringAbsolute } from './modal-review.style';
+import { blockMargin, elementHidden, positionRelative, positionWaringAbsolute } from './modal-review.style';
 
 type ModalReviewProps = {
   onSuccess: () => void,
@@ -142,8 +142,8 @@ function ModalReview(props: ModalReviewProps) {
               data-testid={'input-name'}
             />
             <p
-              style={positionWaringAbsolute}
-              className={invalidField.some((line) => line === ReviewFormField.UserName ) ? 'form-review__warning' : 'visually-hidden'}
+              style={invalidField.some((line) => line === ReviewFormField.UserName) ? positionWaringAbsolute : {...positionWaringAbsolute, ...elementHidden}}
+              className={invalidField.some((line) => line === ReviewFormField.UserName) ? 'form-review__warning' : ''}
             >Заполните поле
             </p>
           </div>
@@ -168,8 +168,8 @@ function ModalReview(props: ModalReviewProps) {
                   ))
               }
               <p
-                style={positionWaringAbsolute}
-                className={invalidField.some((line) => line === ReviewFormField.Rating) ? 'rate__message' : 'visually-hidden'}
+                style={invalidField.some((line) => line === ReviewFormField.Rating) ? positionWaringAbsolute : {...positionWaringAbsolute, ...elementHidden}}
+                className={invalidField.some((line) => line === ReviewFormField.Rating) ? 'rate__message' : ''}
               >Поставьте оценку
               </p>
             </div>
@@ -187,8 +187,8 @@ function ModalReview(props: ModalReviewProps) {
             data-testid={'input-adv'}
           />
           <p
-            style={positionWaringAbsolute}
-            className={invalidField.some((line) => line === ReviewFormField.Advantage) ? 'form-review__warning' : 'visually-hidden'}
+            style={invalidField.some((line) => line === ReviewFormField.Advantage) ? positionWaringAbsolute : {...positionWaringAbsolute, ...elementHidden}}
+            className={invalidField.some((line) => line === ReviewFormField.Advantage) ? 'form-review__warning' : ''}
           >Заполните поле
           </p>
         </div>
@@ -204,8 +204,8 @@ function ModalReview(props: ModalReviewProps) {
             data-testid={'input-disadv'}
           />
           <p
-            style={positionWaringAbsolute}
-            className={invalidField.some((line) => line === ReviewFormField.Disadvantage) ? 'form-review__warning' : 'visually-hidden'}
+            style={invalidField.some((line) => line === ReviewFormField.Disadvantage) ? positionWaringAbsolute : {...positionWaringAbsolute, ...elementHidden}}
+            className={invalidField.some((line) => line === ReviewFormField.Disadvantage) ? 'form-review__warning' : ''}
           >Заполните поле
           </p>
         </div>
@@ -222,8 +222,8 @@ function ModalReview(props: ModalReviewProps) {
           >
           </textarea>
           <p
-            style={positionWaringAbsolute}
-            className={invalidField.some((line) => line === ReviewFormField.Comment) ? 'form-review__warning' : 'visually-hidden'}
+            style={invalidField.some((line) => line === ReviewFormField.Comment) ? positionWaringAbsolute : {...positionWaringAbsolute, ...elementHidden}}
+            className={invalidField.some((line) => line === ReviewFormField.Comment) ? 'form-review__warning' : ''}
           >Заполните поле
           </p>
         </div>
