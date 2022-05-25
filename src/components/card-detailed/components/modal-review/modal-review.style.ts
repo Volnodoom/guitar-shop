@@ -1,5 +1,14 @@
 import { CSSProperties } from 'react';
 
 export const blockMargin: CSSProperties = {
-  marginBottom: 10,
+  marginBottom: 20,
+};
+
+export const positionWaringAbsolute: CSSProperties = {
+  position: 'absolute',
+  right: 0,
+};
+
+export const positionRelative: CSSProperties = {
+  position: 'relative',
 };

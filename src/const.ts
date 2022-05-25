@@ -104,13 +104,6 @@ export const KeyBoardCode = {
   Esc: {version1: 'Esc', version2: 'Escape'},
 } as const;
 
-export const ReviewFormIdFields = {
-  UserName: 'user-name',
-  UserAdv: 'adv',
-  UserDisAdv: 'disadv',
-  UserComment: 'comment',
-} as const;
-
 export enum ModalStatus {
   Initial = 'initial',
   OpenReview = 'openReview',
@@ -212,3 +205,11 @@ export const FooterSocialLinks = [
     text: 'pinterest',
   },
 ];
+
+export enum ReviewFormField {
+  UserName = 'UserName',
+  Advantage = 'Advantage',
+  Disadvantage = 'Disadvantage',
+  Comment = 'Comment',
+  Rating = 'Rating',
+}
