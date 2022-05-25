@@ -2,8 +2,8 @@ import { CSSProperties } from 'react';
 
 export const loadingScreenDiv: CSSProperties = {
   minHeight: '100vh',
-  backgroundColor: '#4481c3',
-  color: '#dfcf77',
+  backgroundColor: '#FFF',
+  color: '#000',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
