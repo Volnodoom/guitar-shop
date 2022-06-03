@@ -15,6 +15,7 @@ export const getCurrentPage = (state: State) => state[NameSpace.DataGuitars].cur
 export const getActiveTab = (state: State) => state[NameSpace.DataGuitars].activeTab;
 export const getGuitarsStatus = (state: State) => state[NameSpace.DataGuitars].guitarsStatus;
 export const getOneGuitarStatus = (state: State) => state[NameSpace.DataGuitars].oneGuitarStatus;
+export const getPriceExtremes = (state: State) => state[NameSpace.DataGuitars].priceExtremes;
 
 export const getGuitarsPerPage = createSelector(
   getCurrentPage,

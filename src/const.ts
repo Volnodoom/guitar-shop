@@ -18,6 +18,8 @@ export const LINK_CURRENT = 'link--current';
 export const NAV_LINK = 'link main-nav__link';
 export const CART_LINK = 'header__cart-link';
 export const SCROLL_LIMIT = 250;
+export const PRICE_MIN = 'priceMin';
+export const PRICE_MAX = 'priceMax';
 
 export const STRING_NUMBERS = [
   4,
@@ -135,6 +137,7 @@ export enum NameSpace {
 
 export enum ApiAction {
   FetchGuitars = 'guitars/fetchGuitars',
+  FetchPrice = 'guitars/fetchMinAndMaxPrice',
   FetchOneGuitar = 'guitars/fetchOneGuitar',
   FetchReviews = 'reviews/fetchReviews',
   SaveComment = 'reviews/saveComment',

@@ -1,7 +1,7 @@
 import { EntityState } from '@reduxjs/toolkit';
 import { LoadingStatus, SortingOrder, SortingSort } from '../const';
 import { store } from '../store';
-import { DataCoupledType, GuitarsIdsLineType, GuitarType, Review } from './general.types';
+import { DataCoupledType, GuitarsIdsLineType, GuitarsPriceRange, GuitarType, Review } from './general.types';
 
 export type State = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -10,6 +10,7 @@ export interface GuitarState extends EntityState<GuitarType> {
   totalGuitars: null | number,
   guitarsIdPerPage: GuitarsIdsLineType,
   currentPage: number,
+  priceExtremes: null | GuitarsPriceRange,
   activeTab: string,
   guitarsStatus: LoadingStatus,
   oneGuitarStatus: LoadingStatus,

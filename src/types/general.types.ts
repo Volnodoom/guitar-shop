@@ -47,6 +47,11 @@ export type SeparatorType = {
   reviews: Review[],
 }
 
+export type GuitarsPriceRange = {
+  min: number,
+  max: number,
+}
+
 export type ModuleReviewStatus =  'openReview' | 'close' | 'success' | 'fail' | 'initial';
 
 export type UserReviewPost = Omit<Review, 'id' | 'createAt'>;

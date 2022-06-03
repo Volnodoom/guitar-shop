@@ -1,7 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace, QueryRoutes, ONE, COUPLED_DATA, PagesName } from '../../const';
+import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace, QueryRoutes, ONE, COUPLED_DATA, PagesName, SortingSort, SortingOrder } from '../../const';
 import { handleError } from '../../services/handle-error';
-import { CoupledProductData, GeneralApiConfig, GuitarsIdsLineType, GuitarType } from '../../types/general.types';
+import { CoupledProductData, GeneralApiConfig, GuitarsIdsLineType, GuitarsPriceRange, GuitarType } from '../../types/general.types';
 import {  GuitarState, State } from '../../types/state.types';
 import { separateGuitarAndReviews } from '../../utils/utils-components';
 import { setReviews } from '../data-reviews/data-reviews';
@@ -14,6 +14,7 @@ export const initialState: GuitarState = guitarsAdapter.getInitialState({
   totalGuitars: null,
   guitarsIdPerPage: {} as GuitarsIdsLineType,
   currentPage: ONE,
+  priceExtremes: null,
   activeTab: PagesName.Catalog.en,
   guitarsStatus: LoadingStatus.Idle,
   oneGuitarStatus: LoadingStatus.Idle,
@@ -63,12 +64,51 @@ export const fetchOneGuitarAction = createAsyncThunk<void, number, GeneralApiCon
   }
 );
 
+export const fetchPriceExtreme = createAsyncThunk<void, undefined, GeneralApiConfig>(
+  ApiAction.FetchPrice,
+  async (_arg, {dispatch, getState, extra: api}) => {
+    try{
+      const minPrice = api.get<GuitarType[]>(ApiRoutes.Guitars, {
+        params: {
+          [QueryRoutes.Start]: 0,
+          [QueryRoutes.Limit]: ONE,
+          [QueryRoutes.Sort]: SortingSort.Price,
+          [QueryRoutes.Order]: SortingOrder.Increase,
+        }
+      });
+
+      const maxPrice = api.get<GuitarType[]>(ApiRoutes.Guitars, {
+        params: {
+          [QueryRoutes.Start]: 0,
+          [QueryRoutes.Limit]: ONE,
+          [QueryRoutes.Sort]: SortingSort.Price,
+          [QueryRoutes.Order]: SortingOrder.Decrease,
+        }
+      });
+
+      const [responseMinPrice, responseMaxPrice] = await Promise.all([minPrice, maxPrice]);
+      const resultMinMax = {
+        min: responseMinPrice.data[0].price,
+        max: responseMaxPrice.data[0].price,
+      };
+
+      dispatch(setPriceExtremes(resultMinMax));
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
+  }
+);
+
 export const dataGuitars = createSlice({
   name: NameSpace.DataGuitars,
   initialState,
   reducers: {
     setTotalGuitars: (state, action: PayloadAction<null | number>) => {
       state.totalGuitars = action.payload;
+    },
+    setPriceExtremes: (state, action: PayloadAction<null | GuitarsPriceRange>) => {
+      state.priceExtremes = action.payload;
     },
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
@@ -128,6 +168,7 @@ export const {
   setGuitarsIdPerPage,
   clearGuitarsIdPerPage,
   setGuitarsStatus,
+  setPriceExtremes,
 } = dataGuitars.actions;
 
 export const rtkSelectorsGuitars = guitarsAdapter.getSelectors((state: State) => state[NameSpace.DataGuitars]);

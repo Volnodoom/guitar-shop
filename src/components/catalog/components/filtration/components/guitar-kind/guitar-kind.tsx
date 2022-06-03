@@ -1,27 +1,17 @@
+import { GuitarPluralRu, KindOfGuitars } from '../../../../../../const';
+
 function GuitarKind (): JSX.Element {
   return(
     <fieldset className="catalog-filter__block">
-      <legend className="catalog-filter__block-title">Цена, ₽</legend>
-      <div className="catalog-filter__price-range">
-        <div className="form-input">
-          <label className="visually-hidden">Минимальная цена</label>
-          <input
-            type="number"
-            placeholder="1 000"
-            id="priceMin"
-            name="от"
-          />
-        </div>
-        <div className="form-input">
-          <label className="visually-hidden">Максимальная цена</label>
-          <input
-            type="number"
-            placeholder="30 000"
-            id="priceMax"
-            name="до"
-          />
-        </div>
-      </div>
+      <legend className="catalog-filter__block-title">Тип гитар</legend>
+      {
+        Object.values(KindOfGuitars).map((line) => (
+          <div className="form-checkbox catalog-filter__block-item" key={`filter-guitar-${line}`}>
+            <input className="visually-hidden" type="checkbox" id={line} name={line} />
+            <label htmlFor={line}>{GuitarPluralRu[line]}</label>
+          </div>
+        ))
+      }
     </fieldset>
   );
 }

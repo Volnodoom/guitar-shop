@@ -5,7 +5,7 @@ import {  LIMIT_GUITARS_PER_PAGE, LoadingStatus, PagesName } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
 import { useCustomSearchParams } from '../../hooks/use-custom-search-params/use-custom-search-params';
 import { useSetCatalogPageState } from '../../hooks/use-set-catalo-page/use-set-catalog-page';
-import { fetchProductsAction } from '../../store/data-guitars/data-guitars';
+import { fetchPriceExtreme, fetchProductsAction } from '../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 import { Breadcrumbs } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
@@ -18,6 +18,7 @@ function Catalog():JSX.Element {
   const isDataLoaded = useSelector(selectorGuitar.getGuitarsStatus) === LoadingStatus.Succeeded;
   const totalGuitarsFromServer = useSelector(selectorGuitar.getTotalNumber);
   const guitarsAccordingToPage = useSelector(selectorGuitar.getGuitarsPerPage);
+  const priceRange = useSelector(selectorGuitar.getPriceExtremes);
   const [setPageState] = useSetCatalogPageState();
 
   useCustomSearchParams();
@@ -30,6 +31,9 @@ function Catalog():JSX.Element {
       setPageState(Number(pageNumber));
       if(totalGuitarsFromServer === null || !guitarsAccordingToPage) {
         dispatch(fetchProductsAction());
+      }
+      if(priceRange === null) {
+        dispatch(fetchPriceExtreme());
       }
     }
   },[
