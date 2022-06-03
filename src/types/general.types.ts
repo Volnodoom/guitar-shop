@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { KeyBoardNames, ReviewFormField } from '../const';
+import { KeyBoardNames, ReviewFormField, SortingOrder, SortingSort } from '../const';
 import { AppDispatch, State } from './state.types';
 
 export type GuitarType = {
@@ -68,3 +68,15 @@ export type EntityReviewType = {[x: string]: Review};
 export type ErrorType = unknown;
 
 export type InvalidFormArray = (keyof typeof ReviewFormField)[]
+
+export type ParamObject = {
+  '_sort': null | SortingSort,
+  '_order': null | SortingOrder,
+}
+
+export type KeysOfParamObject = ('_sort' | '_order') []
+
+export type NoNullParamObject = {
+  '_sort'?: SortingSort,
+  '_order'?: SortingOrder,
+}

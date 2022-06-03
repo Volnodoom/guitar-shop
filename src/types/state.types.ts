@@ -1,5 +1,5 @@
 import { EntityState } from '@reduxjs/toolkit';
-import { LoadingStatus, SortingOrder } from '../const';
+import { LoadingStatus, SortingOrder, SortingSort } from '../const';
 import { store } from '../store';
 import { DataCoupledType, GuitarsIdsLineType, GuitarType, Review } from './general.types';
 
@@ -23,7 +23,7 @@ export interface ReviewState extends EntityState<Review> {
 export type QueryParamsState = {
   filterByName: null | string,
   filterByType: null | string,
-  sortBy: null | string,
+  sortBy: null | SortingSort,
   orderBy: null | SortingOrder,
   itemRangeStart: null | number,
   itemRangeEnd: null | number,

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {  LIMIT_GUITARS_PER_PAGE, LoadingStatus, PagesName } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
+import { useCustomSearchParams } from '../../hooks/use-custom-search-params/use-custom-search-params';
 import { useSetCatalogPageState } from '../../hooks/use-set-catalo-page/use-set-catalog-page';
 import { fetchProductsAction } from '../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
@@ -18,6 +19,8 @@ function Catalog():JSX.Element {
   const totalGuitarsFromServer = useSelector(selectorGuitar.getTotalNumber);
   const guitarsAccordingToPage = useSelector(selectorGuitar.getGuitarsPerPage);
   const [setPageState] = useSetCatalogPageState();
+
+  useCustomSearchParams();
 
   const isPageExist = totalGuitarsFromServer
     && Number(pageNumber) <= Math.ceil(totalGuitarsFromServer/LIMIT_GUITARS_PER_PAGE);
@@ -36,7 +39,6 @@ function Catalog():JSX.Element {
     pageNumber,
     setPageState,
   ]);
-
 
   if(!isDataLoaded || totalGuitarsFromServer === null) {
     return <LoadingScreen />;

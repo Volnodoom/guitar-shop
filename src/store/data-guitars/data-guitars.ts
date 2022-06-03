@@ -30,6 +30,8 @@ export const fetchProductsAction = createAsyncThunk<void, undefined, GeneralApiC
         params: {
           [QueryRoutes.Start]: getState()[NameSpace.QueryParams].itemRangeStart,
           [QueryRoutes.Limit]: LIMIT_GUITARS_PER_PAGE,
+          [QueryRoutes.Sort]: getState()[NameSpace.QueryParams].sortBy,
+          [QueryRoutes.Order]: getState()[NameSpace.QueryParams].orderBy,
           [QueryRoutes.Embed]: COUPLED_DATA,
         }
       });
@@ -87,6 +89,12 @@ export const dataGuitars = createSlice({
         [state.currentPage]: ids,
       };
     },
+    clearGuitarsIdPerPage: (state) => {
+      state.guitarsIdPerPage = {};
+    },
+    setGuitarsStatus: (state, action: PayloadAction<LoadingStatus>) => {
+      state.guitarsStatus = action.payload;
+    },
   },
   extraReducers: (builder) =>  {
     builder
@@ -118,6 +126,8 @@ export const {
   setGuitarsDetails,
   setOneGuitarDetails,
   setGuitarsIdPerPage,
+  clearGuitarsIdPerPage,
+  setGuitarsStatus,
 } = dataGuitars.actions;
 
 export const rtkSelectorsGuitars = guitarsAdapter.getSelectors((state: State) => state[NameSpace.DataGuitars]);

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { NameSpace, SortingOrder } from '../../const';
+import { NameSpace, SortingOrder, SortingSort } from '../../const';
 import { DataCoupledType } from '../../types/general.types';
 import { QueryParamsState } from '../../types/state.types';
 
@@ -26,7 +26,7 @@ export const queryParams = createSlice({
     setFilterByType: (state, action: PayloadAction<null | string>) => {
       state.filterByType = action.payload;
     },
-    setSortBy: (state, action: PayloadAction<null | string>) => {
+    setSortBy: (state, action: PayloadAction<null | SortingSort>) => {
       state.sortBy = action.payload;
     },
     setOrderBy: (state, action: PayloadAction<null | SortingOrder>) => {

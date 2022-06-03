@@ -169,11 +169,16 @@ export const QueryRoutes = {
   PriceEnd: 'price_lte',
   Like: 'name_like',
   Embed: '_embed',
-};
+} as const;
 
 export enum SortingOrder {
   Increase  = 'asc',
   Decrease = 'desc',
+}
+
+export enum SortingSort {
+  Price  = 'price',
+  Popularity = 'rating',
 }
 
 export enum PageScrollOptions {
@@ -212,4 +217,11 @@ export enum ReviewFormField {
   Disadvantage = 'Disadvantage',
   Comment = 'Comment',
   Rating = 'Rating',
+}
+
+export enum AriaLabelSorting {
+  ByPrice = 'по цене',
+  ByPopular = 'по популярности',
+  ByOrderUp = 'по возрастанию',
+  ByOrderDown = 'по убыванию',
 }

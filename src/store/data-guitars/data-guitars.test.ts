@@ -3,7 +3,7 @@ import MockAdapter from 'axios-mock-adapter';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { ApiRoutes, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace } from '../../const';
-import { dataGuitars, fetchOneGuitarAction, fetchProductsAction, initialState as initialStateGuitars, setActiveTab, setCurrentPage, setGuitarsDetails, setGuitarsIdPerPage, setOneGuitarDetails, setTotalGuitars } from '../data-guitars/data-guitars';
+import { clearGuitarsIdPerPage, dataGuitars, fetchOneGuitarAction, fetchProductsAction, initialState as initialStateGuitars, setActiveTab, setCurrentPage, setGuitarsDetails, setGuitarsIdPerPage, setGuitarsStatus, setOneGuitarDetails, setTotalGuitars } from '../data-guitars/data-guitars';
 import { createAPI } from '../../services/api';
 import { State } from '../../types/state.types';
 import { Action } from '@reduxjs/toolkit';
@@ -78,6 +78,26 @@ describe('Store: DATA_GUITARS', () => {
           guitarsIdPerPage: {
             1: mockIds,
           },
+        });
+    });
+
+    it('clearGuitarsIdPerPage -- clear state field: guitarsIdPerPage to empty object', () => {
+      const initialStateWithData = {
+        ...initialStateGuitars,
+        guitarsIdPerPage: {
+          1: mockIds,
+        },
+      };
+
+      expect(dataGuitars.reducer(initialStateWithData, clearGuitarsIdPerPage()))
+        .toEqual(initialStateGuitars);
+    });
+
+    it('setGuitarsStatus -- update state field: guitarsStatus to any value from LoadingStatus type', () => {
+      expect(dataGuitars.reducer(initialStateGuitars, setGuitarsStatus(LoadingStatus.Succeeded)))
+        .toEqual({
+          ...initialStateGuitars,
+          guitarsStatus: LoadingStatus.Succeeded,
         });
     });
   });

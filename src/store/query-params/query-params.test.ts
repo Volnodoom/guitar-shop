@@ -1,5 +1,5 @@
 import { datatype, lorem } from 'faker';
-import { SortingOrder } from '../../const';
+import { SortingOrder, SortingSort } from '../../const';
 import { initialState, queryParams, setDataCoupled, setFilterByName, setFilterByType, setItemRangeEnd, setItemRangeStart, setOrderBy, setPriceRangeEnd, setPriceRangeStart, setSimilarName, setSortBy } from './query-params';
 
 const mockString = lorem.word(1);
@@ -27,9 +27,9 @@ describe('Store: QUERY_PARAMS', () => {
     });
 
     it('setSortBy -- update line sortBy', () => {
-      expect(queryParams.reducer(initialState, setSortBy(mockString))).toEqual({
+      expect(queryParams.reducer(initialState, setSortBy(SortingSort.Popularity))).toEqual({
         ...initialState,
-        sortBy: mockString,
+        sortBy: SortingSort.Popularity,
       });
     });
 

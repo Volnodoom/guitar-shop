@@ -1,5 +1,5 @@
 import { APP_IMG_BASE, JPG_DOUBLE_DENSITY, JPG_ENDING_FORMAT, LoadingStatus, LOCAL_RU, ReviewDateTimeFormat, SERVER_IMG_BASE } from '../const';
-import { CoupledProductData, GuitarType, Review, SeparatorType, UserReviewPost } from '../types/general.types';
+import { CoupledProductData, GuitarType, KeysOfParamObject, NoNullParamObject, ParamObject, Review, SeparatorType, UserReviewPost } from '../types/general.types';
 
 export const formatBaseImgUrl = (url: string) => url.replace(SERVER_IMG_BASE, APP_IMG_BASE);
 export const formatHighDensityImgUrl = (url: string) => url.replace(JPG_ENDING_FORMAT, JPG_DOUBLE_DENSITY);
@@ -47,3 +47,22 @@ export const mockEntity = <T extends GuitarType[] | Review[]> (ids: string[] | n
       }), {});
   }
 };
+
+export const removeObjectPropertyWithNull = (data: ParamObject): NoNullParamObject => {
+  const newObject = {} as NoNullParamObject;
+  const keys = Object.keys(data);
+  const values = Object.values(data);
+
+  const indexes: number[] = [];
+  values.forEach((line, index) => {
+    if(line !== null) {
+      indexes.push(index);
+    }
+  });
+
+  const noNullKeys = indexes.map((line) => keys[line]) as KeysOfParamObject;
+  noNullKeys.forEach((key) => Object.assign(newObject, {[key]: data[key]}));
+
+  return newObject;
+};
+
