@@ -16,16 +16,22 @@ export const useCustomSearchParams = ()  => {
   const getCurrentSort = useSelector(selectorQuery.getSort);
   const getCurrentOrder = useSelector(selectorQuery.getOrder);
 
+  const isNoSort = !searchParams.has(QueryRoutes.Sort);
+  const isNoOder = !searchParams.has(QueryRoutes.Order);
+
+  //first useEffect react on user input in url
   useEffect(() => {
     if(searchParams && searchParams.has(QueryRoutes.Sort)) {
       dispatch(setSortBy(searchParams.get(QueryRoutes.Sort) as SortingSort));
+      isNoOder && dispatch(setOrderBy(SortingOrder.Decrease));
     }
     if(searchParams && searchParams.has(QueryRoutes.Order)) {
       dispatch(setOrderBy(searchParams.get(QueryRoutes.Order) as SortingOrder));
+      isNoSort && dispatch(setSortBy(SortingSort.Price));
     }
-  }, [dispatch, searchParams]);
+  }, [dispatch, isNoOder, isNoSort, searchParams]);
 
-
+  //second useEffect react on user interaction through UI
   useEffect(() => {
     const params: ParamObject = {
       [QueryRoutes.Sort]: getCurrentSort,
