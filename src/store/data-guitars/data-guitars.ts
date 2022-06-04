@@ -33,6 +33,11 @@ export const fetchProductsAction = createAsyncThunk<void, undefined, GeneralApiC
           [QueryRoutes.Limit]: LIMIT_GUITARS_PER_PAGE,
           [QueryRoutes.Sort]: getState()[NameSpace.QueryParams].sortBy,
           [QueryRoutes.Order]: getState()[NameSpace.QueryParams].orderBy,
+          [QueryRoutes.PriceStart]: getState()[NameSpace.QueryParams].priceRangeStart,
+          [QueryRoutes.PriceEnd]: getState()[NameSpace.QueryParams].priceRangeEnd,
+          [QueryRoutes.Like]: getState()[NameSpace.QueryParams].similarName,
+          [QueryRoutes.Name]: getState()[NameSpace.QueryParams].filterByName,
+          [QueryRoutes.Type]: getState()[NameSpace.QueryParams].filterByType,
           [QueryRoutes.Embed]: COUPLED_DATA,
         }
       });
@@ -131,6 +136,7 @@ export const dataGuitars = createSlice({
     },
     clearGuitarsIdPerPage: (state) => {
       state.guitarsIdPerPage = {};
+      state.guitarsStatus = LoadingStatus.Idle;
     },
     setGuitarsStatus: (state, action: PayloadAction<LoadingStatus>) => {
       state.guitarsStatus = action.payload;

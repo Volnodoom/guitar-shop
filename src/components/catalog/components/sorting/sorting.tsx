@@ -1,9 +1,9 @@
 import { MouseEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { AriaLabelSorting, LoadingStatus, QueryRoutes, SortingOrder, SortingSort } from '../../../../const';
+import { AriaLabelSorting, QueryRoutes, SortingOrder, SortingSort } from '../../../../const';
 import { useAppDispatch } from '../../../../hooks/hook';
-import { clearGuitarsIdPerPage, setGuitarsStatus } from '../../../../store/data-guitars/data-guitars';
+import { clearGuitarsIdPerPage } from '../../../../store/data-guitars/data-guitars';
 import { setOrderBy, setSortBy } from '../../../../store/query-params/query-params';
 import * as selectorQuery from '../../../../store/query-params/selector-query';
 
@@ -19,7 +19,6 @@ function Sorting():JSX.Element {
     switch ((evt.target as HTMLButtonElement).ariaLabel) {
       case AriaLabelSorting.ByPrice:
         dispatch(clearGuitarsIdPerPage());
-        dispatch(setGuitarsStatus(LoadingStatus.Idle));
         dispatch(setSortBy(SortingSort.Price));
         setSearchParams({[QueryRoutes.Sort]: SortingSort.Price});
         getCurrentOrder === null
@@ -29,7 +28,6 @@ function Sorting():JSX.Element {
 
       case AriaLabelSorting.ByPopular:
         dispatch(clearGuitarsIdPerPage());
-        dispatch(setGuitarsStatus(LoadingStatus.Idle));
         dispatch(setSortBy(SortingSort.Popularity));
         setSearchParams({[QueryRoutes.Sort]: SortingSort.Popularity});
         getCurrentOrder === null
@@ -39,7 +37,6 @@ function Sorting():JSX.Element {
 
       case AriaLabelSorting.ByOrderUp:
         dispatch(clearGuitarsIdPerPage());
-        dispatch(setGuitarsStatus(LoadingStatus.Idle));
         dispatch(setOrderBy(SortingOrder.Increase));
         setSearchParams({[QueryRoutes.Order]: SortingOrder.Increase});
         getCurrentSort === null
@@ -49,7 +46,6 @@ function Sorting():JSX.Element {
 
       case AriaLabelSorting.ByOrderDown:
         dispatch(clearGuitarsIdPerPage());
-        dispatch(setGuitarsStatus(LoadingStatus.Idle));
         dispatch(setOrderBy(SortingOrder.Decrease));
         setSearchParams({[QueryRoutes.Order]: SortingOrder.Decrease});
         getCurrentSort === null

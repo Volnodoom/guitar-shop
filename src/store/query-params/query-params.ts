@@ -50,6 +50,15 @@ export const queryParams = createSlice({
     setDataCoupled: (state, action: PayloadAction<DataCoupledType>) => {
       state.dataCoupled = action.payload;
     },
+    clearQueryParams: (state) => {
+      state.filterByName = null;
+      state.filterByType = null;
+      state.priceRangeStart = null;
+      state.priceRangeEnd = null;
+      state.sortBy = null;
+      state.orderBy = null;
+      state.similarName = null;
+    },
   }
 });
 
@@ -64,4 +73,5 @@ export const {
   setPriceRangeEnd,
   setSimilarName,
   setDataCoupled,
+  clearQueryParams,
 } = queryParams.actions;

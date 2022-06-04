@@ -61,7 +61,7 @@ export const removeObjectPropertyWithNull = (data: ParamObject): NoNullParamObje
   });
 
   const noNullKeys = indexes.map((line) => keys[line]) as KeysOfParamObject;
-  noNullKeys.forEach((key) => Object.assign(newObject, {[key]: data[key]}));
+  noNullKeys.forEach((key) => Object.assign(newObject, {[key]: String(data[key])}));
 
   return newObject;
 };

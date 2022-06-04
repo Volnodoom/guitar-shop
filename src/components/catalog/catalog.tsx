@@ -7,6 +7,7 @@ import { useCustomSearchParams } from '../../hooks/use-custom-search-params/use-
 import { useSetCatalogPageState } from '../../hooks/use-set-catalo-page/use-set-catalog-page';
 import { fetchPriceExtreme, fetchProductsAction } from '../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
+import * as selectorQuery from '../../store/query-params/selector-query';
 import { Breadcrumbs } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
 import NotAvailablePage from '../not-available-page/not-available-page';
@@ -19,6 +20,13 @@ function Catalog():JSX.Element {
   const totalGuitarsFromServer = useSelector(selectorGuitar.getTotalNumber);
   const guitarsAccordingToPage = useSelector(selectorGuitar.getGuitarsPerPage);
   const priceRange = useSelector(selectorGuitar.getPriceExtremes);
+
+  const getCurrentPriceStart = useSelector(selectorQuery.getPriceRangeStart);
+  const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
+  const getCurrentSimilarName = useSelector(selectorQuery.getSimilarName);
+  const getCurrentFilterName = useSelector(selectorQuery.getFilterByName);
+  const getCurrentFilterType = useSelector(selectorQuery.getFilterByType);
+
   const [setPageState] = useSetCatalogPageState();
 
   useCustomSearchParams();
@@ -42,6 +50,11 @@ function Catalog():JSX.Element {
     totalGuitarsFromServer,
     pageNumber,
     setPageState,
+    getCurrentPriceStart,
+    getCurrentPriceEnd,
+    getCurrentSimilarName,
+    getCurrentFilterName,
+    getCurrentFilterType
   ]);
 
   if(!isDataLoaded || totalGuitarsFromServer === null) {

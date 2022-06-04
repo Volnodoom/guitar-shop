@@ -1,13 +1,82 @@
 import { useSelector } from 'react-redux';
-import { useState, ChangeEvent, FocusEvent } from 'react';
-import { LOCAL_RU, PRICE_MAX, PRICE_MIN } from '../../../../../../const';
+import { useState, ChangeEvent, FocusEvent, useEffect } from 'react';
+import { LOCAL_RU, PRICE_MAX, PRICE_MIN, QueryRoutes } from '../../../../../../const';
 import * as selectorGuitar from '../../../../../../store/data-guitars/selectors-guitars';
+import { useAppDispatch } from '../../../../../../hooks/hook';
+import { setPriceRangeEnd, setPriceRangeStart } from '../../../../../../store/query-params/query-params';
+import { useSearchParams } from 'react-router-dom';
+import { clearGuitarsIdPerPage } from '../../../../../../store/data-guitars/data-guitars';
+import * as selectorQuery from '../../../../../../store/query-params/selector-query';
 
 function Price (): JSX.Element {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useAppDispatch();
+
   const priceRange = useSelector(selectorGuitar.getPriceExtremes);
+  const getCurrentPriceStart = useSelector(selectorQuery.getPriceRangeStart);
+  const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
 
   const [minPrice, setMinPrice] = useState<string | number>('');
   const [maxPrice, setMaxPrice] = useState<string | number>('');
+
+  useEffect(() => {
+    if(getCurrentPriceStart) {
+      setMinPrice(getCurrentPriceStart);
+    }
+    if(getCurrentPriceEnd) {
+      setMaxPrice(getCurrentPriceEnd);
+    }
+  }, [getCurrentPriceEnd, getCurrentPriceStart]);
+
+  const hasMinPrice = Boolean(minPrice);
+  const hasMaxPrice = Boolean(maxPrice);
+
+  const correctMinPrice = () => {
+    if(priceRange && hasMinPrice && minPrice < priceRange.min) {
+      setMinPrice(priceRange.min);
+      dispatch(setPriceRangeStart(priceRange.min));
+    }
+
+    if(priceRange && minPrice > priceRange.max) {
+      setMinPrice(priceRange.max);
+      dispatch(setPriceRangeStart(priceRange.max));
+    }
+
+    if(priceRange && hasMaxPrice && hasMinPrice && maxPrice < minPrice) {
+      setMaxPrice(minPrice);
+    }
+
+    if(!hasMinPrice) {
+      dispatch(setPriceRangeStart(null));
+    }
+
+    dispatch(clearGuitarsIdPerPage());
+  };
+
+
+  const correctMaxPrice = () => {
+    if(priceRange && maxPrice > priceRange.max) {
+      setMaxPrice(priceRange.max);
+      dispatch(setPriceRangeEnd(priceRange.max));
+    }
+
+    if(priceRange && hasMaxPrice && maxPrice < priceRange.min) {
+      setMaxPrice(priceRange.min);
+      dispatch(setPriceRangeEnd(priceRange.min));
+    }
+
+    if(priceRange && hasMaxPrice && hasMinPrice && maxPrice < minPrice) {
+      setMaxPrice(minPrice);
+    }
+
+    if(hasMaxPrice === false) {
+      dispatch(setPriceRangeEnd(null));
+    }
+
+    setSearchParams({[QueryRoutes.PriceEnd]: String(maxPrice)});
+    dispatch(clearGuitarsIdPerPage());
+  };
 
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     switch((evt.target as HTMLInputElement).id) {
@@ -29,14 +98,22 @@ function Price (): JSX.Element {
   const handleInputExit = (evt: FocusEvent<HTMLInputElement>) => {
     switch((evt.target as HTMLInputElement).id) {
       case PRICE_MIN:
-        priceRange && minPrice !== '' && minPrice < priceRange.min && setMinPrice(priceRange.min);
-        priceRange && minPrice > priceRange.max && setMinPrice(priceRange.max);
-        priceRange && maxPrice !== '' && minPrice !== '' && maxPrice < minPrice && setMaxPrice(minPrice);
+        // priceRange && minPrice !== '' && minPrice < priceRange.min && setMinPrice(priceRange.min);
+        // priceRange && minPrice > priceRange.max && setMinPrice(priceRange.max);
+        // priceRange && maxPrice !== '' && minPrice !== '' && maxPrice < minPrice && setMaxPrice(minPrice);
+        correctMinPrice();
+        // minPrice ? dispatch(setPriceRangeStart(minPrice as number)) : dispatch(setPriceRangeStart(null));
+        // dispatch(clearGuitarsIdPerPage());
+        // setSearchParams({[QueryRoutes.PriceStart]: String(minPrice)});
         break;
       case PRICE_MAX:
-        priceRange && maxPrice > priceRange.max && setMaxPrice(priceRange.max);
-        priceRange && maxPrice !== '' && maxPrice < priceRange.min && setMaxPrice(priceRange.min);
-        priceRange && maxPrice !== '' && minPrice !== '' && maxPrice < minPrice && setMaxPrice(minPrice);
+        correctMaxPrice();
+        // priceRange && maxPrice > priceRange.max && setMaxPrice(priceRange.max);
+        // priceRange && maxPrice !== '' && maxPrice < priceRange.min && setMaxPrice(priceRange.min);
+        // priceRange && maxPrice !== '' && minPrice !== '' && maxPrice < minPrice && setMaxPrice(minPrice);
+        // maxPrice ? dispatch(setPriceRangeEnd(maxPrice as number)) : dispatch(setPriceRangeStart(null));
+        // dispatch(clearGuitarsIdPerPage());
+        // setSearchParams({[QueryRoutes.PriceEnd]: String(maxPrice)});
         break;
       default:
         break;
