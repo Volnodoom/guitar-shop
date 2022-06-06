@@ -1,6 +1,6 @@
 import { datatype, lorem } from 'faker';
 import { SortingOrder, SortingSort } from '../../const';
-import { initialState, queryParams, setDataCoupled, setFilterByName, setFilterByType, setItemRangeEnd, setItemRangeStart, setOrderBy, setPriceRangeEnd, setPriceRangeStart, setSimilarName, setSortBy } from './query-params';
+import { initialState, queryParams, setDataCoupled, setFilterByName, setFilterByType, setItemRangeEnd, setItemRangeStart, setOrderBy, setPriceRangeEnd, setPriceRangeStart, setSortBy } from './query-params';
 
 const mockString = lorem.word(1);
 const mockNumber = datatype.number(1);
@@ -68,12 +68,6 @@ describe('Store: QUERY_PARAMS', () => {
       });
     });
 
-    it('setSimilarName -- update line similarName', () => {
-      expect(queryParams.reducer(initialState, setSimilarName(mockString))).toEqual({
-        ...initialState,
-        similarName: mockString,
-      });
-    });
 
     it('setDataCoupled -- update line dataCoupled', () => {
       expect(queryParams.reducer(initialState, setDataCoupled(stringForCouple))).toEqual({

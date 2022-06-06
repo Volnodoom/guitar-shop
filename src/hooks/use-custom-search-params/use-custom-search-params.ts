@@ -5,7 +5,7 @@ import { ParamObject } from '../../types/general.types';
 import { removeObjectPropertyWithNull } from '../../utils/utils-components';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { QueryRoutes, SortingOrder, SortingSort } from '../../const';
-import { setFilterByName, setFilterByType, setOrderBy, setPriceRangeEnd, setPriceRangeStart, setSimilarName, setSortBy } from '../../store/query-params/query-params';
+import { setFilterByName, setFilterByType, setOrderBy, setPriceRangeEnd, setPriceRangeStart, setSortBy } from '../../store/query-params/query-params';
 import { useAppDispatch } from '../hook';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 
@@ -19,7 +19,6 @@ export const useCustomSearchParams = ()  => {
   const getCurrentOrder = useSelector(selectorQuery.getOrder);
   const getCurrentPriceStart = useSelector(selectorQuery.getPriceRangeStart);
   const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
-  const getCurrentSimilarName = useSelector(selectorQuery.getSimilarName);
   const getCurrentFilterName = useSelector(selectorQuery.getFilterByName);
   const getCurrentFilterType = useSelector(selectorQuery.getFilterByType);
 
@@ -65,9 +64,6 @@ export const useCustomSearchParams = ()  => {
         ));
       }
     }
-    if(searchParams && searchParams.has(QueryRoutes.Like)) {
-      dispatch(setSimilarName(searchParams.get(QueryRoutes.Like)));
-    }
     if(searchParams && searchParams.has(QueryRoutes.Name)) {
       dispatch(setFilterByName(searchParams.get(QueryRoutes.Name)));
     }
@@ -83,7 +79,6 @@ export const useCustomSearchParams = ()  => {
       [QueryRoutes.Order]: getCurrentOrder,
       [QueryRoutes.PriceStart]: getCurrentPriceStart,
       [QueryRoutes.PriceEnd]: getCurrentPriceEnd,
-      [QueryRoutes.Like]: getCurrentSimilarName,
       [QueryRoutes.Name]: getCurrentFilterName,
       [QueryRoutes.Type]: getCurrentFilterType,
     };
@@ -98,7 +93,6 @@ export const useCustomSearchParams = ()  => {
     setSearchParams,
     getCurrentPriceStart,
     getCurrentPriceEnd,
-    getCurrentSimilarName,
     getCurrentFilterName,
     getCurrentFilterType
   ]);

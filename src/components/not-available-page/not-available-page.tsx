@@ -1,4 +1,3 @@
-import { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoutes, ONE } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
@@ -9,7 +8,7 @@ import { nonAvailableDiv, nonAvailableLink, nonAvailableText } from './style-not
 function NotAvailablePage ():JSX.Element {
   const dispatch = useAppDispatch();
 
-  const handleClick = (evt: MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = () => {
     dispatch(clearQueryParams());
     dispatch(clearGuitarsIdPerPage());
   };

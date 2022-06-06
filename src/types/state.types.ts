@@ -10,6 +10,7 @@ export interface GuitarState extends EntityState<GuitarType> {
   totalGuitars: null | number,
   guitarsIdPerPage: GuitarsIdsLineType,
   currentPage: number,
+  userGuitarSearch: GuitarType[],
   priceExtremes: null | GuitarsPriceRange,
   activeTab: string,
   guitarsStatus: LoadingStatus,
@@ -30,6 +31,5 @@ export type QueryParamsState = {
   itemRangeEnd: null | number,
   priceRangeStart: null | number,
   priceRangeEnd: null | number,
-  similarName: null | string,
   dataCoupled: DataCoupledType,
 }

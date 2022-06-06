@@ -137,6 +137,7 @@ export enum NameSpace {
 
 export enum ApiAction {
   FetchGuitars = 'guitars/fetchGuitars',
+  FetchUserSearch = 'guitars/fetchUserSearch',
   FetchPrice = 'guitars/fetchMinAndMaxPrice',
   FetchOneGuitar = 'guitars/fetchOneGuitar',
   FetchReviews = 'reviews/fetchReviews',

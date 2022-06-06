@@ -1,17 +1,23 @@
-import { MouseEvent, useEffect } from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
-import { AppRoutes, CART_LINK, LINK_CURRENT, LogoPosition, NAV_LINK, PagesName } from '../../../const';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AppRoutes, CART_LINK, LINK_CURRENT, LoadingStatus, LogoPosition, NAV_LINK, PagesName } from '../../../const';
 import { useAppDispatch } from '../../../hooks/hook';
-import { setActiveTab } from '../../../store/data-guitars/data-guitars';
+import { fetchUserSearchAction, setActiveTab, setOneGuitarStatus, setUserSearch } from '../../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../../store/data-guitars/selectors-guitars';
 import { Logo } from '../common';
 import { zIndexPosition } from './style-header';
 
 function Header (): JSX.Element {
   const dispatch = useAppDispatch();
-  const tabHead = useSelector(selectorGuitar.getActiveTab);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const [searchName, setSearchName] = useState('');
+  const [searchMemory, setSearchMemory] = useState<string[]>([]);
+
+  const tabHead = useSelector(selectorGuitar.getActiveTab);
+  const userSearchResult = useSelector(selectorGuitar.getUserGuitarSearch);
 
   const isCart = location.pathname.includes(PagesName.Cart.en.toLowerCase());
 
@@ -21,9 +27,47 @@ function Header (): JSX.Element {
     }
   });
 
+
   const handleCatalogClick = () => dispatch(setActiveTab(PagesName.Catalog.en));
   const handleCartClick = () => dispatch(setActiveTab(PagesName.Cart.en));
   const handleInactiveLink = (evt: MouseEvent<HTMLAnchorElement>) => evt.preventDefault();
+
+  const handleNameSearch = (evt: ChangeEvent<HTMLInputElement>) => {
+    const currentValue = evt.target.value;
+    const resetInput = () => {
+      dispatch(setUserSearch([]));
+      setSearchName('');
+      setSearchMemory([]);
+    };
+
+    const isMatchMemory = (valueToCheck: string) => searchMemory.some((line) => line === valueToCheck);
+
+    if(currentValue === '') {
+      resetInput();
+    }
+    if(currentValue !== '' && searchName !== '') {
+      if(userSearchResult.length !== 0) {
+        setSearchMemory((previous) => [...previous, searchName]);
+      }
+    }
+
+    if(userSearchResult.length === 0 && searchName === '') {
+      dispatch(fetchUserSearchAction(currentValue));
+    } else if(currentValue.includes(searchName) && userSearchResult.length !== 0) {
+      dispatch(fetchUserSearchAction(currentValue));
+    } else if(isMatchMemory(currentValue)) {
+      dispatch(fetchUserSearchAction(currentValue));
+    }
+    setSearchName(currentValue);
+  };
+
+  const handleResultSearchClick = (id: number) => () => {
+    navigate(AppRoutes.GuitarAbsolute(id));
+    setSearchName('');
+    //it is required to refresh one guitar status because we could drive from one product to
+    //another without refreshing site
+    dispatch(setOneGuitarStatus(LoadingStatus.Idle));
+  };
 
   return (
     <header className="header" id="header">
@@ -69,16 +113,33 @@ function Header (): JSX.Element {
               </svg>
               <span className="visually-hidden">Начать поиск</span>
             </button>
-            <input className="form-search__input" id="search" type="text" autoComplete="off" placeholder="что вы ищите?" />
+            <input
+              className="form-search__input"
+              id="search"
+              type="text"
+              autoComplete="off"
+              placeholder="что вы ищите?"
+              onChange={handleNameSearch}
+              value={searchName}
+            />
             <label className="visually-hidden" htmlFor="search">Поиск</label>
           </form>
-          <ul className="form-search__select-list hidden">
-            <li className="form-search__select-item" tabIndex={0}>Четстер Plus</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX2</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX3</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX4</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX5</li>
+          <ul className={`form-search__select-list ${!searchName  && 'hidden'}`}>
+            {
+              userSearchResult && userSearchResult.length > 0
+                ?
+                userSearchResult
+                  .map((guitar) => (
+                    <li
+                      className="form-search__select-item"
+                      tabIndex={0}
+                      key={`${guitar.name}-${guitar.id}`}
+                      onClick={handleResultSearchClick(guitar.id)}
+                    >{guitar.name}
+                    </li>))
+                :
+                <li>Товаров не найдено</li>
+            }
           </ul>
           <button className="form-search__reset" type="reset" form="form-search">
             <svg className="form-search__icon" width="14" height="15" aria-hidden="true">

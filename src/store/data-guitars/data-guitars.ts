@@ -14,6 +14,7 @@ export const initialState: GuitarState = guitarsAdapter.getInitialState({
   totalGuitars: null,
   guitarsIdPerPage: {} as GuitarsIdsLineType,
   currentPage: ONE,
+  userGuitarSearch: [],
   priceExtremes: null,
   activeTab: PagesName.Catalog.en,
   guitarsStatus: LoadingStatus.Idle,
@@ -35,7 +36,6 @@ export const fetchProductsAction = createAsyncThunk<void, undefined, GeneralApiC
           [QueryRoutes.Order]: getState()[NameSpace.QueryParams].orderBy,
           [QueryRoutes.PriceStart]: getState()[NameSpace.QueryParams].priceRangeStart,
           [QueryRoutes.PriceEnd]: getState()[NameSpace.QueryParams].priceRangeEnd,
-          [QueryRoutes.Like]: getState()[NameSpace.QueryParams].similarName,
           [QueryRoutes.Name]: getState()[NameSpace.QueryParams].filterByName,
           [QueryRoutes.Type]: getState()[NameSpace.QueryParams].filterByType,
           [QueryRoutes.Embed]: COUPLED_DATA,
@@ -49,6 +49,24 @@ export const fetchProductsAction = createAsyncThunk<void, undefined, GeneralApiC
       dispatch(setGuitarsIdPerPage(guitars));
 
       dispatch(setReviews(reviews));
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
+  }
+);
+
+export const fetchUserSearchAction = createAsyncThunk<void, string, GeneralApiConfig>(
+  ApiAction.FetchUserSearch,
+  async (searchName, {dispatch, getState, extra: api}) => {
+    try{
+      const {data} = await api.get<GuitarType[]>(ApiRoutes.Guitars, {
+        params: {
+          [QueryRoutes.Like]: searchName,
+        }
+      });
+
+      dispatch(setUserSearch(data));
     } catch (error) {
       handleError(error);
       throw error;
@@ -141,6 +159,12 @@ export const dataGuitars = createSlice({
     setGuitarsStatus: (state, action: PayloadAction<LoadingStatus>) => {
       state.guitarsStatus = action.payload;
     },
+    setOneGuitarStatus: (state, action: PayloadAction<LoadingStatus>) => {
+      state.oneGuitarStatus = action.payload;
+    },
+    setUserSearch: (state, action: PayloadAction<GuitarType[]>) => {
+      state.userGuitarSearch = action.payload;
+    },
   },
   extraReducers: (builder) =>  {
     builder
@@ -175,6 +199,8 @@ export const {
   clearGuitarsIdPerPage,
   setGuitarsStatus,
   setPriceExtremes,
+  setUserSearch,
+  setOneGuitarStatus,
 } = dataGuitars.actions;
 
 export const rtkSelectorsGuitars = guitarsAdapter.getSelectors((state: State) => state[NameSpace.DataGuitars]);

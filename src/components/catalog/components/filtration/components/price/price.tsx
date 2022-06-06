@@ -51,6 +51,7 @@ function Price (): JSX.Element {
       dispatch(setPriceRangeStart(null));
     }
 
+    setSearchParams({[QueryRoutes.PriceStart]: String(minPrice)});
     dispatch(clearGuitarsIdPerPage());
   };
 
@@ -98,22 +99,10 @@ function Price (): JSX.Element {
   const handleInputExit = (evt: FocusEvent<HTMLInputElement>) => {
     switch((evt.target as HTMLInputElement).id) {
       case PRICE_MIN:
-        // priceRange && minPrice !== '' && minPrice < priceRange.min && setMinPrice(priceRange.min);
-        // priceRange && minPrice > priceRange.max && setMinPrice(priceRange.max);
-        // priceRange && maxPrice !== '' && minPrice !== '' && maxPrice < minPrice && setMaxPrice(minPrice);
         correctMinPrice();
-        // minPrice ? dispatch(setPriceRangeStart(minPrice as number)) : dispatch(setPriceRangeStart(null));
-        // dispatch(clearGuitarsIdPerPage());
-        // setSearchParams({[QueryRoutes.PriceStart]: String(minPrice)});
         break;
       case PRICE_MAX:
         correctMaxPrice();
-        // priceRange && maxPrice > priceRange.max && setMaxPrice(priceRange.max);
-        // priceRange && maxPrice !== '' && maxPrice < priceRange.min && setMaxPrice(priceRange.min);
-        // priceRange && maxPrice !== '' && minPrice !== '' && maxPrice < minPrice && setMaxPrice(minPrice);
-        // maxPrice ? dispatch(setPriceRangeEnd(maxPrice as number)) : dispatch(setPriceRangeStart(null));
-        // dispatch(clearGuitarsIdPerPage());
-        // setSearchParams({[QueryRoutes.PriceEnd]: String(maxPrice)});
         break;
       default:
         break;

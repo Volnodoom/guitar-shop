@@ -23,7 +23,6 @@ function Catalog():JSX.Element {
 
   const getCurrentPriceStart = useSelector(selectorQuery.getPriceRangeStart);
   const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
-  const getCurrentSimilarName = useSelector(selectorQuery.getSimilarName);
   const getCurrentFilterName = useSelector(selectorQuery.getFilterByName);
   const getCurrentFilterType = useSelector(selectorQuery.getFilterByType);
 
@@ -52,7 +51,6 @@ function Catalog():JSX.Element {
     setPageState,
     getCurrentPriceStart,
     getCurrentPriceEnd,
-    getCurrentSimilarName,
     getCurrentFilterName,
     getCurrentFilterType
   ]);
