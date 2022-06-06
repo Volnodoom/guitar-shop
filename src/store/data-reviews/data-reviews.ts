@@ -52,6 +52,9 @@ export const dataReviews = createSlice({
     setCommentStatus: (state, action: PayloadAction<LoadingStatus>) => {
       state.commentStatus = action.payload;
     },
+    setReviewsStatus: (state, action: PayloadAction<LoadingStatus>) => {
+      state.reviewsStatus = action.payload;
+    },
   },
   extraReducers: (builder) =>  {
     builder
@@ -82,4 +85,5 @@ export const {
   setReviews,
   addOneReview,
   setCommentStatus,
+  setReviewsStatus,
 } = dataReviews.actions;

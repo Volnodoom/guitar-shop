@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { EventListenerType, KeyBoardCode } from '../../const';
+import { EventListenerType } from '../../const';
+import { isEscape } from '../../utils/utils-components';
 
 export const useEscPress = (isHookActive: boolean, callback: () => void) => {
   useEffect(() => {
     const handleDocumentKeyDown = (evt: KeyboardEvent) => {
-      if (evt.code === KeyBoardCode.Esc.version1 || evt.code === KeyBoardCode.Esc.version2) {
+      if (isEscape(evt.code)) {
         callback();
       }
     };

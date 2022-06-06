@@ -20,6 +20,7 @@ export const CART_LINK = 'header__cart-link';
 export const SCROLL_LIMIT = 250;
 export const PRICE_MIN = 'priceMin';
 export const PRICE_MAX = 'priceMax';
+export const DELAY_IN_SERVER_REQUEST = 500;
 
 export const STRING_NUMBERS = [
   4,
@@ -104,6 +105,7 @@ export const ReviewDateTimeFormat = {
 
 export const KeyBoardCode = {
   Esc: {version1: 'Esc', version2: 'Escape'},
+  Enter: {version1: 'Enter', version2: 'NumpadEnter'},
 } as const;
 
 export enum ModalStatus {

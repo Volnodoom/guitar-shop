@@ -1,4 +1,4 @@
-import { APP_IMG_BASE, JPG_DOUBLE_DENSITY, JPG_ENDING_FORMAT, LoadingStatus, LOCAL_RU, ReviewDateTimeFormat, SERVER_IMG_BASE } from '../const';
+import { APP_IMG_BASE, JPG_DOUBLE_DENSITY, JPG_ENDING_FORMAT, KeyBoardCode, LoadingStatus, LOCAL_RU, ReviewDateTimeFormat, SERVER_IMG_BASE } from '../const';
 import { CoupledProductData, GuitarType, KeysOfParamObject, NoNullParamObject, ParamObject, Review, SeparatorType, UserReviewPost } from '../types/general.types';
 
 export const formatBaseImgUrl = (url: string) => url.replace(SERVER_IMG_BASE, APP_IMG_BASE);
@@ -64,5 +64,22 @@ export const removeObjectPropertyWithNull = (data: ParamObject): NoNullParamObje
   noNullKeys.forEach((key) => Object.assign(newObject, {[key]: String(data[key])}));
 
   return newObject;
+};
+
+
+export const isEscape = (keyCode: string) => {
+  if(keyCode === KeyBoardCode.Esc.version1 || keyCode === KeyBoardCode.Esc.version2) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const isEnter = (keyCode: string) => {
+  if(keyCode === KeyBoardCode.Enter.version1 || keyCode === KeyBoardCode.Enter.version2) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
