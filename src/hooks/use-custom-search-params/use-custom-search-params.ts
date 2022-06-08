@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import * as selectorQuery from '../../store/query-params/selector-query';
 import { KeysOfParamObject, ParamObject, QueryParamsWithArrayData } from '../../types/general.types';
-import { getValueFromNonEmptyArray, makeNoDuplication, removeObjectPropertyWithNull, translateFromNumberToString } from '../../utils/utils-components';
+import { getValueFromNonEmptyArray, makeNoDuplication, removeObjectPropertyWithNull, translateToStringOrNull } from '../../utils/utils-components';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { QueryRoutes, SortingOrder, SortingSort } from '../../const';
 import { addFilterByString, addFilterByType, setOrderBy, setPriceRangeEnd, setPriceRangeStart, setSortBy } from '../../store/query-params/query-params';
@@ -95,8 +95,8 @@ export const useCustomSearchParams = ()  => {
     const params: ParamObject = {
       [QueryRoutes.Sort]: getCurrentSort,
       [QueryRoutes.Order]: getCurrentOrder,
-      [QueryRoutes.PriceStart]: translateFromNumberToString(getCurrentPriceStart),
-      [QueryRoutes.PriceEnd]: translateFromNumberToString(getCurrentPriceEnd),
+      [QueryRoutes.PriceStart]: translateToStringOrNull(getCurrentPriceStart),
+      [QueryRoutes.PriceEnd]: translateToStringOrNull(getCurrentPriceEnd),
       [QueryRoutes.Type]: makeNoDuplication(getValueFromNonEmptyArray(getCurrentFilterType)),
       [QueryRoutes.StringNumber]: makeNoDuplication(getValueFromNonEmptyArray(getCurrentStringNumber)),
     };
