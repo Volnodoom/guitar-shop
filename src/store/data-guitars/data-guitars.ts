@@ -3,7 +3,7 @@ import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, Load
 import { handleError } from '../../services/handle-error';
 import { CoupledProductData, GeneralApiConfig, GuitarsIdsLineType, GuitarsPriceRange, GuitarType } from '../../types/general.types';
 import {  GuitarState, State } from '../../types/state.types';
-import { separateGuitarAndReviews } from '../../utils/utils-components';
+import { getValueFromNonEmptyArray, separateGuitarAndReviews } from '../../utils/utils-components';
 import { setReviews } from '../data-reviews/data-reviews';
 
 const guitarsAdapter = createEntityAdapter<GuitarType>();
@@ -36,8 +36,8 @@ export const fetchProductsAction = createAsyncThunk<void, undefined, GeneralApiC
           [QueryRoutes.Order]: getState()[NameSpace.QueryParams].orderBy,
           [QueryRoutes.PriceStart]: getState()[NameSpace.QueryParams].priceRangeStart,
           [QueryRoutes.PriceEnd]: getState()[NameSpace.QueryParams].priceRangeEnd,
-          [QueryRoutes.Name]: getState()[NameSpace.QueryParams].filterByName,
-          [QueryRoutes.Type]: getState()[NameSpace.QueryParams].filterByType,
+          [QueryRoutes.StringNumber]: getValueFromNonEmptyArray(getState()[NameSpace.QueryParams].filterByString),
+          [QueryRoutes.Type]: getValueFromNonEmptyArray(getState()[NameSpace.QueryParams].filterByType),
           [QueryRoutes.Embed]: COUPLED_DATA,
         }
       });

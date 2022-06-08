@@ -1,4 +1,4 @@
-import { APP_IMG_BASE, JPG_DOUBLE_DENSITY, JPG_ENDING_FORMAT, KeyBoardCode, LoadingStatus, LOCAL_RU, ReviewDateTimeFormat, SERVER_IMG_BASE } from '../const';
+import { APP_IMG_BASE, JPG_DOUBLE_DENSITY, JPG_ENDING_FORMAT, KeyBoardCode, LoadingStatus, LOCAL_RU, ONE, ReviewDateTimeFormat, SERVER_IMG_BASE } from '../const';
 import { CoupledProductData, GuitarType, KeysOfParamObject, NoNullParamObject, ParamObject, Review, SeparatorType, UserReviewPost } from '../types/general.types';
 
 export const formatBaseImgUrl = (url: string) => url.replace(SERVER_IMG_BASE, APP_IMG_BASE);
@@ -60,12 +60,11 @@ export const removeObjectPropertyWithNull = (data: ParamObject): NoNullParamObje
     }
   });
 
-  const noNullKeys = indexes.map((line) => keys[line]) as KeysOfParamObject;
-  noNullKeys.forEach((key) => Object.assign(newObject, {[key]: String(data[key])}));
+  const noNullKeys = indexes.map((line) => keys[line]) as KeysOfParamObject[];
+  noNullKeys.forEach((key) => Object.assign(newObject, {[key]: data[key]}));
 
   return newObject;
 };
-
 
 export const isEscape = (keyCode: string) => {
   if(keyCode === KeyBoardCode.Esc.version1 || keyCode === KeyBoardCode.Esc.version2) {
@@ -83,3 +82,41 @@ export const isEnter = (keyCode: string) => {
   }
 };
 
+export const removeCurrentElementFromArray = (currentElement: string, data: string[]) => {
+  const copy = data.slice();
+  copy.splice(data.findIndex((value) => value === currentElement), ONE);
+  return copy;
+};
+
+export const getValueFromNonEmptyArray = (array: number[] | string[] | null) => {
+  if(array && array.length !== 0) {
+    return array.map((line) => String(line));
+  } else {
+    return null;
+  }
+};
+
+export const translateFromNumberToString = (value: number | null) => {
+  if(value) {
+    return String(value);
+  } else {
+    return null;
+  }
+};
+
+export const makeNoDuplication = (data: string[] | null, initial: string[] = []) => {
+  if(data) {
+    const isResultHasThisItem = (item:string) => initial.some((line) => line === item);
+
+    data.forEach((line) => {
+      if(!isResultHasThisItem(line)) {
+        initial.push(line);
+      }
+    });
+    return initial;
+  } else {
+    return null;
+  }
+};
+
+export const isCurrentElementActive = <T>(element: T, dataArray: T[]) => dataArray.some((line) => line === element);

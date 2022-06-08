@@ -23,8 +23,8 @@ export interface ReviewState extends EntityState<Review> {
 }
 
 export type QueryParamsState = {
-  filterByName: null | string,
-  filterByType: null | string,
+  filterByString: number[],
+  filterByType: string[],
   sortBy: null | SortingSort,
   orderBy: null | SortingOrder,
   itemRangeStart: null | number,

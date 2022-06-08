@@ -9,8 +9,7 @@ import { clearGuitarsIdPerPage } from '../../../../../../store/data-guitars/data
 import * as selectorQuery from '../../../../../../store/query-params/selector-query';
 
 function Price (): JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
 
   const priceRange = useSelector(selectorGuitar.getPriceExtremes);

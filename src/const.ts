@@ -164,7 +164,7 @@ export enum LoadingStatus {
 }
 
 export const QueryRoutes = {
-  Name: 'name',
+  StringNumber: 'stringCount',
   Type: 'type',
   Sort: '_sort',
   Order: '_order',
@@ -231,3 +231,9 @@ export enum AriaLabelSorting {
   ByOrderUp = 'по возрастанию',
   ByOrderDown = 'по убыванию',
 }
+
+export const GuitarTypeStringNumberCombination: {[value in KindOfGuitars]: number[]}  = {
+  [KindOfGuitars.Acoustic]: [6,7,12],
+  [KindOfGuitars.Electric]: [4,6,7],
+  [KindOfGuitars.Ukulele]: [4],
+};

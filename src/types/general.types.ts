@@ -77,19 +77,21 @@ export type InvalidFormArray = (keyof typeof ReviewFormField)[]
 export type ParamObject = {
   '_sort': null | SortingSort,
   '_order': null | SortingOrder,
-  'price_gte': null | number,
-  'price_lte': null | number,
-  'name': null | string,
-  'type': null | string,
+  'price_gte': null | string,
+  'price_lte': null | string,
+  'stringCount': null | string[],
+  'type': null | string[],
 }
 
-export type KeysOfParamObject = ('_sort' | '_order'| 'price_gte'| 'price_lte'| 'name'| 'type') []
+export type KeysOfParamObject = '_sort' | '_order'| 'price_gte'| 'price_lte'| 'stringCount'| 'type'
 
 export type NoNullParamObject = {
   '_sort'?: SortingSort,
   '_order'?: SortingOrder,
   'price_gte'?: string,
   'price_lte'?: string,
-  'name'?: string,
-  'type'?: string,
+  'stringCount'?: string[],
+  'type'?: string[],
 }
+
+export type QueryParamsWithArrayData = 'stringCount' | 'type';

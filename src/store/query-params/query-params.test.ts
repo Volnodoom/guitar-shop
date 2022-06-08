@@ -1,8 +1,8 @@
-import { datatype, lorem } from 'faker';
+import { datatype } from 'faker';
 import { SortingOrder, SortingSort } from '../../const';
-import { initialState, queryParams, setDataCoupled, setFilterByName, setFilterByType, setItemRangeEnd, setItemRangeStart, setOrderBy, setPriceRangeEnd, setPriceRangeStart, setSortBy } from './query-params';
+import { initialState, queryParams, setDataCoupled, setItemRangeEnd, setItemRangeStart, setOrderBy, setPriceRangeEnd, setPriceRangeStart, setSortBy } from './query-params';
 
-const mockString = lorem.word(1);
+// const mockString = lorem.word(1);
 const mockNumber = datatype.number(1);
 const stringForCouple = 'comments';
 
@@ -12,19 +12,19 @@ describe('Store: QUERY_PARAMS', () => {
       expect(queryParams.reducer(void 0, {type: 'UNKNOWN_ACTION'})).toEqual(initialState);
     });
 
-    it('setFilterByName -- update line filterByName', () => {
-      expect(queryParams.reducer(initialState, setFilterByName(mockString))).toEqual({
-        ...initialState,
-        filterByName: mockString,
-      });
-    });
+    // it('setFilterByName -- update line filterByName', () => {
+    //   expect(queryParams.reducer(initialState, setFilterByName(mockString))).toEqual({
+    //     ...initialState,
+    //     filterByName: mockString,
+    //   });
+    // });
 
-    it('setFilterByType -- update line filterByType', () => {
-      expect(queryParams.reducer(initialState, setFilterByType(mockString))).toEqual({
-        ...initialState,
-        filterByType: mockString,
-      });
-    });
+    // it('setFilterByType -- update line filterByType', () => {
+    //   expect(queryParams.reducer(initialState, setFilterByType(mockString))).toEqual({
+    //     ...initialState,
+    //     filterByType: mockString,
+    //   });
+    // });
 
     it('setSortBy -- update line sortBy', () => {
       expect(queryParams.reducer(initialState, setSortBy(SortingSort.Popularity))).toEqual({

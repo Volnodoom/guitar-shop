@@ -23,7 +23,7 @@ function Catalog():JSX.Element {
 
   const getCurrentPriceStart = useSelector(selectorQuery.getPriceRangeStart);
   const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
-  const getCurrentFilterName = useSelector(selectorQuery.getFilterByName);
+  const getFilterStringNumber = useSelector(selectorQuery.getFilterStringNumber);
   const getCurrentFilterType = useSelector(selectorQuery.getFilterByType);
 
   const [setPageState] = useSetCatalogPageState();
@@ -51,7 +51,7 @@ function Catalog():JSX.Element {
     setPageState,
     getCurrentPriceStart,
     getCurrentPriceEnd,
-    getCurrentFilterName,
+    getFilterStringNumber,
     getCurrentFilterType
   ]);
 
