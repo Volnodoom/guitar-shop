@@ -11,7 +11,7 @@ import CardDetailed from '../card-detailed/card-detailed';
 import Cart from '../cart/cart';
 import Catalog from '../catalog/catalog';
 import Layout from '../layout/layout';
-import NotAvailablePage from '../not-available-page/not-available-page';
+import PageOnError from '../page-on-error/page-on-error';
 
 const TOTAL_NUMBER = 19;
 const ITEMS_NUMBER = 9;
@@ -61,7 +61,7 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -82,7 +82,7 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -103,7 +103,7 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -124,7 +124,7 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -145,7 +145,7 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>

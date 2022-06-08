@@ -2,13 +2,14 @@ import { datatype, lorem } from 'faker';
 import MockAdapter from 'axios-mock-adapter';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { configureMockStore } from '@jedmao/redux-mock-store';
-import { ApiRoutes, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace } from '../../const';
-import { clearGuitarsIdPerPage, dataGuitars, fetchOneGuitarAction, fetchProductsAction, initialState as initialStateGuitars, setActiveTab, setCurrentPage, setGuitarsDetails, setGuitarsIdPerPage, setGuitarsStatus, setOneGuitarDetails, setTotalGuitars } from '../data-guitars/data-guitars';
+import { ApiRoutes, HEADER_TOTAL_NUMBER, LoadingStatus, NameSpace, ONE, QueryRoutes, SortingOrder, SortingSort } from '../../const';
+import { clearGuitarsIdPerPage, dataGuitars, fetchOneGuitarAction, fetchPriceExtreme, fetchProductsAction, fetchUserSearchAction, initialState as initialStateGuitars, setActiveTab, setCurrentPage, setGuitarsDetails, setGuitarsIdPerPage, setGuitarsStatus, setOneGuitarDetails, setOneGuitarStatus, setPriceExtremes, setTotalGuitars, setUserSearch } from '../data-guitars/data-guitars';
 import { createAPI } from '../../services/api';
 import { State } from '../../types/state.types';
 import { Action } from '@reduxjs/toolkit';
 import { createMockState, makeMockGuitarArray, makeMockOneGuitarWitId, makeMockProducts, mockGuitar } from '../../utils/mock-faker';
 import { setReviews } from '../data-reviews/data-reviews';
+import { GuitarType } from '../../types/general.types';
 
 const fakeNumber = datatype.number();
 const fakeWord = lorem.word();
@@ -17,6 +18,8 @@ const api = createAPI();
 const mockAPI = new MockAdapter(api);
 const middlewares = [thunk.withExtraArgument(api)];
 const mockStore = configureMockStore<State, Action, ThunkDispatch<State, typeof api, Action>>(middlewares);
+
+const oneGuitar = mockGuitar();
 
 const ARRAY_LENGTH = 10;
 const mockIds = Array.from({length: ARRAY_LENGTH}, () => datatype.number());
@@ -100,6 +103,27 @@ describe('Store: DATA_GUITARS', () => {
           guitarsStatus: LoadingStatus.Succeeded,
         });
     });
+
+    it('setOneGuitarStatus -- update state field: oneGuitarStatus to any value from LoadingStatus type', () => {
+      expect(dataGuitars.reducer(initialStateGuitars, setOneGuitarStatus(LoadingStatus.Succeeded)))
+        .toEqual({
+          ...initialStateGuitars,
+          oneGuitarStatus: LoadingStatus.Succeeded,
+        });
+    });
+
+    it('setPriceExtremes -- update state field: priceExtremes to object with two parameters min and max values of each of them is a number', () => {
+      const update = {
+        min: fakeNumber,
+        max: fakeNumber,
+      };
+
+      expect(dataGuitars.reducer(initialStateGuitars, setPriceExtremes(update)))
+        .toEqual({
+          ...initialStateGuitars,
+          priceExtremes: update,
+        });
+    });
   });
 
   describe('Check async actions', () => {
@@ -163,14 +187,13 @@ describe('Store: DATA_GUITARS', () => {
     it('fetchOneGuitarAction -- on success (200): update state guitarsStatus with success AND dispatch setOneGuitarDetails', async () => {
       const mockState = createMockState();
       const store = mockStore(mockState);
-      const serverResponse = mockGuitar();
       const action = {
         type: fetchOneGuitarAction.fulfilled.type,
       };
 
       mockAPI
         .onGet(ApiRoutes.Guitar(fakeNumber))
-        .reply(200, serverResponse);
+        .reply(200, oneGuitar);
 
       expect(store.getActions()).toEqual([]);
 
@@ -208,6 +231,70 @@ describe('Store: DATA_GUITARS', () => {
           oneGuitarStatus: LoadingStatus.Failed,
         });
     });
-  });
 
+    it('fetchUserSearchAction -- on success (200): UPDATE state line userGuitarSearch with data and DISPATCH setUserSearch', async () => {
+      const mockState = createMockState();
+      const store = mockStore(mockState);
+      const mockServerResponse = mockGuitars;
+
+      mockAPI
+        .onGet(ApiRoutes.Guitars, {params: {
+          [QueryRoutes.Like]: fakeWord,
+        }})
+        .reply(200, mockServerResponse);
+
+      expect(store.getActions()).toEqual([]);
+
+      await store.dispatch(fetchUserSearchAction(fakeWord));
+
+      const actions = store.getActions().map(({type}) => type);
+
+      expect(actions).toContain(setUserSearch.type);
+    });
+
+    it('fetchPriceExtreme -- on success (200): UPDATE state line priceExtremes with object of two parameters min amd max, which values are numbers, and DISPATCH setPriceExtremes', async () => {
+      const mockState = createMockState();
+      const store = mockStore(mockState);
+
+      const extremes = {
+        min: 1000,
+        max: 5000,
+      };
+
+      const mockServerResponseMin: GuitarType = {
+        ...oneGuitar,
+        price: extremes.min,
+      };
+      const mockServerResponseMax: GuitarType = {
+        ...oneGuitar,
+        price: extremes.max,
+      };
+
+      mockAPI
+        .onGet(ApiRoutes.Guitars, {params: {
+          [QueryRoutes.Start]: 0,
+          [QueryRoutes.Limit]: ONE,
+          [QueryRoutes.Sort]: SortingSort.Price,
+          [QueryRoutes.Order]: SortingOrder.Increase,
+        }})
+        .replyOnce(200, mockServerResponseMin)
+        .onGet(ApiRoutes.Guitars, {
+          params: {
+            [QueryRoutes.Start]: 0,
+            [QueryRoutes.Limit]: ONE,
+            [QueryRoutes.Sort]: SortingSort.Price,
+            [QueryRoutes.Order]: SortingOrder.Decrease,
+          }
+        })
+        .replyOnce(200, mockServerResponseMax);
+
+      expect(store.getActions()).toEqual([]);
+
+      await store.dispatch(fetchPriceExtreme());
+
+      const actions = store.getActions().map(({type}) => type);
+
+      expect(actions).toContain(setPriceExtremes.type);
+    });
+  });
 });

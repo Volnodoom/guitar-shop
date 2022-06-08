@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import NotAvailablePage from './not-available-page';
+import PageOnError from './page-on-error';
 
-describe('Component: NotAvailablePage', () => {
+describe('Component: PageOnError', () => {
   it('render correctly', () => {
     render(
       <MemoryRouter>
-        <NotAvailablePage />
+        <PageOnError />
       </MemoryRouter>
     );
 

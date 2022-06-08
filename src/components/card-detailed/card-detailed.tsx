@@ -12,7 +12,7 @@ import { GuitarType } from '../../types/general.types';
 import { checkStatusFailed, checkStatusLoading, checkStatusSuccess, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
 import { Breadcrumbs, RatingStars } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
-import NotAvailablePage from '../not-available-page/not-available-page';
+import PageOnError from '../page-on-error/page-on-error';
 import { ModalFrame, ReviewsListInteraction, Tabs } from './components/components';
 
 function CardDetailed():JSX.Element {
@@ -52,7 +52,7 @@ function CardDetailed():JSX.Element {
   ]);
 
   if (!guitar && isGuitarFailed) {
-    return <NotAvailablePage />;
+    return <PageOnError />;
   }
 
   if(isComponentLoading) {

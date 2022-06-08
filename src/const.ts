@@ -13,7 +13,7 @@ export const SERVER_IMG_BASE = 'guitar';
 export const COUPLED_DATA = 'comments';
 export const HEADER_TOTAL_NUMBER = 'x-total-count';
 export const BAD_REQUEST = 400;
-export const UNDEFINED_ERROR = 'Ваш запрос сталкнулся с проблемами. Пожалуйста, проверьте ваше интернет соединение и попробуйте повторить ваш запрос.';
+export const UNDEFINED_ERROR = 'Возникли проблемы, при обработке вашего запроса. Пожалуйста, проверьте ваше интернет соединение и попробуйте повторить ваш запрос.';
 export const LINK_CURRENT = 'link--current';
 export const NAV_LINK = 'link main-nav__link';
 export const CART_LINK = 'header__cart-link';
@@ -21,6 +21,9 @@ export const SCROLL_LIMIT = 250;
 export const PRICE_MIN = 'priceMin';
 export const PRICE_MAX = 'priceMax';
 export const DELAY_IN_SERVER_REQUEST = 500;
+export const ERROR_404 = '404.';
+export const PAGE_NOT_FOUND = 'Page not found';
+export const GENERAL_ERROR_MESSAGE = 'Проверьте правильность ввода запроса, наличие интернет соединения и повторите попытку. Если данная проблема повторилась, значит мы работаем над её устранением. Пожалуйста, повторите свой запрос позже.';
 
 export const STRING_NUMBERS = [
   4,

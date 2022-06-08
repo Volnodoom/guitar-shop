@@ -1,11 +1,16 @@
 import { Link } from 'react-router-dom';
-import { AppRoutes, ONE } from '../../const';
+import { AppRoutes, ERROR_404, ONE, PAGE_NOT_FOUND } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
 import { clearGuitarsIdPerPage } from '../../store/data-guitars/data-guitars';
 import { clearQueryParams } from '../../store/query-params/query-params';
-import { nonAvailableDiv, nonAvailableLink, nonAvailableText } from './style-not-available-page';
+import { nonAvailableDiv, nonAvailableLink, nonAvailableText } from './style-page-on-error';
 
-function NotAvailablePage ():JSX.Element {
+type PageOnErrorProps ={
+  error?: string,
+  message?: string,
+}
+
+function PageOnError ({error = ERROR_404, message = PAGE_NOT_FOUND }: PageOnErrorProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   const handleClick = () => {
@@ -16,8 +21,8 @@ function NotAvailablePage ():JSX.Element {
   return (
     <div className="page-content" style={nonAvailableDiv}>
       <h1 style={nonAvailableText}>
-        404.
-        <small> Page not found</small>
+        {error}
+        <small>{message}</small>
       </h1>
       <Link to={AppRoutes.CatalogPageAbsolute(ONE)} style={nonAvailableLink} onClick={handleClick}>
         Go to catalog page
@@ -26,4 +31,4 @@ function NotAvailablePage ():JSX.Element {
   );
 }
 
-export default NotAvailablePage;
+export default PageOnError;

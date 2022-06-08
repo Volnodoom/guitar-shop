@@ -3,7 +3,7 @@ import { datatype, lorem } from 'faker';
 import { ApiRoutes, LoadingStatus, NameSpace } from '../../const';
 import { createAPI } from '../../services/api';
 import { createMockState, makeMockOneReviewWitId, makeMockReviewsArray, mockUserComment } from '../../utils/mock-faker';
-import { addOneReview, dataReviews, fetchReviewsAction, initialState as initialStateReviews, saveCommentAction, setCommentStatus, setReviews } from './data-reviews';
+import { addOneReview, dataReviews, fetchReviewsAction, initialState as initialStateReviews, saveCommentAction, setCommentStatus, setReviews, setReviewsStatus } from './data-reviews';
 import { State } from '../../types/state.types';
 import { Action } from '@reduxjs/toolkit';
 import { configureMockStore } from '@jedmao/redux-mock-store';
@@ -57,6 +57,14 @@ describe('Store: DATA_REVIEWS', () => {
         .toEqual({
           ...initialStateReviews,
           commentStatus: LoadingStatus.Succeeded,
+        });
+    });
+
+    it('setReviewsStatus -- set LoadingStatus to the line reviewsStatus of the store', () => {
+      expect(dataReviews.reducer(initialStateReviews, setReviewsStatus(LoadingStatus.Succeeded)))
+        .toEqual({
+          ...initialStateReviews,
+          reviewsStatus: LoadingStatus.Succeeded,
         });
     });
   });
