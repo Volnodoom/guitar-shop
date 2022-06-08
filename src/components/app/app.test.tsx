@@ -19,7 +19,6 @@ const ITEMS_NUMBER = 9;
 const PAGE_NUMBER = 1;
 const mockState = createMockState();
 
-
 const fakeGuitarIds = Array.from({length: ITEMS_NUMBER}, () => datatype.number());
 const fakeGuitarData = makeMockGuitarArray(ITEMS_NUMBER, fakeGuitarIds);
 const fakeGuitarsEntities = mockEntity(fakeGuitarIds, fakeGuitarData) as EntityGuitarType;

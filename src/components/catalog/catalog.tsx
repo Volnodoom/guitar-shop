@@ -3,9 +3,11 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {  LIMIT_GUITARS_PER_PAGE, LoadingStatus, PagesName } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
+import { useCustomSearchParams } from '../../hooks/use-custom-search-params/use-custom-search-params';
 import { useSetCatalogPageState } from '../../hooks/use-set-catalo-page/use-set-catalog-page';
-import { fetchProductsAction } from '../../store/data-guitars/data-guitars';
+import { fetchPriceExtreme, fetchProductsAction } from '../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
+import * as selectorQuery from '../../store/query-params/selector-query';
 import { Breadcrumbs } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
 import NotAvailablePage from '../not-available-page/not-available-page';
@@ -17,7 +19,16 @@ function Catalog():JSX.Element {
   const isDataLoaded = useSelector(selectorGuitar.getGuitarsStatus) === LoadingStatus.Succeeded;
   const totalGuitarsFromServer = useSelector(selectorGuitar.getTotalNumber);
   const guitarsAccordingToPage = useSelector(selectorGuitar.getGuitarsPerPage);
+  const priceRange = useSelector(selectorGuitar.getPriceExtremes);
+
+  const getCurrentPriceStart = useSelector(selectorQuery.getPriceRangeStart);
+  const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
+  const getFilterStringNumber = useSelector(selectorQuery.getFilterStringNumber);
+  const getCurrentFilterType = useSelector(selectorQuery.getFilterByType);
+
   const [setPageState] = useSetCatalogPageState();
+
+  useCustomSearchParams();
 
   const isPageExist = totalGuitarsFromServer
     && Number(pageNumber) <= Math.ceil(totalGuitarsFromServer/LIMIT_GUITARS_PER_PAGE);
@@ -28,6 +39,9 @@ function Catalog():JSX.Element {
       if(totalGuitarsFromServer === null || !guitarsAccordingToPage) {
         dispatch(fetchProductsAction());
       }
+      if(priceRange === null) {
+        dispatch(fetchPriceExtreme());
+      }
     }
   },[
     dispatch,
@@ -35,8 +49,11 @@ function Catalog():JSX.Element {
     totalGuitarsFromServer,
     pageNumber,
     setPageState,
+    getCurrentPriceStart,
+    getCurrentPriceEnd,
+    getFilterStringNumber,
+    getCurrentFilterType
   ]);
-
 
   if(!isDataLoaded || totalGuitarsFromServer === null) {
     return <LoadingScreen />;

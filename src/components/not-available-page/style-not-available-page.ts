@@ -23,4 +23,5 @@ export const nonAvailableLink: CSSProperties = {
   display: 'block',
   fontStyle: 'italic',
   fontWeight: 'bold',
+  zIndex: '100',
 };

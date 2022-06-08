@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { KeyBoardNames, ReviewFormField } from '../const';
+import { KeyBoardNames, ReviewFormField, SortingOrder, SortingSort } from '../const';
 import { AppDispatch, State } from './state.types';
 
 export type GuitarType = {
@@ -47,6 +47,11 @@ export type SeparatorType = {
   reviews: Review[],
 }
 
+export type GuitarsPriceRange = {
+  min: number,
+  max: number,
+}
+
 export type ModuleReviewStatus =  'openReview' | 'close' | 'success' | 'fail' | 'initial';
 
 export type UserReviewPost = Omit<Review, 'id' | 'createAt'>;
@@ -68,3 +73,25 @@ export type EntityReviewType = {[x: string]: Review};
 export type ErrorType = unknown;
 
 export type InvalidFormArray = (keyof typeof ReviewFormField)[]
+
+export type ParamObject = {
+  '_sort': null | SortingSort,
+  '_order': null | SortingOrder,
+  'price_gte': null | string,
+  'price_lte': null | string,
+  'stringCount': null | string[],
+  'type': null | string[],
+}
+
+export type KeysOfParamObject = '_sort' | '_order'| 'price_gte'| 'price_lte'| 'stringCount'| 'type'
+
+export type NoNullParamObject = {
+  '_sort'?: SortingSort,
+  '_order'?: SortingOrder,
+  'price_gte'?: string,
+  'price_lte'?: string,
+  'stringCount'?: string[],
+  'type'?: string[],
+}
+
+export type QueryParamsWithArrayData = 'stringCount' | 'type';

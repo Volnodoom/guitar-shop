@@ -18,6 +18,9 @@ export const LINK_CURRENT = 'link--current';
 export const NAV_LINK = 'link main-nav__link';
 export const CART_LINK = 'header__cart-link';
 export const SCROLL_LIMIT = 250;
+export const PRICE_MIN = 'priceMin';
+export const PRICE_MAX = 'priceMax';
+export const DELAY_IN_SERVER_REQUEST = 500;
 
 export const STRING_NUMBERS = [
   4,
@@ -102,6 +105,7 @@ export const ReviewDateTimeFormat = {
 
 export const KeyBoardCode = {
   Esc: {version1: 'Esc', version2: 'Escape'},
+  Enter: {version1: 'Enter', version2: 'NumpadEnter'},
 } as const;
 
 export enum ModalStatus {
@@ -135,6 +139,8 @@ export enum NameSpace {
 
 export enum ApiAction {
   FetchGuitars = 'guitars/fetchGuitars',
+  FetchUserSearch = 'guitars/fetchUserSearch',
+  FetchPrice = 'guitars/fetchMinAndMaxPrice',
   FetchOneGuitar = 'guitars/fetchOneGuitar',
   FetchReviews = 'reviews/fetchReviews',
   SaveComment = 'reviews/saveComment',
@@ -158,7 +164,7 @@ export enum LoadingStatus {
 }
 
 export const QueryRoutes = {
-  Name: 'name',
+  StringNumber: 'stringCount',
   Type: 'type',
   Sort: '_sort',
   Order: '_order',
@@ -169,11 +175,16 @@ export const QueryRoutes = {
   PriceEnd: 'price_lte',
   Like: 'name_like',
   Embed: '_embed',
-};
+} as const;
 
 export enum SortingOrder {
   Increase  = 'asc',
   Decrease = 'desc',
+}
+
+export enum SortingSort {
+  Price  = 'price',
+  Popularity = 'rating',
 }
 
 export enum PageScrollOptions {
@@ -213,3 +224,16 @@ export enum ReviewFormField {
   Comment = 'Comment',
   Rating = 'Rating',
 }
+
+export enum AriaLabelSorting {
+  ByPrice = 'по цене',
+  ByPopular = 'по популярности',
+  ByOrderUp = 'по возрастанию',
+  ByOrderDown = 'по убыванию',
+}
+
+export const GuitarTypeStringNumberCombination: {[value in KindOfGuitars]: number[]}  = {
+  [KindOfGuitars.Acoustic]: [6,7,12],
+  [KindOfGuitars.Electric]: [4,6,7],
+  [KindOfGuitars.Ukulele]: [4],
+};
