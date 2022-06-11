@@ -24,6 +24,7 @@ export const DELAY_IN_SERVER_REQUEST = 500;
 export const ERROR_404 = '404.';
 export const PAGE_NOT_FOUND = 'Page not found';
 export const GENERAL_ERROR_MESSAGE = 'Проверьте правильность ввода запроса, наличие интернет соединения и повторите попытку. Если данная проблема повторилась, значит мы работаем над её устранением. Пожалуйста, повторите свой запрос позже.';
+export const SEARCH_BAR_PLACEHOLDER = 'Что вы ищите?';
 
 export const STRING_NUMBERS = [
   4,

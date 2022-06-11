@@ -293,6 +293,7 @@ describe('Store: DATA_GUITARS', () => {
       await store.dispatch(fetchPriceExtreme());
 
       const actions = store.getActions().map(({type}) => type);
+
       expect(actions).toContain(setPriceExtremes.type);
     });
   });

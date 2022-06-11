@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent, MouseEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AppRoutes, CART_LINK, LINK_CURRENT, LoadingStatus, LogoPosition, NAV_LINK, PagesName } from '../../../const';
+import { AppRoutes, CART_LINK, LINK_CURRENT, LoadingStatus, LogoPosition, NAV_LINK, PagesName, SEARCH_BAR_PLACEHOLDER } from '../../../const';
 import { useAppDispatch } from '../../../hooks/hook';
 import { useDebouncedValue } from '../../../hooks/use-debounced-value/use-debounced-value';
 import { fetchUserSearchAction, setActiveTab, setOneGuitarStatus, setUserSearch } from '../../../store/data-guitars/data-guitars';
@@ -59,6 +59,7 @@ function Header (): JSX.Element {
     } else if(!debouncedValue.includes(searchName) && !hasMemoryUnMatch(debouncedValue)) {
       dispatch(fetchUserSearchAction(debouncedValue));
     }
+
     setSearchName(debouncedValue);
   }, [debouncedValue, dispatch]);
 
@@ -161,7 +162,7 @@ function Header (): JSX.Element {
               id="search"
               type="text"
               autoComplete="off"
-              placeholder="что вы ищите?"
+              placeholder={SEARCH_BAR_PLACEHOLDER}
               onChange={handleNameSearch}
               value={currentVisual}
               onKeyDown={handleKeyboardClick()}

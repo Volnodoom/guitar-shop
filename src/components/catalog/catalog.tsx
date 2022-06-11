@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import {  GENERAL_ERROR_MESSAGE, LIMIT_GUITARS_PER_PAGE, PagesName } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
 import { useCustomSearchParams } from '../../hooks/use-custom-search-params/use-custom-search-params';
-import { useSetCatalogPageState } from '../../hooks/use-set-catalo-page/use-set-catalog-page';
+import { useSetCatalogPageState } from '../../hooks/use-set-catalog-page-state/use-set-catalog-page-state';
 import { fetchPriceExtreme, fetchProductsAction } from '../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 import * as selectorQuery from '../../store/query-params/selector-query';
