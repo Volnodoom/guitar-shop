@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { useState, ChangeEvent, FocusEvent, useEffect } from 'react';
+import { useState, ChangeEvent, FocusEvent, useEffect, KeyboardEvent } from 'react';
 import { LOCAL_RU, PRICE_MAX, PRICE_MIN, QueryRoutes } from '../../../../../../const';
 import * as selectorGuitar from '../../../../../../store/data-guitars/selectors-guitars';
 import { useAppDispatch } from '../../../../../../hooks/hook';
@@ -7,9 +7,10 @@ import { setPriceRangeEnd, setPriceRangeStart } from '../../../../../../store/qu
 import { useSearchParams } from 'react-router-dom';
 import { clearGuitarsIdPerPage } from '../../../../../../store/data-guitars/data-guitars';
 import * as selectorQuery from '../../../../../../store/query-params/selector-query';
+import { isEnter } from '../../../../../../utils/utils-components';
 
 function Price (): JSX.Element {
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
 
   const priceRange = useSelector(selectorGuitar.getPriceExtremes);
@@ -17,21 +18,48 @@ function Price (): JSX.Element {
   const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
 
   const [minPrice, setMinPrice] = useState<string | number>('');
+  const [minPricePrevious, setMinPricePrevious] = useState<string | number>('');
   const [maxPrice, setMaxPrice] = useState<string | number>('');
+  const [maxPricePrevious, setMaxPricePrevious] = useState<string | number>('');
 
   useEffect(() => {
     if(getCurrentPriceStart) {
       setMinPrice(getCurrentPriceStart);
+      setMinPricePrevious(getCurrentPriceStart);
     }
     if(getCurrentPriceEnd) {
       setMaxPrice(getCurrentPriceEnd);
+      setMaxPricePrevious(getCurrentPriceEnd);
     }
   }, [getCurrentPriceEnd, getCurrentPriceStart]);
 
   const hasMinPrice = Boolean(minPrice);
   const hasMaxPrice = Boolean(maxPrice);
 
+  const setUrlQueryParam = () => {
+    if(hasMinPrice && hasMaxPrice) {
+      setSearchParams({[QueryRoutes.PriceStart]: String(minPrice)});
+      setSearchParams({[QueryRoutes.PriceEnd]: String(maxPrice)});
+    }
+    if(!hasMinPrice && hasMaxPrice) {
+      setSearchParams({[QueryRoutes.PriceEnd]: String(maxPrice)});
+    }
+    if(hasMinPrice && !hasMaxPrice) {
+      setSearchParams({[QueryRoutes.PriceStart]: String(minPrice)});
+    }
+    if(!hasMinPrice && !hasMaxPrice) {
+      searchParams.delete(QueryRoutes.PriceStart);
+      searchParams.delete(QueryRoutes.PriceEnd);
+    }
+  };
+
   const correctMinPrice = () => {
+    if(minPricePrevious === minPrice) {
+      return;
+    } else {
+      setMinPricePrevious(minPrice);
+    }
+
     if(priceRange && hasMinPrice && minPrice < priceRange.min) {
       setMinPrice(priceRange.min);
       dispatch(setPriceRangeStart(priceRange.min));
@@ -50,12 +78,18 @@ function Price (): JSX.Element {
       dispatch(setPriceRangeStart(null));
     }
 
-    setSearchParams({[QueryRoutes.PriceStart]: String(minPrice)});
+    setUrlQueryParam();
     dispatch(clearGuitarsIdPerPage());
   };
 
 
   const correctMaxPrice = () => {
+    if(maxPricePrevious === maxPrice) {
+      return;
+    } else {
+      setMaxPricePrevious(maxPrice);
+    }
+
     if(priceRange && maxPrice > priceRange.max) {
       setMaxPrice(priceRange.max);
       dispatch(setPriceRangeEnd(priceRange.max));
@@ -74,11 +108,23 @@ function Price (): JSX.Element {
       dispatch(setPriceRangeEnd(null));
     }
 
-    setSearchParams({[QueryRoutes.PriceEnd]: String(maxPrice)});
+    setUrlQueryParam();
     dispatch(clearGuitarsIdPerPage());
   };
 
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const elementMin: boolean = (evt.target as HTMLInputElement).id === PRICE_MIN;
+    const elementMax: boolean = (evt.target as HTMLInputElement).id === PRICE_MAX;
+    const inputValue = (evt.target as HTMLInputElement).value;
+
+    if(elementMin && inputValue === String(minPrice)) {
+      return;
+    }
+    if(elementMax && inputValue === String(maxPrice)) {
+      return;
+    }
+
+
     switch((evt.target as HTMLInputElement).id) {
       case PRICE_MIN:
         (evt.target as HTMLInputElement).value === ''
@@ -95,13 +141,26 @@ function Price (): JSX.Element {
     }
   };
 
-  const handleInputExit = (evt: FocusEvent<HTMLInputElement>) => {
+  const handleBlurInputExit = (evt: FocusEvent<HTMLInputElement>) => {
     switch((evt.target as HTMLInputElement).id) {
       case PRICE_MIN:
         correctMinPrice();
         break;
       case PRICE_MAX:
         correctMaxPrice();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleKeyDownInputExit = (evt: KeyboardEvent<HTMLInputElement>) => {
+    switch((evt.target as HTMLInputElement).id) {
+      case PRICE_MIN:
+        isEnter(evt.code) && correctMinPrice();
+        break;
+      case PRICE_MAX:
+        isEnter(evt.code) && correctMaxPrice();
         break;
       default:
         break;
@@ -121,7 +180,8 @@ function Price (): JSX.Element {
             name="от"
             value={minPrice}
             onChange={handleChange}
-            onBlur={handleInputExit}
+            onBlur={handleBlurInputExit}
+            onKeyDown={handleKeyDownInputExit}
           />
         </div>
         <div className="form-input">
@@ -133,7 +193,8 @@ function Price (): JSX.Element {
             name="до"
             value={maxPrice}
             onChange={handleChange}
-            onBlur={handleInputExit}
+            onBlur={handleBlurInputExit}
+            onKeyDown={handleKeyDownInputExit}
           />
         </div>
       </div>
