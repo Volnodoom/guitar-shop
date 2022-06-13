@@ -1,15 +1,24 @@
 import { render, screen } from '@testing-library/react';
+import { configureMockStore } from '@jedmao/redux-mock-store';
 import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import { FooterSocialLinks } from '../../../const';
 import Footer from './footer';
+import { createMockState } from '../../../utils/mock-faker';
 
 describe('Component: Footer', () => {
   it('render correctly', () => {
+    const mockState = createMockState();
+    const mockStore = configureMockStore()(mockState);
+
     render(
-      <MemoryRouter>
-        <Footer />
-      </MemoryRouter>
+      <Provider store={mockStore}>
+        <MemoryRouter>
+          <Footer />
+        </MemoryRouter>
+      </Provider>
     );
+
 
     expect(screen.getByText(/О нас/i)).toBeInTheDocument();
     expect(screen.getByText(/Информация/i)).toBeInTheDocument();
