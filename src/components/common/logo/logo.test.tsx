@@ -44,6 +44,8 @@ describe('Component: Logo', () => {
 
     const START_PATH = '/start';
 
+    mockStore.dispatch = jest.fn();
+
     render(
       <Provider store={mockStore}>
         <MemoryRouter initialEntries={[START_PATH]}>
@@ -57,5 +59,6 @@ describe('Component: Logo', () => {
 
     userEvent.click(screen.getByAltText(/Логотип/i));
     await waitFor(() => {expect(screen.getByText('Correct redirection')).toBeInTheDocument();});
+    await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledTimes(2);});
   });
 });

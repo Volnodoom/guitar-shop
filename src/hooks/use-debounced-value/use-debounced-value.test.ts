@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 import { useDebouncedValue } from './use-debounced-value';
 
 describe('Custom hook: use-debounced-value', () => {
@@ -10,16 +10,18 @@ describe('Custom hook: use-debounced-value', () => {
     jest.useFakeTimers();
     const {result} = renderHook(() => useDebouncedValue(FAKE_VALUE, FAKE_TIME));
     let returnValue = result.current;
-
     expect(returnValue).toBe('');
 
-    jest.advanceTimersByTime(HALF_FAKE_TIME);
+    act(() => {
+      jest.advanceTimersByTime(HALF_FAKE_TIME);
+    });
     returnValue = result.current;
     expect(returnValue).toBe('');
 
-    jest.advanceTimersByTime(FAKE_TIME);
+    act(() => {
+      jest.advanceTimersByTime(FAKE_TIME);
+    });
     returnValue = result.current;
-
     expect(returnValue).toBe(FAKE_VALUE);
   });
 
@@ -34,26 +36,28 @@ describe('Custom hook: use-debounced-value', () => {
     let time = FAKE_TIME;
     const {result, rerender} = renderHook(() => useDebouncedValue(input, time));
     const returnValueInitial = result.current;
-
     expect(returnValueInitial).toBe('');
 
-    jest.advanceTimersByTime(HALF_FAKE_TIME);
+    act(() => {
+      jest.advanceTimersByTime(HALF_FAKE_TIME);
+    });
     input = NEW_FAKE;
     time = FAKE_TIME;
     rerender();
     const returnValue500sec = result.current;
-
     expect(returnValue500sec).toBe('');
 
-    jest.advanceTimersByTime(FAKE_TIME);
+    act(() => {
+      jest.advanceTimersByTime(HALF_FAKE_TIME);
+    });
     const returnValue1000sec = result.current;
-
     expect(returnValue1000sec).toBe('');
 
-    jest.advanceTimersByTime(FAKE_TIME + HALF_FAKE_TIME);
+    act(() => {
+      jest.advanceTimersByTime(FAKE_TIME);
+    });
     const returnValue1500sec = result.current;
-
-    expect(returnValue1500sec).toBe('fake2');
+    expect(returnValue1500sec).toBe(NEW_FAKE);
   });
 });
 
