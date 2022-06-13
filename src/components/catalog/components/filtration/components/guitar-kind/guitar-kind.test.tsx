@@ -42,7 +42,7 @@ describe('Component: GuitarKind', () => {
     );
 
     userEvent.click(screen.getByLabelText(GuitarPluralRu.acoustic));
-    await waitFor(() => {expect(screen.getByLabelText(GuitarPluralRu.acoustic, {selector: 'input'})).toBeDisabled();});
+    await waitFor(() => {expect(screen.getByLabelText(GuitarPluralRu.acoustic, {selector: 'input'})).not.toBeChecked();});
     // await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledTimes(2);});
     // await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledWith(addFilterByType(KindOfGuitars.Acoustic));});
     // expect(mockStore.dispatch).toHaveBeenCalledTimes(2);
