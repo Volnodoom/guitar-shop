@@ -1,21 +1,20 @@
 import { useEffect } from 'react';
 import { SCROLL_LIMIT } from '../../const';
-import { Review } from '../../types/general.types';
 
 export const useReviewsOnScroll = (
-  showOffLimit: number,
-  filtratedReviews: Review[],
+  showNumberOfReviews: number,
+  numberOfReviews: number,
   callback: () => void,
 ) => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight;
       const windowHeight = document.documentElement.clientHeight;
-      const scrollTop = window.pageYOffset;
+      const scrollTop = window.scrollY;
 
       const scrollBottom = scrollHeight - windowHeight - scrollTop;
 
-      if (scrollBottom < SCROLL_LIMIT && showOffLimit < filtratedReviews.length) {
+      if (scrollBottom < SCROLL_LIMIT && showNumberOfReviews < numberOfReviews) {
         callback();
       }
     };
@@ -25,6 +24,6 @@ export const useReviewsOnScroll = (
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [callback, filtratedReviews.length, showOffLimit]);
+  }, [callback, numberOfReviews, showNumberOfReviews]);
 
 };

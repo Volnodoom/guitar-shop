@@ -20,7 +20,7 @@ function ReviewsListInteraction ({onCreateReviewClick}: ReviewsListInteractionPr
   }, [showOffLimit]);
 
   const filtratedReviews = reviews.slice().sort(compareFunctionEarlyToLate);
-  useReviewsOnScroll(showOffLimit, filtratedReviews, handleShowMoreClick);
+  useReviewsOnScroll(showOffLimit, filtratedReviews.length, handleShowMoreClick);
 
   const handleGoUpLink = (evt: MouseEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
