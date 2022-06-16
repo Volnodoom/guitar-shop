@@ -22,7 +22,6 @@ function GuitarKind (): JSX.Element {
       dispatch(addFilterByType(engGuitarKind));
       setSearchParams({[QueryRoutes.Type]: engGuitarKind});
     }
-
     dispatch(clearGuitarsIdPerPage());
   };
 
@@ -38,8 +37,9 @@ function GuitarKind (): JSX.Element {
               type="checkbox" id={line}
               name={line}
               defaultChecked={isCurrentElementActive(line, filterActive)}
+              data-testid={`${line}-checkbox`}
             />
-            <label htmlFor={line} onClick={handleLabelClick(line)}>{GuitarPluralRu[line]}</label>
+            <label htmlFor={line} onClick={handleLabelClick(line)} data-testid={line}>{GuitarPluralRu[line]}</label>
           </div>
         ))
       }
