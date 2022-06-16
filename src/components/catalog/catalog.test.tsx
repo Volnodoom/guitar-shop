@@ -11,7 +11,7 @@ import Catalog from './catalog';
 
 
 describe('Component: Catalog', () => {
-  it('render correctly with data', () => {
+  it('Render correctly with data', () => {
     const PAGE_NUMBER = 2;
     const TOTAL_NUMBER = 19;
     const ITEMS_NUMBER = 9;
@@ -31,6 +31,10 @@ describe('Component: Catalog', () => {
         guitarsIdPerPage: {[PAGE_NUMBER]: fakeIds},
         entities: fakeGuitarsEntities,
         ids: fakeIds,
+        priceExtremes: {
+          min: 100,
+          max: 500,
+        }
       }
     };
     const store = configureMockStore()(updatedState);
@@ -68,6 +72,10 @@ describe('Component: Catalog', () => {
         guitarsStatus: LoadingStatus.Succeeded,
         guitarsIdPerPage: {[PAGE_NUMBER]: fakeIds},
         ids:[fakeIds],
+        priceExtremes: {
+          min: 100,
+          max: 500,
+        }
       }
     };
     const store = configureMockStore()(updatedState);
@@ -104,6 +112,10 @@ describe('Component: Catalog', () => {
         guitarsStatus: LoadingStatus.Loading,
         guitarsIdPerPage: {[PAGE_NUMBER]: fakeIds},
         ids: fakeIds,
+        priceExtremes: {
+          min: 100,
+          max: 500,
+        }
       }
     };
     const store = configureMockStore()(updatedState);
@@ -139,6 +151,10 @@ describe('Component: Catalog', () => {
         guitarsStatus: LoadingStatus.Succeeded,
         guitarsIdPerPage: {[PAGE_NUMBER]: fakeIds},
         ids: fakeIds,
+        priceExtremes: {
+          min: 100,
+          max: 500,
+        }
       }
     };
     const store = configureMockStore()(updatedState);
