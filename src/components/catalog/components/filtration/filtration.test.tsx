@@ -7,7 +7,7 @@ import Filtration from './filtration';
 import { createMockState } from '../../../../utils/mock-faker';
 import { clearQueryParams } from '../../../../store/query-params/query-params';
 import { clearGuitarsIdPerPage } from '../../../../store/data-guitars/data-guitars';
-import { GuitarPluralRu } from '../../../../const';
+import { GuitarPluralRu, KindOfGuitars, NameSpace } from '../../../../const';
 
 describe('Component: Filtration', () => {
   it('render correctly', () => {
@@ -28,7 +28,14 @@ describe('Component: Filtration', () => {
 
   it('click on one of Guitar types disable number of the strings that are not related to selected type', async () => {
     const mockState = createMockState();
-    const mockStore = configureMockStore()(mockState);
+    const updatedState = {
+      ...mockState,
+      [NameSpace.QueryParams]: {
+        ...mockState[NameSpace.QueryParams],
+        filterByType: [KindOfGuitars.Acoustic]
+      }
+    };
+    const mockStore = configureMockStore()(updatedState);
 
     mockStore.dispatch = jest.fn();
 
@@ -40,8 +47,8 @@ describe('Component: Filtration', () => {
       </Provider>
     );
 
-    userEvent.click(screen.getByLabelText(GuitarPluralRu.acoustic));
-    await waitFor(() => {expect(screen.getByLabelText(4, {selector: 'input'})).toBeDisabled();});
+    expect(screen.getByLabelText(GuitarPluralRu.acoustic, {selector: 'input'})).toBeChecked();
+    expect(screen.getByLabelText(4, {selector: 'input'})).toBeDisabled();
   });
 
   it('click on Очистить button lead to clear filtration and search params (call for actions clearQueryParams)', async () => {
