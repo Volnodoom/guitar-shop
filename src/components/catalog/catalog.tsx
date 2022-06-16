@@ -54,7 +54,8 @@ function Catalog():JSX.Element {
     getCurrentPriceStart,
     getCurrentPriceEnd,
     getFilterStringNumber,
-    getCurrentFilterType
+    getCurrentFilterType,
+    priceRange
   ]);
 
   if(isDataLoading || totalGuitarsFromServer === null) {

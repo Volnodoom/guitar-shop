@@ -38,8 +38,10 @@ function Price (): JSX.Element {
 
   const setUrlQueryParam = () => {
     if(hasMinPrice && hasMaxPrice) {
-      setSearchParams({[QueryRoutes.PriceStart]: String(minPrice)});
-      setSearchParams({[QueryRoutes.PriceEnd]: String(maxPrice)});
+      setSearchParams({
+        [QueryRoutes.PriceStart]: String(minPrice),
+        [QueryRoutes.PriceEnd]: String(maxPrice),
+      });
     }
     if(!hasMinPrice && hasMaxPrice) {
       setSearchParams({[QueryRoutes.PriceEnd]: String(maxPrice)});

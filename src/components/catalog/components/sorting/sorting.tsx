@@ -13,43 +13,73 @@ function Sorting():JSX.Element {
   const getCurrentOrder = useSelector(selectorQuery.getOrder);
   const [, setSearchParams] = useSearchParams();
 
+  const hasSorting = Boolean(getCurrentSort);
+  const hasOrdering = Boolean(getCurrentOrder);
 
   const handleSortClick = (evt: MouseEvent<HTMLButtonElement>) => {
     switch ((evt.target as HTMLButtonElement).dataset.sorting) {
       case SortingDataset.ByPrice:
         dispatch(clearGuitarsIdPerPage());
         dispatch(setSortBy(SortingSort.Price));
-        setSearchParams({[QueryRoutes.Sort]: SortingSort.Price});
-        getCurrentOrder === null
+        hasOrdering
+        && setSearchParams({
+          [QueryRoutes.Sort]: SortingSort.Price,
+          [QueryRoutes.Order]: getCurrentOrder as SortingOrder,
+        });
+        !hasOrdering
         && dispatch(setOrderBy(SortingOrder.Decrease))
-        && setSearchParams({[QueryRoutes.Order]: SortingOrder.Decrease});
+        && setSearchParams({
+          [QueryRoutes.Sort]: SortingSort.Price,
+          [QueryRoutes.Order]: SortingOrder.Decrease
+        });
         break;
 
       case SortingDataset.ByPopular:
         dispatch(clearGuitarsIdPerPage());
         dispatch(setSortBy(SortingSort.Popularity));
-        setSearchParams({[QueryRoutes.Sort]: SortingSort.Popularity});
-        getCurrentOrder === null
+        hasOrdering
+        && setSearchParams({
+          [QueryRoutes.Sort]: SortingSort.Popularity,
+          [QueryRoutes.Order]: getCurrentOrder as SortingOrder,
+        });
+        !hasOrdering
         && dispatch(setOrderBy(SortingOrder.Decrease))
-        && setSearchParams({[QueryRoutes.Order]: SortingOrder.Decrease});
+        && setSearchParams({
+          [QueryRoutes.Sort]: SortingSort.Popularity,
+          [QueryRoutes.Order]: SortingOrder.Decrease
+        });
         break;
 
       case SortingDataset.ByOrderUp:
         dispatch(clearGuitarsIdPerPage());
         dispatch(setOrderBy(SortingOrder.Increase));
-        setSearchParams({[QueryRoutes.Order]: SortingOrder.Increase});
-        getCurrentSort === null
+        hasSorting
+        && setSearchParams({
+          [QueryRoutes.Order]: SortingOrder.Increase,
+          [QueryRoutes.Sort]: getCurrentSort as SortingSort,
+        });
+        !hasSorting
         && dispatch(setSortBy(SortingSort.Price))
-        && setSearchParams({[QueryRoutes.Sort]: SortingSort.Price});
+        && setSearchParams({
+          [QueryRoutes.Order]: SortingOrder.Increase,
+          [QueryRoutes.Sort]: SortingSort.Price,
+        });
         break;
 
       case SortingDataset.ByOrderDown:
         dispatch(clearGuitarsIdPerPage());
         dispatch(setOrderBy(SortingOrder.Decrease));
-        setSearchParams({[QueryRoutes.Order]: SortingOrder.Decrease});
-        getCurrentSort === null
+        hasSorting
+        && setSearchParams({
+          [QueryRoutes.Order]: SortingOrder.Decrease,
+          [QueryRoutes.Sort]: getCurrentSort as SortingSort,
+        });
+        !hasSorting
         && dispatch(setSortBy(SortingSort.Price))
-        && setSearchParams({[QueryRoutes.Sort]: SortingSort.Price});
+        && setSearchParams({
+          [QueryRoutes.Order]: SortingOrder.Decrease,
+          [QueryRoutes.Sort]: SortingSort.Price,
+        });
         break;
 
       default:
