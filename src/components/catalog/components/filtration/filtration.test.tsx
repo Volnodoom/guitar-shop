@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
+import * as ReactRouter from 'react-router-dom';
 import { MemoryRouter } from 'react-router-dom';
 import Filtration from './filtration';
 import { createMockState } from '../../../../utils/mock-faker';
@@ -10,7 +11,7 @@ import { clearGuitarsIdPerPage } from '../../../../store/data-guitars/data-guita
 import { GuitarPluralRu, KindOfGuitars, NameSpace } from '../../../../const';
 
 describe('Component: Filtration', () => {
-  it('render correctly', () => {
+  it('Render correctly', () => {
     const mockState = createMockState();
     const mockStore = configureMockStore()(mockState);
 
@@ -26,7 +27,7 @@ describe('Component: Filtration', () => {
     expect(screen.getByRole('button', {name: /Очистить/i})).toBeInTheDocument();
   });
 
-  it('click on one of Guitar types disable number of the strings that are not related to selected type', async () => {
+  it('Click on one of Guitar types disable number of the strings that are not related to selected type', async () => {
     const mockState = createMockState();
     const updatedState = {
       ...mockState,
@@ -51,7 +52,7 @@ describe('Component: Filtration', () => {
     expect(screen.getByLabelText(4, {selector: 'input'})).toBeDisabled();
   });
 
-  it('click on Очистить button lead to clear filtration and search params (call for actions clearQueryParams)', async () => {
+  it('Click on Очистить button lead to clear user filtration', async () => {
     const mockState = createMockState();
     const mockStore = configureMockStore()(mockState);
 
@@ -69,5 +70,26 @@ describe('Component: Filtration', () => {
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledTimes(2);});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledWith(clearQueryParams());});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledWith(clearGuitarsIdPerPage());});
+  });
+
+  it('Click on Очистить button call to clear search params with setSearchParams({})', async () => {
+    const mockState = createMockState();
+    const mockStore = configureMockStore()(mockState);
+
+    const firstValue = new URLSearchParams();
+    const setSearch = jest.fn();
+    const useStateSpy = jest.spyOn(ReactRouter, 'useSearchParams');
+    useStateSpy.mockImplementation(() => [firstValue, setSearch]);
+
+    render(
+      <Provider store={mockStore}>
+        <MemoryRouter>
+          <Filtration />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    userEvent.click(screen.getByRole('button', {name: /Очистить/i}));
+    await waitFor(() => {expect(setSearch).toHaveBeenCalledWith({});});
   });
 });
