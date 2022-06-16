@@ -229,11 +229,11 @@ export enum ReviewFormField {
   Rating = 'Rating',
 }
 
-export enum AriaLabelSorting {
-  ByPrice = 'по цене',
-  ByPopular = 'по популярности',
-  ByOrderUp = 'по возрастанию',
-  ByOrderDown = 'по убыванию',
+export enum SortingDataset {
+  ByPrice = 'by price',
+  ByPopular = 'by popularity',
+  ByOrderUp = 'by order up',
+  ByOrderDown = 'by order down',
 }
 
 export const GuitarTypeStringNumberCombination: {[value in KindOfGuitars]: number[]}  = {

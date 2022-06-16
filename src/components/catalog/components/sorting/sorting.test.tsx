@@ -11,7 +11,7 @@ import { SortingOrder, SortingSort } from '../../../../const';
 
 
 describe('Component: Sorting', () => {
-  it('render correctly', () => {
+  it('Render correctly', () => {
     const mockState = createMockState();
     const mockStore = configureMockStore()(mockState);
 
@@ -30,7 +30,7 @@ describe('Component: Sorting', () => {
     expect(screen.getByRole('button', {name: /По убыванию/i})).toBeInTheDocument();
   });
 
-  it('press on sorting according to the price automatically add sorting decreasing', async () => {
+  it('Press on sorting according to the price automatically add sorting decreasing', async () => {
     const mockState = createMockState();
     const mockStore = configureMockStore()(mockState);
 
@@ -49,11 +49,26 @@ describe('Component: Sorting', () => {
     await waitFor(() => expect(mockStore.dispatch).toBeCalledWith(clearGuitarsIdPerPage()));
     await waitFor(() => expect(mockStore.dispatch).toBeCalledWith(setSortBy(SortingSort.Price)));
     await waitFor(() => expect(mockStore.dispatch).toBeCalledWith(setOrderBy(SortingOrder.Decrease)));
-    // expect(screen.getByText(/Сортировать/i)).toBeInTheDocument();
-    // expect().toBeInTheDocument();
-    // expect(screen.getByRole('button', {name: /по популярности/i})).toBeInTheDocument();
-    // expect(screen.getByRole('button', {name: /По возрастанию/i})).toBeInTheDocument();
-    // expect(screen.getByRole('button', {name: /По убыванию/i})).toBeInTheDocument();
   });
 
+  it('Press on oder up automatically add sorting by price', async () => {
+    const mockState = createMockState();
+    const mockStore = configureMockStore()(mockState);
+
+    mockStore.dispatch = jest.fn();
+
+    render(
+      <Provider store={mockStore}>
+        <MemoryRouter>
+          <Sorting />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    userEvent.click(screen.getByRole('button', {name: /По возрастанию/i}));
+    await waitFor(() => expect(mockStore.dispatch).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(mockStore.dispatch).toBeCalledWith(clearGuitarsIdPerPage()));
+    await waitFor(() => expect(mockStore.dispatch).toBeCalledWith(setSortBy(SortingSort.Price)));
+    await waitFor(() => expect(mockStore.dispatch).toBeCalledWith(setOrderBy(SortingOrder.Increase)));
+  });
 });
