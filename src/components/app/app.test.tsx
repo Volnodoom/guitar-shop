@@ -32,6 +32,10 @@ const updatedState = {
   [NameSpace.DataGuitars]: {
     ...mockState[NameSpace.DataGuitars],
     totalGuitars: TOTAL_NUMBER,
+    priceExtremes: {
+      min: 100,
+      max: 300,
+    },
     guitarsStatus: LoadingStatus.Succeeded,
     oneGuitarStatus: LoadingStatus.Succeeded,
     guitarsIdPerPage: {[PAGE_NUMBER]: fakeGuitarIds},
@@ -109,7 +113,7 @@ describe('Component: App', () => {
       </Provider>
     );
 
-    expect(screen.getByText(/Товар/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Товар$/i)).toBeInTheDocument();
   });
 
   it('render cart info on url address /catalog/cart', () => {
