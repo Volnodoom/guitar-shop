@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { LIMIT_GUITARS_PER_PAGE, LIMIT_GUITARS_PER_PAGE_DOUBLE, ONE, AppRoutes } from '../../../../const';
 import * as selectorGuitars from '../../../../store/data-guitars/selectors-guitars';
-import { useSetCatalogPageState } from '../../../../hooks/use-set-catalo-page/use-set-catalog-page';
+import { useSetCatalogPageState } from '../../../../hooks/use-set-catalog-page-state/use-set-catalog-page-state';
 
 function Pagination() {
   const totalGuitar = useSelector(selectorGuitars.getTotalNumber);

@@ -96,7 +96,7 @@ export const getValueFromNonEmptyArray = (array: number[] | string[] | null) => 
   }
 };
 
-export const translateFromNumberToString = (value: number | null) => {
+export const translateToStringOrNull = (value: number | null) => {
   if(value) {
     return String(value);
   } else {

@@ -11,7 +11,7 @@ import CardDetailed from '../card-detailed/card-detailed';
 import Cart from '../cart/cart';
 import Catalog from '../catalog/catalog';
 import Layout from '../layout/layout';
-import NotAvailablePage from '../not-available-page/not-available-page';
+import PageOnError from '../page-on-error/page-on-error';
 
 const TOTAL_NUMBER = 19;
 const ITEMS_NUMBER = 9;
@@ -32,6 +32,10 @@ const updatedState = {
   [NameSpace.DataGuitars]: {
     ...mockState[NameSpace.DataGuitars],
     totalGuitars: TOTAL_NUMBER,
+    priceExtremes: {
+      min: 100,
+      max: 300,
+    },
     guitarsStatus: LoadingStatus.Succeeded,
     oneGuitarStatus: LoadingStatus.Succeeded,
     guitarsIdPerPage: {[PAGE_NUMBER]: fakeGuitarIds},
@@ -61,7 +65,7 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -82,7 +86,7 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -103,13 +107,13 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>
     );
 
-    expect(screen.getByText(/Товар/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Товар$/i)).toBeInTheDocument();
   });
 
   it('render cart info on url address /catalog/cart', () => {
@@ -124,7 +128,7 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -145,7 +149,7 @@ describe('Component: App', () => {
               <Route path={AppRoutes.Guitar()} element={<CardDetailed />} />
               <Route path={AppRoutes.Cart} element={<Cart />} />
             </Route>
-            <Route path={AppRoutes.NotExisted} element={<NotAvailablePage />} />
+            <Route path={AppRoutes.NotExisted} element={<PageOnError />} />
           </Routes>
         </MemoryRouter>
       </Provider>

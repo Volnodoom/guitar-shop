@@ -1,7 +1,7 @@
 import { MouseEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { AriaLabelSorting, QueryRoutes, SortingOrder, SortingSort } from '../../../../const';
+import { SortingDataset, QueryRoutes, SortingOrder, SortingSort } from '../../../../const';
 import { useAppDispatch } from '../../../../hooks/hook';
 import { clearGuitarsIdPerPage } from '../../../../store/data-guitars/data-guitars';
 import { setOrderBy, setSortBy } from '../../../../store/query-params/query-params';
@@ -11,46 +11,75 @@ function Sorting():JSX.Element {
   const dispatch = useAppDispatch();
   const getCurrentSort = useSelector(selectorQuery.getSort);
   const getCurrentOrder = useSelector(selectorQuery.getOrder);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
+  const hasSorting = Boolean(getCurrentSort);
+  const hasOrdering = Boolean(getCurrentOrder);
 
   const handleSortClick = (evt: MouseEvent<HTMLButtonElement>) => {
-    switch ((evt.target as HTMLButtonElement).ariaLabel) {
-      case AriaLabelSorting.ByPrice:
+    switch ((evt.target as HTMLButtonElement).dataset.sorting) {
+      case SortingDataset.ByPrice:
         dispatch(clearGuitarsIdPerPage());
         dispatch(setSortBy(SortingSort.Price));
-        setSearchParams({[QueryRoutes.Sort]: SortingSort.Price});
-        getCurrentOrder === null
+        hasOrdering
+        && setSearchParams({
+          [QueryRoutes.Sort]: SortingSort.Price,
+          [QueryRoutes.Order]: getCurrentOrder as SortingOrder,
+        });
+        !hasOrdering
         && dispatch(setOrderBy(SortingOrder.Decrease))
-        && setSearchParams({[QueryRoutes.Order]: SortingOrder.Decrease});
+        && setSearchParams({
+          [QueryRoutes.Sort]: SortingSort.Price,
+          [QueryRoutes.Order]: SortingOrder.Decrease
+        });
         break;
 
-      case AriaLabelSorting.ByPopular:
+      case SortingDataset.ByPopular:
         dispatch(clearGuitarsIdPerPage());
         dispatch(setSortBy(SortingSort.Popularity));
-        setSearchParams({[QueryRoutes.Sort]: SortingSort.Popularity});
-        getCurrentOrder === null
+        hasOrdering
+        && setSearchParams({
+          [QueryRoutes.Sort]: SortingSort.Popularity,
+          [QueryRoutes.Order]: getCurrentOrder as SortingOrder,
+        });
+        !hasOrdering
         && dispatch(setOrderBy(SortingOrder.Decrease))
-        && setSearchParams({[QueryRoutes.Order]: SortingOrder.Decrease});
+        && setSearchParams({
+          [QueryRoutes.Sort]: SortingSort.Popularity,
+          [QueryRoutes.Order]: SortingOrder.Decrease
+        });
         break;
 
-      case AriaLabelSorting.ByOrderUp:
+      case SortingDataset.ByOrderUp:
         dispatch(clearGuitarsIdPerPage());
         dispatch(setOrderBy(SortingOrder.Increase));
-        setSearchParams({[QueryRoutes.Order]: SortingOrder.Increase});
-        getCurrentSort === null
+        hasSorting
+        && setSearchParams({
+          [QueryRoutes.Order]: SortingOrder.Increase,
+          [QueryRoutes.Sort]: getCurrentSort as SortingSort,
+        });
+        !hasSorting
         && dispatch(setSortBy(SortingSort.Price))
-        && setSearchParams({[QueryRoutes.Sort]: SortingSort.Price});
+        && setSearchParams({
+          [QueryRoutes.Order]: SortingOrder.Increase,
+          [QueryRoutes.Sort]: SortingSort.Price,
+        });
         break;
 
-      case AriaLabelSorting.ByOrderDown:
+      case SortingDataset.ByOrderDown:
         dispatch(clearGuitarsIdPerPage());
         dispatch(setOrderBy(SortingOrder.Decrease));
-        setSearchParams({[QueryRoutes.Order]: SortingOrder.Decrease});
-        getCurrentSort === null
+        hasSorting
+        && setSearchParams({
+          [QueryRoutes.Order]: SortingOrder.Decrease,
+          [QueryRoutes.Sort]: getCurrentSort as SortingSort,
+        });
+        !hasSorting
         && dispatch(setSortBy(SortingSort.Price))
-        && setSearchParams({[QueryRoutes.Sort]: SortingSort.Price});
+        && setSearchParams({
+          [QueryRoutes.Order]: SortingOrder.Decrease,
+          [QueryRoutes.Sort]: SortingSort.Price,
+        });
         break;
 
       default:
@@ -65,15 +94,17 @@ function Sorting():JSX.Element {
 
         <button
           className={`${getCurrentSort === SortingSort.Price && 'catalog-sort__type-button--active'} catalog-sort__type-button`}
-          aria-label={AriaLabelSorting.ByPrice}
+          aria-label="по цене"
           onClick={handleSortClick}
+          data-sorting={SortingDataset.ByPrice}
         >по цене
         </button>
 
         <button
           className={`${getCurrentSort === SortingSort.Popularity && 'catalog-sort__type-button--active'} catalog-sort__type-button`}
-          aria-label={AriaLabelSorting.ByPopular}
+          aria-label="по популярности"
           onClick={handleSortClick}
+          data-sorting={SortingDataset.ByPopular}
         >по популярности
         </button>
 
@@ -82,15 +113,17 @@ function Sorting():JSX.Element {
 
         <button
           className={`${getCurrentOrder === SortingOrder.Increase && 'catalog-sort__order-button--active'} catalog-sort__order-button catalog-sort__order-button--up`}
-          aria-label={AriaLabelSorting.ByOrderUp}
+          aria-label="по возрастанию"
           onClick={handleSortClick}
+          data-sorting={SortingDataset.ByOrderUp}
         >
         </button>
 
         <button
           className={`${getCurrentOrder === SortingOrder.Decrease && 'catalog-sort__order-button--active'} catalog-sort__order-button catalog-sort__order-button--down`}
-          aria-label={AriaLabelSorting.ByOrderDown}
+          aria-label="по убыванию"
           onClick={handleSortClick}
+          data-sorting={SortingDataset.ByOrderDown}
         >
         </button>
 
