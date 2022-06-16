@@ -95,7 +95,7 @@ function Price (): JSX.Element {
       dispatch(setPriceRangeEnd(priceRange.max));
     }
 
-    if(priceRange && hasMaxPrice && maxPrice < priceRange.min) {
+    if(priceRange && hasMaxPrice && !hasMinPrice && maxPrice < priceRange.min) {
       setMaxPrice(priceRange.min);
       dispatch(setPriceRangeEnd(priceRange.min));
     }
