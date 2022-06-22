@@ -6,9 +6,10 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createMockState, mockGuitar } from '../../../utils/mock-faker';
 import Header from './header';
 import { AppRoutes, LoadingStatus, NameSpace, SEARCH_BAR_PLACEHOLDER } from '../../../const';
-import { fetchUserSearchAction, setOneGuitarStatus, setUserSearch } from '../../../store/data-guitars/data-guitars';
+import { setOneGuitarStatus, setUserSearch } from '../../../store/data-guitars/data-guitars';
 import { setReviewsStatus } from '../../../store/data-reviews/data-reviews';
 import { State } from '../../../types/state.types';
+import { fetchUserSearchAction } from '../../../store/data-guitars/actions-guitars';
 
 jest.mock('../../../store/data-guitars/data-guitars', () => ({
   ...jest.requireActual('../../../store/data-guitars/data-guitars'),

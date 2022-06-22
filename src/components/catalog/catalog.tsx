@@ -5,7 +5,7 @@ import {  GENERAL_ERROR_MESSAGE, LIMIT_GUITARS_PER_PAGE, PagesName } from '../..
 import { useAppDispatch } from '../../hooks/hook';
 import { useCustomSearchParams } from '../../hooks/use-custom-search-params/use-custom-search-params';
 import { useSetCatalogPageState } from '../../hooks/use-set-catalog-page-state/use-set-catalog-page-state';
-import { fetchPriceExtreme, fetchProductsAction } from '../../store/data-guitars/data-guitars';
+import { fetchPriceExtreme, fetchProductsAction } from '../../store/data-guitars/actions-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 import * as selectorQuery from '../../store/query-params/selector-query';
 import { checkStatusFailed, checkStatusLoading } from '../../utils/utils-components';
@@ -58,8 +58,25 @@ function Catalog():JSX.Element {
     priceRange
   ]);
 
-  if(isDataLoading || totalGuitarsFromServer === null) {
+  if(isDataLoading && totalGuitarsFromServer === null && priceRange === null) {
     return <LoadingScreen />;
+  } else if(isDataLoading) {
+    return(
+      <main className="page-content">
+        <div className="container">
+          <h1 className="page-content__title title title--bigger">Каталог гитар</h1>
+          <Breadcrumbs pageContent={PagesName.Catalog.en}/>
+          <div className="catalog">
+            <Filtration />
+            <Sorting />
+            <div className='catalog__cards'>
+              <b>Loading ...</b>
+            </div>
+            <Pagination />
+          </div>
+        </div>
+      </main>
+    );
   }
 
   if(isPageExist === false) {

@@ -1,8 +1,8 @@
-import { createAsyncThunk, createEntityAdapter, createSlice, EntityAdapter, PayloadAction } from '@reduxjs/toolkit';
-import { ApiAction, ApiRoutes, LoadingStatus, NameSpace } from '../../const';
-import { handleError } from '../../services/handle-error';
-import { GeneralApiConfig, Review, UserReviewPost } from '../../types/general.types';
+import { createEntityAdapter, createSlice, EntityAdapter, PayloadAction } from '@reduxjs/toolkit';
+import { LoadingStatus, NameSpace } from '../../const';
+import { Review } from '../../types/general.types';
 import { ReviewState, State } from '../../types/state.types';
+import { fetchReviewsAction, saveCommentAction } from './actions-reviews';
 
 const reviewsAdapter: EntityAdapter<Review> = createEntityAdapter();
 export const initialState: ReviewState = reviewsAdapter.getInitialState({
@@ -11,33 +11,6 @@ export const initialState: ReviewState = reviewsAdapter.getInitialState({
   reviewsStatus: LoadingStatus.Idle,
   commentStatus: LoadingStatus.Idle,
 });
-
-export const fetchReviewsAction = createAsyncThunk<void, number, GeneralApiConfig>(
-  ApiAction.FetchReviews,
-  async (id, {dispatch, extra: api}) => {
-    try {
-      const {data} = await api.get<Review[]>(ApiRoutes.Reviews(id));
-      dispatch(setReviews(data));
-    } catch (error) {
-      handleError(error);
-      throw error;
-    }
-  }
-);
-
-export const saveCommentAction = createAsyncThunk<void, UserReviewPost, GeneralApiConfig>(
-  ApiAction.SaveComment,
-  async (userComment, {dispatch, extra: api}) => {
-    try {
-      const {data} = await api.post<Review>(ApiRoutes.PostComment, userComment);
-      dispatch(addOneReview(data));
-    } catch (error) {
-      handleError(error);
-      throw error;
-    }
-  }
-);
-
 
 export const dataReviews = createSlice({
   name: NameSpace.DataReviews,

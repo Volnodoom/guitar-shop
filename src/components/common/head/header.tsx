@@ -1,10 +1,11 @@
-import { ChangeEvent, KeyboardEvent, MouseEvent, useEffect, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, MouseEvent, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppRoutes, CART_LINK, LINK_CURRENT, LoadingStatus, LogoPosition, NAV_LINK, PagesName, SEARCH_BAR_PLACEHOLDER } from '../../../const';
 import { useAppDispatch } from '../../../hooks/hook';
 import { useDebouncedValue } from '../../../hooks/use-debounced-value/use-debounced-value';
-import { fetchUserSearchAction, setActiveTab, setOneGuitarStatus, setUserSearch } from '../../../store/data-guitars/data-guitars';
+import { fetchUserSearchAction } from '../../../store/data-guitars/actions-guitars';
+import { setActiveTab, setOneGuitarStatus, setUserSearch } from '../../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../../store/data-guitars/selectors-guitars';
 import { setReviewsStatus } from '../../../store/data-reviews/data-reviews';
 import { isEnter, isEscape } from '../../../utils/utils-components';
@@ -35,17 +36,30 @@ function Header (): JSX.Element {
     }
   });
 
+  const resetInput = useCallback(() => {
+    setSearchName('');
+    setCurrentVisual('');
+    setRealTimeInput('');
+    dispatch(setUserSearch([]));
+    setSearchMemoryMatch([]);
+    setSearchMemoryUnMatch([]);
+  },[dispatch]);
+
+  useEffect(() => {
+    if(debouncedValue === '') {
+      resetInput();
+    }
+  }, [debouncedValue, resetInput]);
+
   useEffect(() => {
     const hasMemoryMatch = (valueToCheck: string) => searchMemoryMatch.some((line) => line === valueToCheck);
     const hasMemoryUnMatch = (valueToCheck: string) => searchMemoryUnMatch.some((line) => line === valueToCheck);
 
-    if(debouncedValue === '') {
-      resetInput();
-    }
+
     if(debouncedValue !== '') {
-      if(userSearchResult.length !== 0) {
+      if(userSearchResult.length !== 0 && !hasMemoryMatch(searchName)) {
         setSearchMemoryMatch((previous) => [...previous, searchName]);
-      } else if(userSearchResult.length === 0) {
+      } else if(userSearchResult.length === 0 && !hasMemoryUnMatch(searchName)) {
         setSearchMemoryUnMatch((previous) => [...previous, searchName]);
       }
     }
@@ -61,16 +75,8 @@ function Header (): JSX.Element {
     }
 
     setSearchName(debouncedValue);
-  }, [debouncedValue, dispatch]);
+  }, [debouncedValue, dispatch, searchMemoryMatch, searchMemoryUnMatch, searchName, userSearchResult.length]);
 
-  const resetInput = () => {
-    setSearchName('');
-    setCurrentVisual('');
-    setRealTimeInput('');
-    dispatch(setUserSearch([]));
-    setSearchMemoryMatch([]);
-    setSearchMemoryUnMatch([]);
-  };
 
   const pickupOneResult = (id: number) => {
     navigate(AppRoutes.GuitarAbsolute(id));
