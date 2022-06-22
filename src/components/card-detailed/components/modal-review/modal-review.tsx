@@ -4,11 +4,12 @@ import { useSelector } from 'react-redux';
 import { LoadingStatus, RATING_OPTIONS, ReviewFormField } from '../../../../const';
 import { useAppDispatch } from '../../../../hooks/hook';
 import { useIdGetProductInfo } from '../../../../hooks/use-id-get-product-info/use-id-get-product-info';
-import { saveCommentAction, setCommentStatus } from '../../../../store/data-reviews/data-reviews';
+import { setCommentStatus } from '../../../../store/data-reviews/data-reviews';
 import * as selector from '../../../../store/data-reviews/selectors-reviews';
 import { GuitarType, InvalidFormArray, UserReviewPost } from '../../../../types/general.types';
 import { checkIsReviewFormValid, checkStatusFailed, checkStatusLoading, checkStatusSuccess } from '../../../../utils/utils-components';
 import { blockMargin, elementHidden, positionRelative, positionWaringAbsolute } from './modal-review.style';
+import { saveCommentAction } from '../../../../store/data-reviews/actions-reviews';
 
 type ModalReviewProps = {
   onSuccess: () => void,
