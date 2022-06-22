@@ -58,8 +58,25 @@ function Catalog():JSX.Element {
     priceRange
   ]);
 
-  if(isDataLoading || totalGuitarsFromServer === null) {
+  if(isDataLoading && totalGuitarsFromServer === null && priceRange === null) {
     return <LoadingScreen />;
+  } else if(isDataLoading) {
+    return(
+      <main className="page-content">
+        <div className="container">
+          <h1 className="page-content__title title title--bigger">Каталог гитар</h1>
+          <Breadcrumbs pageContent={PagesName.Catalog.en}/>
+          <div className="catalog">
+            <Filtration />
+            <Sorting />
+            <div className='catalog__cards'>
+              <b>Loading ...</b>
+            </div>
+            <Pagination />
+          </div>
+        </div>
+      </main>
+    );
   }
 
   if(isPageExist === false) {
