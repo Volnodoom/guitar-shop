@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { GuitarPluralRu, KindOfGuitars, QueryRoutes } from '../../../../../../const';
+import { GuitarPluralRu, GuitarTypeStringNumberCombination, KindOfGuitars, QueryRoutes } from '../../../../../../const';
 import { useAppDispatch } from '../../../../../../hooks/hook';
 import { clearGuitarsIdPerPage } from '../../../../../../store/data-guitars/data-guitars';
-import { addFilterByType, removeFilterByType } from '../../../../../../store/query-params/query-params';
+import { addFilterByType, removeFilterByString, removeFilterByType } from '../../../../../../store/query-params/query-params';
 import * as selectorQuery from '../../../../../../store/query-params/selector-query';
 import { isCurrentElementActive, removeCurrentElementFromArray } from '../../../../../../utils/utils-components';
 
@@ -11,16 +11,33 @@ function GuitarKind (): JSX.Element {
   const [, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   const filterActive = useSelector(selectorQuery.getFilterByType);
+  const activeStringNumbers = useSelector(selectorQuery.getFilterStringNumber);
 
-  const handleInputChange = (engGuitarKind: string) => () => {
+  const handleInputChange = (engGuitarKind: KindOfGuitars) => () => {
+    let hasString: boolean;
+    if(activeStringNumbers.length === 0) {
+      hasString = true;
+    } else {
+      hasString = activeStringNumbers
+        .map((line) =>isCurrentElementActive(line, GuitarTypeStringNumberCombination[engGuitarKind]))
+        .some((line) => line === true);
+    }
+
     if(isCurrentElementActive(engGuitarKind, filterActive)) {
       dispatch(removeFilterByType(engGuitarKind));
       setSearchParams(
         {[QueryRoutes.Type]: removeCurrentElementFromArray(engGuitarKind, filterActive)}
       );
     } else {
-      dispatch(addFilterByType(engGuitarKind));
-      setSearchParams({[QueryRoutes.Type]: engGuitarKind});
+      if(hasString) {
+        dispatch(addFilterByType(engGuitarKind));
+      } else {
+        activeStringNumbers.forEach((string) => dispatch(removeFilterByString(string)));
+        dispatch(addFilterByType(engGuitarKind));
+        setSearchParams(
+          {[QueryRoutes.Type]: engGuitarKind}
+        );
+      }
     }
     dispatch(clearGuitarsIdPerPage());
   };
