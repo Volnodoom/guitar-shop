@@ -32,7 +32,7 @@ describe('Component: StringNumber', () => {
   });
 
 
-  it('click on the unchecked label lead to mark this position checked', async () => {
+  it('click on the unchecked label add position to store', async () => {
     const mockState = createMockState();
     const mockStore = configureMockStore()(mockState);
 
@@ -47,7 +47,6 @@ describe('Component: StringNumber', () => {
     );
 
     userEvent.click(screen.getByLabelText(4));
-    await waitFor(() => {expect(screen.getByLabelText(4, {selector: 'input'})).toBeChecked();});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledTimes(2);});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledWith(addFilterByString(4));});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledWith(clearGuitarsIdPerPage());});
@@ -75,7 +74,7 @@ describe('Component: StringNumber', () => {
     expect(screen.getByLabelText(4, {selector: 'input'})).toBeChecked();
   });
 
-  it('when store contain query params related to string number, click on it to remove check', async () => {
+  it('click on checked string number, to remove this position from the store', async () => {
     const mockState = createMockState();
     const updatedState: State = {
       ...mockState,
@@ -97,7 +96,6 @@ describe('Component: StringNumber', () => {
     );
 
     userEvent.click(screen.getByLabelText(4));
-    await waitFor(() => {expect(screen.getByLabelText(4, {selector: 'input'})).not.toBeChecked();});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledTimes(2);});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledWith(removeFilterByString(4));});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledWith(clearGuitarsIdPerPage());});

@@ -5,10 +5,10 @@ import {  GENERAL_ERROR_MESSAGE, LIMIT_GUITARS_PER_PAGE, PagesName } from '../..
 import { useAppDispatch } from '../../hooks/hook';
 import { useCustomSearchParams } from '../../hooks/use-custom-search-params/use-custom-search-params';
 import { useSetCatalogPageState } from '../../hooks/use-set-catalog-page-state/use-set-catalog-page-state';
-import { fetchPriceExtreme, fetchProductsAction } from '../../store/data-guitars/actions-guitars';
+import { fetchProductsAction } from '../../store/data-guitars/actions-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 import * as selectorQuery from '../../store/query-params/selector-query';
-import { checkStatusFailed, checkStatusLoading } from '../../utils/utils-components';
+import { checkStatusFailed, checkStatusIdl, checkStatusLoading } from '../../utils/utils-components';
 import { Breadcrumbs } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
 import PageOnError from '../page-on-error/page-on-error';
@@ -18,6 +18,7 @@ function Catalog():JSX.Element {
   const { pageNumber } = useParams<{pageNumber: string}>();
   const dispatch = useAppDispatch();
   const isDataLoading = checkStatusLoading(useSelector(selectorGuitar.getGuitarsStatus));
+  const isDataIdl = checkStatusIdl(useSelector(selectorGuitar.getGuitarsStatus));
   const isDataFailed = checkStatusFailed(useSelector(selectorGuitar.getGuitarsStatus));
   const totalGuitarsFromServer = useSelector(selectorGuitar.getTotalNumber);
   const guitarsAccordingToPage = useSelector(selectorGuitar.getGuitarsPerPage);
@@ -25,8 +26,8 @@ function Catalog():JSX.Element {
 
   const getCurrentPriceStart = useSelector(selectorQuery.getPriceRangeStart);
   const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
-  const getFilterStringNumber = useSelector(selectorQuery.getFilterStringNumber);
-  const getCurrentFilterType = useSelector(selectorQuery.getFilterByType);
+  // const getFilterStringNumber = useSelector(selectorQuery.getFilterStringNumber);
+  // const getCurrentFilterType = useSelector(selectorQuery.getFilterByType);
 
   const [setPageState] = useSetCatalogPageState();
 
@@ -41,9 +42,9 @@ function Catalog():JSX.Element {
       if(totalGuitarsFromServer === null || !guitarsAccordingToPage) {
         dispatch(fetchProductsAction());
       }
-      if(priceRange === null) {
-        dispatch(fetchPriceExtreme());
-      }
+      // if(priceRange === null) {
+      //   dispatch(fetchPriceExtreme());
+      // }
     }
   },[
     dispatch,
@@ -53,14 +54,14 @@ function Catalog():JSX.Element {
     setPageState,
     getCurrentPriceStart,
     getCurrentPriceEnd,
-    getFilterStringNumber,
-    getCurrentFilterType,
+    // getFilterStringNumber,
+    // getCurrentFilterType,
     priceRange
   ]);
 
   if(isDataLoading && totalGuitarsFromServer === null && priceRange === null) {
     return <LoadingScreen />;
-  } else if(isDataLoading) {
+  } else if(isDataLoading || isDataIdl) {
     return(
       <main className="page-content">
         <div className="container">
@@ -79,7 +80,7 @@ function Catalog():JSX.Element {
     );
   }
 
-  if(isPageExist === false) {
+  if(isPageExist === false && totalGuitarsFromServer !== 0) {
     return <PageOnError />;
   }
 

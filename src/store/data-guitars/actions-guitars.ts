@@ -1,5 +1,5 @@
 import { createAsyncThunk} from '@reduxjs/toolkit';
-import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, NameSpace, QueryRoutes, ONE, COUPLED_DATA, SortingSort, SortingOrder } from '../../const';
+import { ApiAction, ApiRoutes, LIMIT_GUITARS_PER_PAGE, HEADER_TOTAL_NUMBER, NameSpace, QueryRoutes, ONE, COUPLED_DATA, SortingSort, SortingOrder, NEGATIVE_ONE } from '../../const';
 import { handleError } from '../../services/handle-error';
 import { CoupledProductData, GeneralApiConfig, GuitarType } from '../../types/general.types';
 import { getValueFromNonEmptyArray, separateGuitarAndReviews } from '../../utils/utils-components';
@@ -27,7 +27,7 @@ export const fetchProductsAction = createAsyncThunk<void, undefined, GeneralApiC
         }
       });
 
-      dispatch(setTotalGuitars(response.headers[HEADER_TOTAL_NUMBER]));
+      dispatch(setTotalGuitars(Number(response.headers[HEADER_TOTAL_NUMBER])));
 
       const {guitars, reviews} = separateGuitarAndReviews(response.data);
       dispatch(setGuitarsDetails(guitars));
@@ -82,6 +82,8 @@ export const fetchPriceExtreme = createAsyncThunk<void, undefined, GeneralApiCon
           [QueryRoutes.Limit]: ONE,
           [QueryRoutes.Sort]: SortingSort.Price,
           [QueryRoutes.Order]: SortingOrder.Increase,
+          [QueryRoutes.StringNumber]: getValueFromNonEmptyArray(getState()[NameSpace.QueryParams].filterByString),
+          [QueryRoutes.Type]: getValueFromNonEmptyArray(getState()[NameSpace.QueryParams].filterByType),
         }
       });
 
@@ -91,16 +93,23 @@ export const fetchPriceExtreme = createAsyncThunk<void, undefined, GeneralApiCon
           [QueryRoutes.Limit]: ONE,
           [QueryRoutes.Sort]: SortingSort.Price,
           [QueryRoutes.Order]: SortingOrder.Decrease,
+          [QueryRoutes.StringNumber]: getValueFromNonEmptyArray(getState()[NameSpace.QueryParams].filterByString),
+          [QueryRoutes.Type]: getValueFromNonEmptyArray(getState()[NameSpace.QueryParams].filterByType),
         }
       });
 
       const [responseMinPrice, responseMaxPrice] = await Promise.all([minPrice, maxPrice]);
-      const resultMinMax = {
-        min: responseMinPrice.data[0].price,
-        max: responseMaxPrice.data[0].price,
-      };
 
-      dispatch(setPriceExtremes(resultMinMax));
+      if(responseMinPrice.data.length === 0 || responseMaxPrice.data.length === 0) {
+        dispatch(setPriceExtremes({ min: NEGATIVE_ONE, max: NEGATIVE_ONE }));
+      } else {
+        const resultMinMax = {
+          min: responseMinPrice.data[0].price,
+          max: responseMaxPrice.data[0].price,
+        };
+
+        dispatch(setPriceExtremes(resultMinMax));
+      }
     } catch (error) {
       handleError(error);
       throw error;

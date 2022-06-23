@@ -9,15 +9,11 @@ import { AppRoutes, LoadingStatus, NameSpace, SEARCH_BAR_PLACEHOLDER } from '../
 import { setOneGuitarStatus, setUserSearch } from '../../../store/data-guitars/data-guitars';
 import { setReviewsStatus } from '../../../store/data-reviews/data-reviews';
 import { State } from '../../../types/state.types';
-import { fetchUserSearchAction } from '../../../store/data-guitars/actions-guitars';
+import * as GuitarActions from '../../../store/data-guitars/actions-guitars';
 
 jest.mock('../../../store/data-guitars/data-guitars', () => ({
   ...jest.requireActual('../../../store/data-guitars/data-guitars'),
-  fetchUserSearchAction: jest.fn(() => ({
-    ...mockGuitar(),
-    name: 'LaLaLa',
-    id: 10,
-  })),
+  fetchUserSearchAction: jest.fn(),
   setActiveTab: jest.fn(),
   setOneGuitarStatus: jest.fn(),
   setReviewsStatus: jest.fn(),
@@ -52,6 +48,8 @@ describe('Component: header', () => {
     mockStore.dispatch = jest.fn();
     jest.useFakeTimers();
 
+    const fakeFetch = jest.spyOn(GuitarActions, 'fetchUserSearchAction');
+
     render(
       <Provider store={mockStore}>
         <MemoryRouter>
@@ -61,7 +59,7 @@ describe('Component: header', () => {
     );
 
     userEvent.type(screen.getByPlaceholderText(SEARCH_BAR_PLACEHOLDER), NAME_FAKE);
-    await waitFor(() => {expect(fetchUserSearchAction).toHaveBeenCalledWith(NAME_FAKE);});
+    await waitFor(() => {expect(fakeFetch).toHaveBeenCalledWith(NAME_FAKE);});
   });
 
   it('Typing guitar name does not dispatch action, when it has the same sequence of alphabet from the first call and the first call return nothing', async () => {
@@ -71,6 +69,8 @@ describe('Component: header', () => {
     const mockStore = configureMockStore()(mockState);
     mockStore.dispatch = jest.fn();
     jest.useFakeTimers();
+    const fakeFetch = jest.spyOn(GuitarActions, 'fetchUserSearchAction');
+
 
     render(
       <Provider store={mockStore}>
@@ -81,10 +81,10 @@ describe('Component: header', () => {
     );
 
     userEvent.type(screen.getByPlaceholderText(SEARCH_BAR_PLACEHOLDER), NAME_FAKE);
-    await waitFor(() => {expect(fetchUserSearchAction).toHaveBeenCalledWith(NAME_FAKE);});
+    await waitFor(() => {expect(fakeFetch).toHaveBeenCalledWith(NAME_FAKE);});
     await waitFor(() => {expect(screen.getByText(/Товаров не найдено/i)).toBeInTheDocument();});
     await (() => {userEvent.type(screen.getByText(NAME_FAKE), 'CURTT');});
-    await waitFor(() => {expect(fetchUserSearchAction).not.toHaveBeenCalledWith('CURTT');});
+    await waitFor(() => {expect(fakeFetch).not.toHaveBeenCalledWith('CURTT');});
   });
 
   it('Pressing Esc clean input search, when input search bar is focused', async () => {

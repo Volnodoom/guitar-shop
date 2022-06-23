@@ -12,7 +12,7 @@ function GuitarKind (): JSX.Element {
   const dispatch = useAppDispatch();
   const filterActive = useSelector(selectorQuery.getFilterByType);
 
-  const handleLabelClick = (engGuitarKind: string) => () => {
+  const handleInputChange = (engGuitarKind: string) => () => {
     if(isCurrentElementActive(engGuitarKind, filterActive)) {
       dispatch(removeFilterByType(engGuitarKind));
       setSearchParams(
@@ -36,10 +36,11 @@ function GuitarKind (): JSX.Element {
               className="visually-hidden"
               type="checkbox" id={line}
               name={line}
-              defaultChecked={isCurrentElementActive(line, filterActive)}
+              checked={isCurrentElementActive(line, filterActive)}
+              onChange={handleInputChange(line)}
               data-testid={`${line}-checkbox`}
             />
-            <label htmlFor={line} onClick={handleLabelClick(line)} data-testid={line}>{GuitarPluralRu[line]}</label>
+            <label htmlFor={line} data-testid={line}>{GuitarPluralRu[line]}</label>
           </div>
         ))
       }
