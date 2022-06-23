@@ -10,6 +10,7 @@ export const checkIsReviewFormValid = (data:UserReviewPost): boolean =>  Object.
 
 export const checkStatusSuccess = (status: LoadingStatus) => status === LoadingStatus.Succeeded;
 export const checkStatusLoading = (status: LoadingStatus) => status === LoadingStatus.Loading;
+export const checkStatusIdl = (status: LoadingStatus) => status === LoadingStatus.Idle;
 export const checkStatusFailed = (status: LoadingStatus) => status === LoadingStatus.Failed;
 
 export const separateGuitarAndReviews = (data: CoupledProductData[]) => data

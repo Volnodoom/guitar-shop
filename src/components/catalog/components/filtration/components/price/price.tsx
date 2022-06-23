@@ -7,15 +7,27 @@ import { setPriceRangeEnd, setPriceRangeStart } from '../../../../../../store/qu
 import { useSearchParams } from 'react-router-dom';
 import { clearGuitarsIdPerPage } from '../../../../../../store/data-guitars/data-guitars';
 import * as selectorQuery from '../../../../../../store/query-params/selector-query';
-import { isEnter } from '../../../../../../utils/utils-components';
+import { checkStatusFailed, checkStatusLoading, isEnter } from '../../../../../../utils/utils-components';
+import { fetchPriceExtreme } from '../../../../../../store/data-guitars/actions-guitars';
 
-function Price (): JSX.Element {
+type PriceProps = {
+  isReset: boolean,
+  resetFunction: React.Dispatch<React.SetStateAction<boolean>>,
+};
+
+function Price ({isReset, resetFunction}: PriceProps): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
 
   const priceRange = useSelector(selectorGuitar.getPriceExtremes);
+  const priceStatus = useSelector(selectorGuitar.getPriceStatus);
   const getCurrentPriceStart = useSelector(selectorQuery.getPriceRangeStart);
   const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
+  const isLoading = checkStatusLoading(priceStatus);
+  const isFailed = checkStatusFailed(priceStatus);
+
+  const getFilterStringNumber = useSelector(selectorQuery.getFilterStringNumber);
+  const getCurrentFilterType = useSelector(selectorQuery.getFilterByType);
 
   const [minPrice, setMinPrice] = useState<string | number>('');
   const [minPricePrevious, setMinPricePrevious] = useState<string | number>('');
@@ -32,6 +44,21 @@ function Price (): JSX.Element {
       setMaxPricePrevious(getCurrentPriceEnd);
     }
   }, [getCurrentPriceEnd, getCurrentPriceStart]);
+
+  useEffect(() => {
+    if(isReset) {
+      setMaxPrice('');
+      setMinPrice('');
+      setMinPricePrevious('');
+      setMaxPricePrevious('');
+      resetFunction(false);
+    }
+  }, [isReset, resetFunction]);
+
+  useEffect(() => {
+    dispatch(fetchPriceExtreme());
+  },[dispatch, getFilterStringNumber, getCurrentFilterType]);
+
 
   const hasMinPrice = Boolean(minPrice);
   const hasMaxPrice = Boolean(maxPrice);
@@ -168,6 +195,47 @@ function Price (): JSX.Element {
         break;
     }
   };
+
+  if(
+    (priceRange && (priceRange.min < 0 || priceRange.max < 0))
+    ||
+    isFailed
+    ||
+    isLoading
+  ) {
+    return(
+      <fieldset className="catalog-filter__block">
+        <legend className="catalog-filter__block-title">Цена, ₽</legend>
+        <div className="catalog-filter__price-range">
+          <div className="form-input">
+            <label className="visually-hidden">Минимальная цена</label>
+            <input
+              type="number"
+              id={PRICE_MIN}
+              name="от"
+              value={minPrice}
+              onChange={handleChange}
+              onBlur={handleBlurInputExit}
+              onKeyDown={handleKeyDownInputExit}
+            />
+          </div>
+          <div className="form-input">
+            <label className="visually-hidden">Максимальная цена</label>
+            <input
+              type="number"
+              id={PRICE_MAX}
+              name="до"
+              value={maxPrice}
+              onChange={handleChange}
+              onBlur={handleBlurInputExit}
+              onKeyDown={handleKeyDownInputExit}
+            />
+          </div>
+        </div>
+      </fieldset>
+    );
+  }
+
 
   return(
     <fieldset className="catalog-filter__block">

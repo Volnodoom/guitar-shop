@@ -30,7 +30,7 @@ function StringNumber (): JSX.Element {
     return isAcousticStringsActive || isElectricStringsActive || isUkuleleStringsActive;
   };
 
-  const handleCheckboxClick = (currentValue: number) => () => {
+  const handleInputChange = (currentValue: number) => () => {
     if(isCurrentElementActive(currentValue, activeStringNumbers)) {
       dispatch(removeFilterByString(currentValue));
       setSearchParams(
@@ -38,7 +38,6 @@ function StringNumber (): JSX.Element {
       );
     } else {
       dispatch(addFilterByString(currentValue));
-      setSearchParams({[QueryRoutes.StringNumber]: String(currentValue)});
     }
 
     dispatch(clearGuitarsIdPerPage());
@@ -56,8 +55,8 @@ function StringNumber (): JSX.Element {
               id={`${valueNumber}-strings`}
               name={`${valueNumber}-strings`}
               disabled={!isActiveString(valueNumber)}
-              onChange={handleCheckboxClick(valueNumber)}
-              defaultChecked={isCurrentElementActive(valueNumber, activeStringNumbers)}
+              onChange={handleInputChange(valueNumber)}
+              checked={isCurrentElementActive(valueNumber, activeStringNumbers)}
             />
             <label htmlFor={`${valueNumber}-strings`}>{valueNumber}</label>
           </div>

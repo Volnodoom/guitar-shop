@@ -14,6 +14,7 @@ describe('Component: Filtration', () => {
   it('Render correctly', () => {
     const mockState = createMockState();
     const mockStore = configureMockStore()(mockState);
+    mockStore.dispatch = jest.fn();
 
     render(
       <Provider store={mockStore}>
@@ -67,7 +68,8 @@ describe('Component: Filtration', () => {
     );
 
     userEvent.click(screen.getByRole('button', {name: /Очистить/i}));
-    await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledTimes(2);});
+    //called 3 times due to price component contain dispatch
+    await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledTimes(3);});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledWith(clearQueryParams());});
     await waitFor(() => {expect(mockStore.dispatch).toHaveBeenCalledWith(clearGuitarsIdPerPage());});
   });
@@ -77,9 +79,11 @@ describe('Component: Filtration', () => {
     const mockStore = configureMockStore()(mockState);
 
     const firstValue = new URLSearchParams();
+
     const setSearch = jest.fn();
     const useStateSpy = jest.spyOn(ReactRouter, 'useSearchParams');
     useStateSpy.mockImplementation(() => [firstValue, setSearch]);
+    mockStore.dispatch = jest.fn();
 
     render(
       <Provider store={mockStore}>

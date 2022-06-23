@@ -156,6 +156,9 @@ describe('Actions Guitars', () => {
     it('fetchPriceExtreme -- on success (200): UPDATE state line priceExtremes with object of two parameters min amd max, which values are numbers, and DISPATCH setPriceExtremes', async () => {
       const mockState = createMockState();
       const store = mockStore(mockState);
+      const action = {
+        type: fetchPriceExtreme.fulfilled.type,
+      };
 
       const extremes = {
         min: 1000,
@@ -196,6 +199,34 @@ describe('Actions Guitars', () => {
       const actions = store.getActions().map(({type}) => type);
 
       expect(actions).toContain(setPriceExtremes.type);
+      expect(dataGuitars.reducer(mockState[NameSpace.DataGuitars], action).priceStatus)
+        .toBe(LoadingStatus.Succeeded);
+    });
+
+    it('fetchPriceExtreme -- on pending: update state priceStatus with loading', async () => {
+      const mockState = createMockState();
+      const actionLoading = {
+        type: fetchPriceExtreme.pending.type,
+      };
+
+      expect(dataGuitars.reducer(mockState[NameSpace.DataGuitars], actionLoading))
+        .toEqual({
+          ...mockState[NameSpace.DataGuitars],
+          priceStatus: LoadingStatus.Loading,
+        });
+    });
+
+    it('fetchPriceExtreme -- on fail: update state priceStatus with fail', async () => {
+      const mockState = createMockState();
+      const action = {
+        type: fetchPriceExtreme.rejected.type,
+      };
+
+      expect(dataGuitars.reducer(mockState[NameSpace.DataGuitars], action))
+        .toEqual({
+          ...mockState[NameSpace.DataGuitars],
+          priceStatus: LoadingStatus.Failed,
+        });
     });
   });
 });

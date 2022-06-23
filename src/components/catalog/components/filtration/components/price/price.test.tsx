@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import Price from './price';
 import { createMockState } from '../../../../../../utils/mock-faker';
-import { NameSpace } from '../../../../../../const';
+import { LoadingStatus, NameSpace } from '../../../../../../const';
 import { State } from '../../../../../../types/state.types';
 import { setPriceRangeStart } from '../../../../../../store/query-params/query-params';
 import { clearGuitarsIdPerPage } from '../../../../../../store/data-guitars/data-guitars';
@@ -14,6 +14,9 @@ jest.mock('../../../../../../store/query-params/query-params', () => ({
   setPriceRangeEnd: jest.fn(),
   setPriceRangeStart: jest.fn(),
 }));
+
+const FAKE_FALSE = false;
+const fakeResetFunction = jest.fn();
 
 describe('Component: Price', () => {
   it('Render correctly', () => {
@@ -26,18 +29,21 @@ describe('Component: Price', () => {
           min: 100,
           max: 200,
         },
+        priceStatus: LoadingStatus.Succeeded,
       }
     };
     const mockStore = configureMockStore()(updatedState);
+    mockStore.dispatch = jest.fn();
 
     render(
       <Provider store={mockStore}>
-        <MemoryRouter>
-          <Price />
+        <MemoryRouter >
+          <Price isReset={FAKE_FALSE} resetFunction={fakeResetFunction}/>
         </MemoryRouter>
       </Provider>
     );
 
+    expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
     expect(screen.getByText(/Цена,/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/100/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/200/i)).toBeInTheDocument();
@@ -62,7 +68,7 @@ describe('Component: Price', () => {
     render(
       <Provider store={mockStore}>
         <MemoryRouter initialEntries={['/']}>
-          <Price />
+          <Price isReset={FAKE_FALSE} resetFunction={fakeResetFunction}/>
         </MemoryRouter>
       </Provider>
     );
@@ -93,7 +99,7 @@ describe('Component: Price', () => {
     render(
       <Provider store={mockStore}>
         <MemoryRouter initialEntries={['/']}>
-          <Price />
+          <Price isReset={FAKE_FALSE} resetFunction={fakeResetFunction}/>
         </MemoryRouter>
       </Provider>
     );
@@ -124,7 +130,7 @@ describe('Component: Price', () => {
     render(
       <Provider store={mockStore}>
         <MemoryRouter initialEntries={['/']}>
-          <Price />
+          <Price isReset={FAKE_FALSE} resetFunction={fakeResetFunction}/>
         </MemoryRouter>
       </Provider>
     );
@@ -155,7 +161,7 @@ describe('Component: Price', () => {
     render(
       <Provider store={mockStore}>
         <MemoryRouter initialEntries={['/']}>
-          <Price />
+          <Price isReset={FAKE_FALSE} resetFunction={fakeResetFunction}/>
         </MemoryRouter>
       </Provider>
     );
@@ -186,7 +192,7 @@ describe('Component: Price', () => {
     render(
       <Provider store={mockStore}>
         <MemoryRouter initialEntries={['/']}>
-          <Price />
+          <Price isReset={FAKE_FALSE} resetFunction={fakeResetFunction}/>
         </MemoryRouter>
       </Provider>
     );
@@ -217,7 +223,7 @@ describe('Component: Price', () => {
     render(
       <Provider store={mockStore}>
         <MemoryRouter initialEntries={['/']}>
-          <Price />
+          <Price isReset={FAKE_FALSE} resetFunction={fakeResetFunction}/>
         </MemoryRouter>
       </Provider>
     );
@@ -253,12 +259,49 @@ describe('Component: Price', () => {
     render(
       <Provider store={mockStore}>
         <MemoryRouter initialEntries={['/']}>
-          <Price />
+          <Price isReset={FAKE_FALSE} resetFunction={fakeResetFunction}/>
         </MemoryRouter>
       </Provider>
     );
 
     expect( screen.getByDisplayValue(/120/i)).toBeInTheDocument();
     expect( screen.getByDisplayValue(/170/i)).toBeInTheDocument();
+  });
+
+  it('When isReset true reset function call in the component, and clear all component states', async () => {
+    const FAKE_TRUE = true;
+    const mockState = createMockState();
+    const updatedState: State = {
+      ...mockState,
+      [NameSpace.DataGuitars]: {
+        ...mockState[NameSpace.DataGuitars],
+        priceExtremes: {
+          min: 100,
+          max: 200,
+        },
+        priceStatus: LoadingStatus.Succeeded,
+      },
+      [NameSpace.QueryParams]: {
+        ...mockState[NameSpace.QueryParams],
+        priceRangeStart: 120,
+        priceRangeEnd: 170,
+      }
+    };
+    const mockStore = configureMockStore()(updatedState);
+
+    mockStore.dispatch = jest.fn();
+
+    render(
+      <Provider store={mockStore}>
+        <MemoryRouter initialEntries={['/']}>
+          <Price isReset={FAKE_TRUE} resetFunction={fakeResetFunction}/>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    expect( screen.queryByDisplayValue(/120/i)).not.toBeInTheDocument();
+    expect( screen.queryByDisplayValue(/170/i)).not.toBeInTheDocument();
+    expect(fakeResetFunction).toHaveBeenCalledWith(false);
+    expect(fakeResetFunction).toHaveBeenCalledTimes(1);
   });
 });

@@ -17,6 +17,7 @@ export const getGuitarsStatus = (state: State) => state[NameSpace.DataGuitars].g
 export const getOneGuitarStatus = (state: State) => state[NameSpace.DataGuitars].oneGuitarStatus;
 export const getPriceExtremes = (state: State) => state[NameSpace.DataGuitars].priceExtremes;
 export const getUserGuitarSearch = (state: State) => state[NameSpace.DataGuitars].userGuitarSearch;
+export const getPriceStatus = (state: State) => state[NameSpace.DataGuitars].priceStatus;
 
 export const getGuitarsPerPage = createSelector(
   getCurrentPage,

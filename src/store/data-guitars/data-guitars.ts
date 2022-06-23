@@ -2,7 +2,7 @@ import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolki
 import { LoadingStatus, NameSpace, ONE, PagesName } from '../../const';
 import { GuitarsIdsLineType, GuitarsPriceRange, GuitarType } from '../../types/general.types';
 import { GuitarState, State } from '../../types/state.types';
-import { fetchOneGuitarAction, fetchProductsAction } from './actions-guitars';
+import { fetchOneGuitarAction, fetchPriceExtreme, fetchProductsAction } from './actions-guitars';
 
 
 const guitarsAdapter = createEntityAdapter<GuitarType>();
@@ -18,6 +18,7 @@ export const initialState: GuitarState = guitarsAdapter.getInitialState({
   activeTab: PagesName.Catalog.en,
   guitarsStatus: LoadingStatus.Idle,
   oneGuitarStatus: LoadingStatus.Idle,
+  priceStatus: LoadingStatus.Idle,
 });
 
 export const dataGuitars = createSlice({
@@ -82,6 +83,15 @@ export const dataGuitars = createSlice({
       })
       .addCase(fetchOneGuitarAction.rejected, (state) => {
         state.oneGuitarStatus = LoadingStatus.Failed;
+      })
+      .addCase(fetchPriceExtreme.pending, (state) => {
+        state.priceStatus = LoadingStatus.Loading;
+      })
+      .addCase(fetchPriceExtreme.fulfilled, (state) => {
+        state.priceStatus = LoadingStatus.Succeeded;
+      })
+      .addCase(fetchPriceExtreme.rejected, (state) => {
+        state.priceStatus = LoadingStatus.Failed;
       });
   }
 });

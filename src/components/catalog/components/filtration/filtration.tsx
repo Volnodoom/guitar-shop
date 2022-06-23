@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAppDispatch } from '../../../../hooks/hook';
 import { clearGuitarsIdPerPage } from '../../../../store/data-guitars/data-guitars';
@@ -7,17 +8,19 @@ import { GuitarKind, Price, StringNumber } from './components/components';
 function Filtration():JSX.Element {
   const dispatch = useAppDispatch();
   const [, setSearchParams] = useSearchParams();
+  const [isReset, setIsReset] = useState(false);
 
   const handleClick = () => {
     setSearchParams({});
     dispatch(clearQueryParams());
     dispatch(clearGuitarsIdPerPage());
+    setIsReset(true);
   };
 
   return(
     <form className="catalog-filter">
       <h2 className="title title--bigger catalog-filter__title">Фильтр</h2>
-      <Price />
+      <Price isReset={isReset} resetFunction={setIsReset}/>
       <GuitarKind />
       <StringNumber />
       <button

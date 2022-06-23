@@ -38,7 +38,7 @@ describe('Component: Catalog', () => {
       }
     };
     const store = configureMockStore()(updatedState);
-    store.dispatch =jest.fn();
+    store.dispatch = jest.fn();
 
     render(
       <Provider store={store}>
@@ -52,8 +52,8 @@ describe('Component: Catalog', () => {
 
 
     expect(screen.getByText(/Каталог гитар/i)).toBeInTheDocument();
-    //due to useSetCatalogPageState dispatch call two times
-    expect(store.dispatch).toHaveBeenCalledTimes(2);
+    //due to useSetCatalogPageState dispatch call two times and price component dispatch call one time
+    expect(store.dispatch).toHaveBeenCalledTimes(3);
     expect(screen.queryAllByRole('link', {name: /Подробнее/i})).toHaveLength(ITEMS_NUMBER);
   });
 
@@ -79,6 +79,7 @@ describe('Component: Catalog', () => {
       }
     };
     const store = configureMockStore()(updatedState);
+    store.dispatch = jest.fn();
 
     render(
       <Provider store={store}>
@@ -89,7 +90,6 @@ describe('Component: Catalog', () => {
         </MemoryRouter>
       </Provider>
     );
-
 
     expect(screen.getByText(/Каталог гитар/i)).toBeInTheDocument();
     expect(screen.getByText(/Товаров по вашему запросу не найдено/i)).toBeInTheDocument();
@@ -119,6 +119,7 @@ describe('Component: Catalog', () => {
       }
     };
     const store = configureMockStore()(updatedState);
+    store.dispatch = jest.fn();
 
     render(
       <Provider store={store}>
@@ -129,7 +130,6 @@ describe('Component: Catalog', () => {
         </MemoryRouter>
       </Provider>
     );
-
 
     expect(screen.getByText(/Loading/i)).toBeInTheDocument();
   });

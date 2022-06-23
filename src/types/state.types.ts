@@ -15,6 +15,7 @@ export interface GuitarState extends EntityState<GuitarType> {
   activeTab: string,
   guitarsStatus: LoadingStatus,
   oneGuitarStatus: LoadingStatus,
+  priceStatus: LoadingStatus,
 }
 
 export interface ReviewState extends EntityState<Review> {

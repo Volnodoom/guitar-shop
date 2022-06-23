@@ -38,6 +38,7 @@ const updatedState = {
     },
     guitarsStatus: LoadingStatus.Succeeded,
     oneGuitarStatus: LoadingStatus.Succeeded,
+    priceStatus: LoadingStatus.Succeeded,
     guitarsIdPerPage: {[PAGE_NUMBER]: fakeGuitarIds},
     entities: fakeGuitarsEntities,
     ids: fakeGuitarIds,
@@ -54,6 +55,8 @@ const store = configureMockStore()(updatedState);
 
 describe('Component: App', () => {
   it('render catalog page on url address /', () => {
+    store.dispatch = jest.fn();
+
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/']}>
@@ -75,6 +78,8 @@ describe('Component: App', () => {
   });
 
   it('render catalog page on url address /catalog', () => {
+    store.dispatch = jest.fn();
+
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/catalog']}>

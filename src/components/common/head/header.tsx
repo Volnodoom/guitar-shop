@@ -51,6 +51,18 @@ function Header (): JSX.Element {
     }
   }, [debouncedValue, resetInput]);
 
+  const handleClickOutsideSearchBar = () => {
+    if(realTimeInput) {
+      resetInput();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('click', handleClickOutsideSearchBar);
+
+    return () => window.removeEventListener('click', handleClickOutsideSearchBar);
+  });
+
   useEffect(() => {
     const hasMemoryMatch = (valueToCheck: string) => searchMemoryMatch.some((line) => line === valueToCheck);
     const hasMemoryUnMatch = (valueToCheck: string) => searchMemoryUnMatch.some((line) => line === valueToCheck);
