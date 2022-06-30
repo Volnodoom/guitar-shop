@@ -1,9 +1,12 @@
+import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoutes, ModalKind, PAGE, PagesName, PRODUCT } from '../../../../../const';
 import { useAppDispatch } from '../../../../../hooks/hook';
+import { useFocusTrap } from '../../../../../hooks/use-focus-trap/use-focus-trap';
 import { setActiveTab } from '../../../../../store/data-guitars/data-guitars';
 import * as selectorQuery from '../../../../../store/query-params/selector-query';
+import { DiveRef } from '../../../../../types/general.types';
 
 type ModalReviewSuccessProps= {
   onClose: () => void,
@@ -14,6 +17,10 @@ function ModalSuccess({onClose, modalType = ModalKind.Review,}: ModalReviewSucce
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const modalRef = useRef<DiveRef>(null);
+
+  useFocusTrap(modalRef);
+
   const redirectUrl = useSelector(selectorQuery.getCatalogWithQueryParamUrl);
 
   const isCatalog = location.pathname.includes(PAGE);
@@ -36,7 +43,7 @@ function ModalSuccess({onClose, modalType = ModalKind.Review,}: ModalReviewSucce
   };
 
   return(
-    <div className="modal__content">
+    <div className="modal__content" ref={modalRef}>
       <svg className="modal__icon" width="26" height="20" aria-hidden="true">
         <use xlinkHref="#icon-success"></use>
       </svg>

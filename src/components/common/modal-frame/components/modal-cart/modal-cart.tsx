@@ -1,5 +1,7 @@
+import { useRef } from 'react';
 import { GuitarSingleRu, LOCAL_RU, ModalKind } from '../../../../../const';
-import { GuitarType } from '../../../../../types/general.types';
+import { useFocusTrap } from '../../../../../hooks/use-focus-trap/use-focus-trap';
+import { DiveRef, GuitarType } from '../../../../../types/general.types';
 import { formatBaseImgUrl, formatHighDensityImgUrl } from '../../../../../utils/utils-components';
 
 type ModalCartProp = {
@@ -20,6 +22,10 @@ function ModalCart ({guitarDetails, onAdd, onDelete, onClose, modalType = ModalK
     type,
   } = guitarDetails;
 
+  const modalRef = useRef<DiveRef>(null);
+
+  useFocusTrap(modalRef);
+
   const handleDeleteClick = () => {
     if(onDelete) {
       onDelete();
@@ -28,7 +34,7 @@ function ModalCart ({guitarDetails, onAdd, onDelete, onClose, modalType = ModalK
   };
 
   return (
-    <div className ="modal__content">
+    <div className ="modal__content" ref={modalRef}>
       {
         modalType === ModalKind.CartDelete
           ?

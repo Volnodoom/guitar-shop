@@ -1,13 +1,12 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { ModalKind, ModalStatus, ONE, PAGE, PRODUCT } from '../../../const';
 import { useAppDispatch } from '../../../hooks/hook';
 import { useEscPress } from '../../../hooks/use-esc-press/use-esc-press';
-import { useFocusTrap } from '../../../hooks/use-focus-trap/use-focus-trap';
 import { addCartContent, removeCartContent, removeCartContentNumber, updateCartContentNumber } from '../../../store/data-cart/data-cart';
 import * as selectorCart from '../../../store/data-cart/selector-cart';
-import { DiveRef, GuitarType } from '../../../types/general.types';
+import { GuitarType } from '../../../types/general.types';
 import { State } from '../../../types/state.types';
 import { ModalCart, ModalReview, ModalSuccess } from './components/components';
 
@@ -19,7 +18,6 @@ type ModalFrameProps = {
 }
 
 function ModalFrame({onClose, isOpen, modalKind, guitarDetails}: ModalFrameProps): JSX.Element {
-  const modalRef = useRef<DiveRef>(null);
   const dispatch = useAppDispatch();
   const location = useLocation();
 
@@ -50,7 +48,6 @@ function ModalFrame({onClose, isOpen, modalKind, guitarDetails}: ModalFrameProps
   };
 
   useEscPress(isOpen, handleFrameClose);
-  useFocusTrap(modalRef, modalStatus, isOpen);
 
   useEffect(() => {
     if(isOpen) {
@@ -109,7 +106,6 @@ function ModalFrame({onClose, isOpen, modalKind, guitarDetails}: ModalFrameProps
           (modalStatus === ModalStatus.SuccessReview || modalStatus === ModalStatus.SuccessCart) && 'modal--success'
         }`
       }
-      ref={modalRef}
     >
       <div className="modal__wrapper">
         <div className="modal__overlay" data-close-modal onClick={handleOverlayClick} data-testid={'overlay'}>

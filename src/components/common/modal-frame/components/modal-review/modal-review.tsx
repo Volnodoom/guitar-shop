@@ -1,15 +1,16 @@
 import { toast } from 'react-toastify';
-import { ChangeEvent, FormEventHandler, Fragment, MouseEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEventHandler, Fragment, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LoadingStatus, RATING_OPTIONS, ReviewFormField } from '../../../../../const';
 import { useAppDispatch } from '../../../../../hooks/hook';
 import { useIdGetProductInfo } from '../../../../../hooks/use-id-get-product-info/use-id-get-product-info';
 import { setCommentStatus } from '../../../../../store/data-reviews/data-reviews';
 import * as selector from '../../../../../store/data-reviews/selectors-reviews';
-import { GuitarType, InvalidFormArray, UserReviewPost } from '../../../../../types/general.types';
+import { DiveRef, GuitarType, InvalidFormArray, UserReviewPost } from '../../../../../types/general.types';
 import { checkIsReviewFormValid, checkStatusFailed, checkStatusLoading, checkStatusSuccess } from '../../../../../utils/utils-components';
 import { blockMargin, elementHidden, positionRelative, positionWaringAbsolute } from './modal-review.style';
 import { saveCommentAction } from '../../../../../store/data-reviews/actions-reviews';
+import { useFocusTrap } from '../../../../../hooks/use-focus-trap/use-focus-trap';
 
 type ModalReviewProps = {
   onSuccess: () => void,
@@ -22,6 +23,7 @@ function ModalReview(props: ModalReviewProps) {
     onClose,
   } = props;
 
+  const modalRef = useRef<DiveRef>(null);
   const dispatch = useAppDispatch();
   const [guitar] = useIdGetProductInfo();
 
@@ -37,6 +39,8 @@ function ModalReview(props: ModalReviewProps) {
   const [userComments, setUserComments] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
   const [invalidField, setInvalidField] = useState<InvalidFormArray>([]);
+
+  useFocusTrap(modalRef);
 
   useEffect(() => {
     if(isCommentLoading) {
@@ -130,7 +134,7 @@ function ModalReview(props: ModalReviewProps) {
   }
 
   return(
-    <div className="modal__content" >
+    <div className="modal__content" ref={modalRef}>
       <h2 className="modal__header modal__header--review title title--medium">Оставить отзыв</h2>
       <h3 className="modal__product-name title title--medium-20 title--uppercase">{name}</h3>
       <form className="form-review" onSubmit={handleSubmit}>
