@@ -3,9 +3,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { LoadingStatus, NameSpace, RATING_OPTIONS } from '../../../../const';
-import { GuitarType } from '../../../../types/general.types';
-import { createMockState, makeMockOneGuitarWitId } from '../../../../utils/mock-faker';
+import { LoadingStatus, NameSpace, RATING_OPTIONS } from '../../../../../const';
+import { GuitarType } from '../../../../../types/general.types';
+import { createMockState, makeMockOneGuitarWitId } from '../../../../../utils/mock-faker';
 import ModalReview from './modal-review';
 
 

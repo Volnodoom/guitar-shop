@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { createMockState } from '../../../../utils/mock-faker';
+import { createMockState } from '../../../../../utils/mock-faker';
 import ModalReviewSuccess from './modal-review-success';
 
 

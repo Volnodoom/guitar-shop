@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent, MouseEvent, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AppRoutes, CART_LINK, LINK_CURRENT, LoadingStatus, LogoPosition, NAV_LINK, PagesName, SEARCH_BAR_PLACEHOLDER } from '../../../const';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppRoutes, LINK_CURRENT, LoadingStatus, LogoPosition, NAV_LINK, PagesName, SEARCH_BAR_PLACEHOLDER } from '../../../const';
 import { useAppDispatch } from '../../../hooks/hook';
 import { useDebouncedValue } from '../../../hooks/use-debounced-value/use-debounced-value';
 import { fetchUserSearchAction } from '../../../store/data-guitars/actions-guitars';
@@ -10,11 +10,10 @@ import * as selectorGuitar from '../../../store/data-guitars/selectors-guitars';
 import { setReviewsStatus } from '../../../store/data-reviews/data-reviews';
 import { isEnter, isEscape } from '../../../utils/utils-components';
 import { Logo } from '../common';
-import { zIndexPosition } from './style-header';
+import { HeaderCart } from './components/components';
 
 function Header (): JSX.Element {
   const dispatch = useAppDispatch();
-  const location = useLocation();
   const navigate = useNavigate();
 
   const [searchName, setSearchName] = useState('');
@@ -27,14 +26,6 @@ function Header (): JSX.Element {
 
   const tabHead = useSelector(selectorGuitar.getActiveTab);
   const userSearchResult = useSelector(selectorGuitar.getUserGuitarSearch);
-
-  const isCart = location.pathname.includes(PagesName.Cart.en.toLowerCase());
-
-  useEffect(() => {
-    if(isCart) {
-      dispatch(setActiveTab(PagesName.Cart.en));
-    }
-  });
 
   const resetInput = useCallback(() => {
     setSearchName('');
@@ -66,7 +57,6 @@ function Header (): JSX.Element {
   useEffect(() => {
     const hasMemoryMatch = (valueToCheck: string) => searchMemoryMatch.some((line) => line === valueToCheck);
     const hasMemoryUnMatch = (valueToCheck: string) => searchMemoryUnMatch.some((line) => line === valueToCheck);
-
 
     if(debouncedValue !== '') {
       if(userSearchResult.length !== 0 && !hasMemoryMatch(searchName)) {
@@ -100,7 +90,6 @@ function Header (): JSX.Element {
   };
 
   const handleCatalogClick = () => dispatch(setActiveTab(PagesName.Catalog.en));
-  const handleCartClick = () => dispatch(setActiveTab(PagesName.Cart.en));
   const handleInactiveLink = (evt: MouseEvent<HTMLAnchorElement>) => evt.preventDefault();
 
   const handleNameSearch = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -214,19 +203,7 @@ function Header (): JSX.Element {
           </button>
         </div>
 
-        <Link
-          className={tabHead === PagesName.Cart.en ? `${CART_LINK} ${LINK_CURRENT}` : CART_LINK}
-          to={AppRoutes.Cart}
-          aria-label="Корзина"
-          onClick={handleCartClick}
-          style={zIndexPosition}
-        >
-          <svg className="header__cart-icon" width="14" height="14" aria-hidden="true" data-testid={'icon-basket'}>
-            <use xlinkHref="#icon-basket"></use>
-          </svg>
-          <span className="visually-hidden">Перейти в корзину</span>
-          <span className="header__cart-count">2</span>
-        </Link>
+        <HeaderCart />
       </div>
     </header>
   );

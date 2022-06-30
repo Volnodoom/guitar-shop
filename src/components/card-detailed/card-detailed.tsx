@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { LOCAL_RU, ModalKind, PagesName, StarSize } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
 import { useIdGetProductInfo } from '../../hooks/use-id-get-product-info/use-id-get-product-info';
@@ -10,10 +9,10 @@ import { fetchReviewsAction } from '../../store/data-reviews/actions-reviews';
 import * as selectorReview from '../../store/data-reviews/selectors-reviews';
 import { GuitarType } from '../../types/general.types';
 import { checkStatusFailed, checkStatusLoading, checkStatusSuccess, formatBaseImgUrl, formatHighDensityImgUrl } from '../../utils/utils-components';
-import { Breadcrumbs, RatingStars } from '../common/common';
+import { Breadcrumbs, ModalFrame, RatingStars } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
 import PageOnError from '../page-on-error/page-on-error';
-import { ModalFrame, ReviewsListInteraction, Tabs } from './components/components';
+import { ReviewsListInteraction, Tabs } from './components/components';
 
 function CardDetailed():JSX.Element {
   const [guitar, reviews, id] = useIdGetProductInfo();
@@ -28,7 +27,7 @@ function CardDetailed():JSX.Element {
   const isReviewsSuccess = checkStatusSuccess(reviewsStatus);
 
   const [isModalActive, setIsModalActive] = useState(false);
-  const [modalInfo, setModalInfo] = useState<null | ModalKind>(null);
+  const [currentModalType, setCurrentModalType] = useState<ModalKind>(ModalKind.Null);
 
   const isComponentLoading = (!guitar && !isGuitarSuccess && !isReviewsSuccess) || isGuitarLoading;
 
@@ -68,12 +67,17 @@ function CardDetailed():JSX.Element {
 
   const handleReviewModalClick = () => {
     setIsModalActive(true);
-    setModalInfo(ModalKind.Review);
+    setCurrentModalType(ModalKind.Review);
+  };
+
+  const handleCartAddModalClick = () => {
+    setIsModalActive(true);
+    setCurrentModalType(ModalKind.CartAdd);
   };
 
   const handleModalFrameOnClose = () => {
     setIsModalActive(false);
-    setModalInfo(ModalKind.Null);
+    setCurrentModalType(ModalKind.Null);
   };
 
   return(
@@ -106,7 +110,11 @@ function CardDetailed():JSX.Element {
           <div className="product-container__price-wrapper">
             <p className="product-container__price-info product-container__price-info--title">Цена:</p>
             <p className="product-container__price-info product-container__price-info--value">{price.toLocaleString(LOCAL_RU)} ₽</p>
-            <Link className="button button--red button--big product-container__button" to="#">Добавить в корзину</Link>
+            <button
+              className="button button--red button--big product-container__button"
+              onClick={handleCartAddModalClick}
+            >Добавить в корзину
+            </button>
           </div>
         </div>
 
@@ -114,10 +122,10 @@ function CardDetailed():JSX.Element {
 
         <ModalFrame
           onClose={handleModalFrameOnClose}
-          currentFrameStatus={isModalActive}
-          modalInfo={modalInfo}
+          isOpen={isModalActive}
+          modalKind={currentModalType}
+          guitarDetails={guitar}
         />
-
       </div>
     </main>
   );

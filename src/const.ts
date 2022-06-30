@@ -2,6 +2,7 @@ export const JPG_ENDING_FORMAT ='.jpg';
 export const JPG_DOUBLE_DENSITY = '@2x.jpg 2x';
 export const LOCAL_RU = 'ru-RU';
 export const ONE = 1;
+export const TWO = 2;
 export const NEGATIVE_ONE = -1;
 export const DOUBLE_STEP = 2;
 export const REVIEW_SHOW_OFF_LIMITS = 3;
@@ -26,6 +27,8 @@ export const ERROR_404 = '404.';
 export const PAGE_NOT_FOUND = 'Page not found';
 export const GENERAL_ERROR_MESSAGE = 'Проверьте правильность ввода запроса, наличие интернет соединения и повторите попытку. Если данная проблема повторилась, значит мы работаем над её устранением. Пожалуйста, повторите свой запрос позже.';
 export const SEARCH_BAR_PLACEHOLDER = 'Что вы ищите?';
+export const PAGE = 'page';
+export const PRODUCT = 'guitar';
 
 export const STRING_NUMBERS = [
   4,
@@ -114,15 +117,17 @@ export const KeyBoardCode = {
 } as const;
 
 export enum ModalStatus {
-  Initial = 'initial',
-  OpenReview = 'openReview',
-  Close = 'close',
-  Success = 'success',
+  Idl = 'idl',
+  SuccessReview = 'success-review',
+  SuccessCart = 'success-cart',
   Fail = 'fail',
 }
 
 export enum ModalKind {
   Review = 'review',
+  Cart = 'cart',
+  CartAdd = 'cart-add',
+  CartDelete = 'cart-delete',
   Null = 'null',
 }
 
@@ -139,6 +144,7 @@ export enum EventListenerType {
 export enum NameSpace {
   DataGuitars = 'DATA_GUITARS',
   DataReviews = 'DATA_REVIEWS',
+  DataCart = 'DATA_CART',
   QueryParams = 'QUERY_PARAMS',
 }
 

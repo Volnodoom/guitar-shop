@@ -3,9 +3,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { ModalKind, NameSpace } from '../../../../const';
-import { GuitarType } from '../../../../types/general.types';
-import { createMockState, makeMockOneGuitarWitId } from '../../../../utils/mock-faker';
+import { ModalKind, NameSpace } from '../../../const';
+import { GuitarType } from '../../../types/general.types';
+import { createMockState, makeMockOneGuitarWitId } from '../../../utils/mock-faker';
 import ModalFrame from './modal-frame';
 
 const SPECIFIC_GUITAR_ID = 5;
@@ -38,8 +38,8 @@ describe('Component: ModalFrame', () => {
             <Route path='guitar/:id' element={
               <ModalFrame
                 onClose={fakeOnClose}
-                currentFrameStatus={FRAME_ACTIVE}
-                modalInfo={MODAL_REVIEW}
+                isOpen={FRAME_ACTIVE}
+                modalKind={MODAL_REVIEW}
               />
             }
             />
@@ -66,8 +66,8 @@ describe('Component: ModalFrame', () => {
             <Route path='guitar/:id' element={
               <ModalFrame
                 onClose={fakeOnClose}
-                currentFrameStatus={FRAME_ACTIVE}
-                modalInfo={MODAL_REVIEW}
+                isOpen={FRAME_ACTIVE}
+                modalKind={MODAL_REVIEW}
               />
             }
             />
@@ -93,8 +93,8 @@ describe('Component: ModalFrame', () => {
             <Route path='guitar/:id' element={
               <ModalFrame
                 onClose={fakeOnClose}
-                currentFrameStatus={FRAME_ACTIVE}
-                modalInfo={MODAL_REVIEW}
+                isOpen={FRAME_ACTIVE}
+                modalKind={MODAL_REVIEW}
               />
             }
             />
@@ -123,8 +123,8 @@ describe('Component: ModalFrame', () => {
             <Route path='guitar/:id' element={
               <ModalFrame
                 onClose={fakeOnClose}
-                currentFrameStatus={FRAME_ACTIVE}
-                modalInfo={MODAL_REVIEW}
+                isOpen={FRAME_ACTIVE}
+                modalKind={MODAL_REVIEW}
               />
             }
             />
@@ -153,8 +153,8 @@ describe('Component: ModalFrame', () => {
             <Route path='guitar/:id' element={
               <ModalFrame
                 onClose={fakeOnClose}
-                currentFrameStatus={FRAME_ACTIVE}
-                modalInfo={MODAL_REVIEW}
+                isOpen={FRAME_ACTIVE}
+                modalKind={MODAL_REVIEW}
               />
             }
             />
