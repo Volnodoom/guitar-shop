@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { NameSpace, ONE } from '../../const';
+import { LoadingStatus, NameSpace, ONE } from '../../const';
 import { CartContentNumberOneType, GuitarType } from '../../types/general.types';
 import { CartState } from '../../types/state.types';
+import { fetchCouponCheckAction } from './action-cart';
 
 export const initialState: CartState = {
   cartContent: [],
   cartContentNumber: null,
   coupon: null,
+  couponStatus: LoadingStatus.Idle,
 };
 
 export const dataCart = createSlice({
@@ -47,7 +49,25 @@ export const dataCart = createSlice({
           state.cartContentNumber = null;
         }
       }
-    }
+    },
+    updateCoupon:  (state, action: PayloadAction<number | null>) => {
+      state.coupon = action.payload;
+    },
+    setCouponStatus: (state, action: PayloadAction<LoadingStatus>) => {
+      state.couponStatus = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCouponCheckAction.pending, (state) => {
+        state.couponStatus = LoadingStatus.Loading;
+      })
+      .addCase(fetchCouponCheckAction.fulfilled, (state) => {
+        state.couponStatus = LoadingStatus.Succeeded;
+      })
+      .addCase(fetchCouponCheckAction.rejected, (state) => {
+        state.couponStatus = LoadingStatus.Failed;
+      });
   }
 });
 
@@ -56,5 +76,7 @@ export const {
   removeCartContent,
   updateCartContentNumber,
   removeCartContentNumber,
+  updateCoupon,
+  setCouponStatus,
 } = dataCart.actions;
 

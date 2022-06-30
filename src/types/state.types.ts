@@ -38,5 +38,6 @@ export type QueryParamsState = {
 export type CartState = {
   cartContent: GuitarType[],
   cartContentNumber: null | CartContentNumber,
-  coupon: null | string,
+  coupon: null | number,
+  couponStatus: LoadingStatus,
 }

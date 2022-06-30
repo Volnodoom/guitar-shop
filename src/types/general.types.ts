@@ -99,3 +99,5 @@ export type QueryParamsWithArrayData = 'stringCount' | 'type';
 export type CartContentNumber = {[key: string]: number};
 
 export type CartContentNumberOneType = {id: string, value: number};
+
+export type CouponPost = {coupon: string};

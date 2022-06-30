@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { ModalKind, PagesName } from '../../const';
-import { getCartContent } from '../../store/data-cart/selector-cart';
+import * as selectorCart from '../../store/data-cart/selector-cart';
 import { GuitarType } from '../../types/general.types';
 import { Breadcrumbs, ModalFrame } from '../common/common';
 import { CartCardPreview, Coupon, Total } from './components/components';
+import * as selectorQuery from '../../store/query-params/selector-query';
 
 function Cart(): JSX.Element {
-  const cartProductList = useSelector(getCartContent);
+  const cartProductList = useSelector(selectorCart.getCartContent);
+  const redirectUrl = useSelector(selectorQuery.getCatalogWithQueryParamUrl);
 
   const [isModalActive, setIsModalActive] = useState(false);
   const [activeGuitar, setActiveGuitar] = useState<GuitarType | undefined>(undefined);
@@ -24,13 +27,29 @@ function Cart(): JSX.Element {
         <Breadcrumbs pageContent={PagesName.Cart.en}/>
 
         <div className="cart">
-          {cartProductList.map((line) => (
-            <CartCardPreview
-              guitarInfo={line}
-              setModalFrame={setIsModalActive}
-              setGuitar={setActiveGuitar}
-              key={line.id}
-            />))}
+          {
+            cartProductList.length > 0
+
+              ?
+
+              cartProductList.map((line) => (
+                <CartCardPreview
+                  guitarInfo={line}
+                  setModalFrame={setIsModalActive}
+                  setGuitar={setActiveGuitar}
+                  key={line.id}
+                />))
+
+              :
+              <div className="cart-item">
+                <div></div>
+                <div></div>
+                <div className="car__footer">
+                  <p className="product-info__title">В вашей корзине нет товаров</p>
+                  <Link className="link" to={redirectUrl}>перейти в каталог товаров</Link>
+                </div>
+              </div>
+          }
           <div className="cart__footer">
             <Coupon />
             <Total />

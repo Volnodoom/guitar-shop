@@ -6,6 +6,7 @@ import { State } from '../../types/state.types';
 export const getCartContent = (state: State) => state[NameSpace.DataCart].cartContent;
 export const getCoupon = (state: State) => state[NameSpace.DataCart].coupon;
 export const getCartContentNumbers = (state: State) => state[NameSpace.DataCart].cartContentNumber;
+export const getCouponStatus = (state: State) => state[NameSpace.DataCart].couponStatus;
 
 export const getTotalCartContentNumber = createSelector(
   getCartContentNumbers,
