@@ -12,7 +12,6 @@ export interface GuitarState extends EntityState<GuitarType> {
   currentPage: number,
   userGuitarSearch: GuitarType[],
   priceExtremes: null | GuitarsPriceRange,
-  activeTab: string,
   guitarsStatus: LoadingStatus,
   oneGuitarStatus: LoadingStatus,
   priceStatus: LoadingStatus,

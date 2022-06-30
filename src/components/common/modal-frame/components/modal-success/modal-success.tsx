@@ -1,10 +1,8 @@
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AppRoutes, ModalKind, PAGE, PagesName, PRODUCT } from '../../../../../const';
-import { useAppDispatch } from '../../../../../hooks/hook';
+import { AppRoutes, ModalKind, PAGE, PRODUCT } from '../../../../../const';
 import { useFocusTrap } from '../../../../../hooks/use-focus-trap/use-focus-trap';
-import { setActiveTab } from '../../../../../store/data-guitars/data-guitars';
 import * as selectorQuery from '../../../../../store/query-params/selector-query';
 import { DiveRef } from '../../../../../types/general.types';
 
@@ -15,7 +13,6 @@ type ModalReviewSuccessProps= {
 
 function ModalSuccess({onClose, modalType = ModalKind.Review,}: ModalReviewSuccessProps): JSX.Element {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const location = useLocation();
   const modalRef = useRef<DiveRef>(null);
 
@@ -27,7 +24,6 @@ function ModalSuccess({onClose, modalType = ModalKind.Review,}: ModalReviewSucce
   const isGuitar = location.pathname.includes(PRODUCT);
 
   const handleCartRedirectClick = () => {
-    dispatch(setActiveTab(PagesName.Cart.en));
     navigate(AppRoutes.CartAbsolute);
     onClose();
   };

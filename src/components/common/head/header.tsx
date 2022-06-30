@@ -1,11 +1,11 @@
 import { ChangeEvent, KeyboardEvent, MouseEvent, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppRoutes, LINK_CURRENT, LoadingStatus, LogoPosition, NAV_LINK, PagesName, SEARCH_BAR_PLACEHOLDER } from '../../../const';
 import { useAppDispatch } from '../../../hooks/hook';
 import { useDebouncedValue } from '../../../hooks/use-debounced-value/use-debounced-value';
 import { fetchUserSearchAction } from '../../../store/data-guitars/actions-guitars';
-import { setActiveTab, setOneGuitarStatus, setUserSearch } from '../../../store/data-guitars/data-guitars';
+import { setOneGuitarStatus, setUserSearch } from '../../../store/data-guitars/data-guitars';
 import * as selectorGuitar from '../../../store/data-guitars/selectors-guitars';
 import { setReviewsStatus } from '../../../store/data-reviews/data-reviews';
 import { isEnter, isEscape } from '../../../utils/utils-components';
@@ -15,6 +15,9 @@ import { HeaderCart } from './components/components';
 function Header (): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isCart = location.pathname.includes(PagesName.Cart.en.toLowerCase());
 
   const [searchName, setSearchName] = useState('');
   const [searchMemoryMatch, setSearchMemoryMatch] = useState<string[]>([]);
@@ -24,7 +27,6 @@ function Header (): JSX.Element {
 
   const debouncedValue = useDebouncedValue(realTimeInput);
 
-  const tabHead = useSelector(selectorGuitar.getActiveTab);
   const userSearchResult = useSelector(selectorGuitar.getUserGuitarSearch);
 
   const resetInput = useCallback(() => {
@@ -89,7 +91,6 @@ function Header (): JSX.Element {
     dispatch(setReviewsStatus(LoadingStatus.Idle));
   };
 
-  const handleCatalogClick = () => dispatch(setActiveTab(PagesName.Catalog.en));
   const handleInactiveLink = (evt: MouseEvent<HTMLAnchorElement>) => evt.preventDefault();
 
   const handleNameSearch = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -129,9 +130,8 @@ function Header (): JSX.Element {
           <ul className="main-nav__list">
             <li>
               <Link
-                className={tabHead === PagesName.Catalog.en ? `${NAV_LINK} ${LINK_CURRENT}` : NAV_LINK}
+                className={!isCart ? `${NAV_LINK} ${LINK_CURRENT}` : NAV_LINK}
                 to={AppRoutes.Root}
-                onClick={handleCatalogClick}
               >Каталог
               </Link>
             </li>
