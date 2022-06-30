@@ -29,6 +29,7 @@ export const GENERAL_ERROR_MESSAGE = 'Проверьте правильност�
 export const SEARCH_BAR_PLACEHOLDER = 'Что вы ищите?';
 export const PAGE = 'page';
 export const PRODUCT = 'guitar';
+export const GUITAR_CART_LIMIT = 99;
 
 export const STRING_NUMBERS = [
   4,

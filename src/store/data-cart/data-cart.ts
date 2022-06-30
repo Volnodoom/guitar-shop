@@ -19,8 +19,8 @@ export const dataCart = createSlice({
         state.cartContent = [...state.cartContent, action.payload];
       }
     },
-    removeCartContent: (state, action: PayloadAction<GuitarType>) => {
-      const index = state.cartContent.findIndex((guitarObject) => guitarObject.id === action.payload.id);
+    removeCartContent: (state, action: PayloadAction<{guitarId: number}>) => {
+      const index = state.cartContent.findIndex((guitarObject) => guitarObject.id === action.payload.guitarId);
       if(index >= 0) {
         state.cartContent.splice(index, ONE);
       }

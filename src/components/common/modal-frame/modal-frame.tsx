@@ -90,8 +90,9 @@ function ModalFrame({onClose, isOpen, modalKind, guitarDetails}: ModalFrameProps
 
   const handleCartDeleteClick = () => {
     if(guitarDetails) {
-      dispatch(removeCartContent(guitarDetails));
+      dispatch(removeCartContent({guitarId: guitarDetails.id}));
       dispatch(removeCartContentNumber({guitarId: guitarDetails.id}));
+      handleFrameClose();
     }
   };
 
