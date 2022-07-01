@@ -3,7 +3,6 @@ import { ChangeEvent, FormEventHandler, Fragment, MouseEvent, useEffect, useRef,
 import { useSelector } from 'react-redux';
 import { LoadingStatus, RATING_OPTIONS, ReviewFormField } from '../../../../../const';
 import { useAppDispatch } from '../../../../../hooks/hook';
-import { useIdGetProductInfo } from '../../../../../hooks/use-id-get-product-info/use-id-get-product-info';
 import { setCommentStatus } from '../../../../../store/data-reviews/data-reviews';
 import * as selector from '../../../../../store/data-reviews/selectors-reviews';
 import { DiveRef, GuitarType, InvalidFormArray, UserReviewPost } from '../../../../../types/general.types';
@@ -15,17 +14,12 @@ import { useFocusTrap } from '../../../../../hooks/use-focus-trap/use-focus-trap
 type ModalReviewProps = {
   onSuccess: () => void,
   onClose: () => void,
+  guitarDetails: GuitarType,
 }
 
-function ModalReview(props: ModalReviewProps) {
-  const {
-    onSuccess,
-    onClose,
-  } = props;
-
+function ModalReview({onSuccess, onClose, guitarDetails}: ModalReviewProps) {
   const modalRef = useRef<DiveRef>(null);
   const dispatch = useAppDispatch();
-  const [guitar] = useIdGetProductInfo();
 
   const commentStatus = useSelector(selector.getSaveCommentStatus);
   const isCommentSuccess = checkStatusSuccess(commentStatus);
@@ -65,7 +59,7 @@ function ModalReview(props: ModalReviewProps) {
   const {
     name,
     id,
-  } = guitar as GuitarType;
+  } = guitarDetails;
 
   const checkInvalidForm = (userReview:UserReviewPost): InvalidFormArray => {
     const invalidValues: InvalidFormArray = [];
@@ -129,7 +123,7 @@ function ModalReview(props: ModalReviewProps) {
     );
   };
 
-  if(!guitar) {
+  if(!guitarDetails) {
     return <p> </p>;
   }
 

@@ -8,17 +8,17 @@ import { DiveRef } from '../../../../../types/general.types';
 
 type ModalReviewSuccessProps= {
   onClose: () => void,
-  modalType?: ModalKind.Review | ModalKind.Cart,
+  modalType: ModalKind.Review | ModalKind.Cart,
 }
 
-function ModalSuccess({onClose, modalType = ModalKind.Review,}: ModalReviewSuccessProps): JSX.Element {
+function ModalSuccess({onClose, modalType = ModalKind.Review}: ModalReviewSuccessProps): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
   const modalRef = useRef<DiveRef>(null);
 
-  useFocusTrap(modalRef);
-
   const redirectUrl = useSelector(selectorQuery.getCatalogWithQueryParamUrl);
+
+  useFocusTrap(modalRef);
 
   const isCatalog = location.pathname.includes(PAGE);
   const isGuitar = location.pathname.includes(PRODUCT);

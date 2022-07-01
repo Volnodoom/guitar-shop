@@ -64,7 +64,9 @@ function ModalCart ({guitarDetails, onAdd, onDelete, onClose, modalType = ModalK
 
       {
         modalType === ModalKind.CartDelete
+
           ?
+
           <div className="modal__button-container">
             <button
               className="button button--small modal__button"
@@ -77,7 +79,9 @@ function ModalCart ({guitarDetails, onAdd, onDelete, onClose, modalType = ModalK
             >Продолжить покупки
             </button>
           </div>
+
           :
+
           <div className="modal__button-container">
             <button
               className="button button--red button--big modal__button modal__button--add"

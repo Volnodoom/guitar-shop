@@ -28,7 +28,15 @@ export const getCatalogWithQueryParamUrl = createSelector(
       {type: QueryRoutes.Type, value: productType},
     ];
 
-    const noNullParams = allParams.filter((line) => line.value !== null);
+    const noNullParams = allParams.filter(
+      (line) => {
+        if(Array.isArray(line.value)) {
+          return (line.value as Array<number | string>).length !== 0;
+        } else {
+          return line.value !== null;
+        }
+      }
+    );
 
     if(noNullParams.length !== 0) {
       const formattedData = noNullParams.map((line) => {

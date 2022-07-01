@@ -189,4 +189,60 @@ describe('Component: ModalREview', () => {
     userEvent.click(screen.getByRole('button', {name: /Закрыть/i}));
     await waitFor(() => {expect(fakeOnClose).toHaveBeenCalledTimes(1);});
   });
+
+  it('Focus trap work on any components inside Module Frame', () => {
+    const SPECIFIC_GUITAR_ID = 5;
+
+    const mockState = createMockState();
+    const fakeGuitarData: GuitarType = makeMockOneGuitarWitId(SPECIFIC_GUITAR_ID);
+    const fakeGuitarEntities = {[SPECIFIC_GUITAR_ID]: fakeGuitarData};
+
+    const updatedState = {
+      ...mockState,
+      [NameSpace.DataGuitars]: {
+        ...mockState[NameSpace.DataGuitars],
+        entities: fakeGuitarEntities,
+        ids: [SPECIFIC_GUITAR_ID],
+      }
+    };
+
+    const store = configureMockStore()(updatedState);
+    const fakeOnSuccess = jest.fn();
+    const fakeOnClose = jest.fn();
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/guitar/${SPECIFIC_GUITAR_ID}`]}>
+          <Routes>
+            <Route path='guitar/:id' element={<ModalReview onSuccess={fakeOnSuccess} onClose={fakeOnClose}/>} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    userEvent.tab();
+    expect(screen.getByTestId(/input-name/i)).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByTestId(/rate-star-5/i)).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByTestId(/rate-star-4/i)).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByTestId(/rate-star-3/i)).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByTestId(/rate-star-2/i)).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByTestId(/rate-star-1/i)).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByTestId(/input-adv/i)).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByTestId(/input-disadv/i)).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByTestId(/input-textarea/i)).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByRole('button', {name: /Отправить отзыв/i})).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByRole('button', {name: /Закрыть/i})).toHaveFocus();
+    userEvent.tab();
+    expect(screen.getByTestId(/input-name/i)).toHaveFocus();
+  });
 });

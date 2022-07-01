@@ -115,7 +115,10 @@ function ModalFrame({onClose, isOpen, modalKind, guitarDetails}: ModalFrameProps
             &&
             isActive
             &&
+            guitarDetails
+            &&
             <ModalReview
+              guitarDetails={guitarDetails}
               onClose={handleFrameClose}
               onSuccess={handleModalReviewSuccess}
             />
@@ -152,7 +155,7 @@ function ModalFrame({onClose, isOpen, modalKind, guitarDetails}: ModalFrameProps
         {
           modalStatus === ModalStatus.SuccessReview
             &&
-            <ModalSuccess onClose={handleFrameClose} />
+            <ModalSuccess modalType={ModalKind.Review} onClose={handleFrameClose} />
         }
 
         {
