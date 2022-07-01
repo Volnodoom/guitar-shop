@@ -74,7 +74,8 @@ function CartCardPreview({guitarInfo, setModalFrame, setGuitar}: CartCardPreview
       dispatch(updateCartContentNumber({id: String(id), value: GUITAR_CART_LIMIT}));
       setCurrentValue(GUITAR_CART_LIMIT);
     } else {
-      handleDeleteCartItem();
+      dispatch(updateCartContentNumber({id: String(id), value: ONE}));
+      setCurrentValue(ONE);
     }
   };
 
@@ -123,6 +124,7 @@ function CartCardPreview({guitarInfo, setModalFrame, setGuitar}: CartCardPreview
           className="quantity__input"
           type="number"
           value={currentValue ? currentValue : 0}
+          placeholder={currentValue ? String(currentValue) : String(0)}
           onChange={handleInputChange}
           id="2-count"
           name="2-count"
