@@ -1,4 +1,5 @@
 import { configureMockStore } from '@jedmao/redux-mock-store';
+import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import { datatype } from 'faker';
 import { Provider } from 'react-redux';
@@ -64,7 +65,7 @@ describe('Component: CardDetailed', () => {
     expect(screen.getByText(ITEMS_NUMBER)).toBeInTheDocument();
     expect(screen.getByText(/Цена/i)).toBeInTheDocument();
     expect(screen.getByText(/25 634/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', {name: /Добавить в корзину/i})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /Добавить в корзину/i})).toBeInTheDocument();
   });
 
   it('Display loading when data is loading', () => {
@@ -135,4 +136,40 @@ describe('Component: CardDetailed', () => {
     expect(screen.getByText(/404/i)).toBeInTheDocument();
   });
 
+  it('Click on button Add-To-Cart calls for Modal window', async () => {
+    const SUCCESS = LoadingStatus.Succeeded;
+
+    const mockState = createMockState();
+
+    const updatedState = {
+      ...mockState,
+      [NameSpace.DataReviews]: {
+        ...mockState[NameSpace.DataReviews],
+        reviewsStatus: SUCCESS,
+        entities: fakeReviewsEntities,
+        ids: fakeIds,
+      },
+      [NameSpace.DataGuitars]: {
+        ...mockState[NameSpace.DataGuitars],
+        entities: fakeGuitarEntities,
+        ids: [SPECIFIC_GUITAR_ID],
+        oneGuitarStatus: SUCCESS,
+      },
+    };
+
+    const store = configureMockStore()(updatedState);
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/guitar/${SPECIFIC_GUITAR_ID}`]}>
+          <Routes>
+            <Route path='guitar/:id' element={<CardDetailed />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await userEvent.click(screen.getByRole('button', {name: /Добавить в корзину/i}));
+    expect(screen.getByText(/Добавить товар в корзину/i)).toBeInTheDocument();
+  });
 });
