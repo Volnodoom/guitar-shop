@@ -1,6 +1,6 @@
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import userEvent from '@testing-library/user-event';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { NameSpace } from '../../../../const';
@@ -103,10 +103,9 @@ describe('Component: CartCardPreview', () => {
       </Provider>
     );
 
-    screen.getByRole('spinbutton').focus();
-    userEvent.keyboard('{1}');
+    fireEvent.change(screen.getByRole('spinbutton'), {target: {value: '20'}});
     await waitFor(() => expect(mockStoreSpec.dispatch).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(mockStoreSpec.dispatch).toHaveBeenCalledWith(updateCartContentNumber({id: String(fakeGuitar.id), value: 15})));
-    expect(screen.getByPlaceholderText(15)).toBeInTheDocument();
+    await waitFor(() => expect(mockStoreSpec.dispatch).toHaveBeenCalledWith(updateCartContentNumber({id: String(fakeGuitar.id), value: 20})));
+    expect(screen.getByPlaceholderText(20)).toBeInTheDocument();
   });
 });
