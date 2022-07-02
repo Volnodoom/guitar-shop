@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { ModalKind } from '../../../const';
+import { addCartContent, removeCartContent, removeCartContentNumber } from '../../../store/data-cart/data-cart';
 import { createMockState,  mockGuitar } from '../../../utils/mock-faker';
 import ModalFrame from './modal-frame';
 
@@ -102,5 +103,58 @@ describe('Component: ModalFrame', () => {
     expect(screen.getByText(/Оставить отзыв/i)).toBeInTheDocument();
     await userEvent.click(screen.getByTestId(/overlay/i));
     expect(fakeOnClose).toBeCalledTimes(1);
+  });
+
+  it('Modal-Add on click Add-To-Cart dispatch actions', async () => {
+    const FRAME_ACTIVE = true;
+    const MODAL_ADD = ModalKind.CartAdd;
+
+    const storeSpec = configureMockStore()(mockState);
+
+    const fakeOnClose = jest.fn();
+    storeSpec.dispatch = jest.fn();
+
+    render(
+      <Provider store={storeSpec}>
+        <MemoryRouter>
+          <ModalFrame
+            onClose={fakeOnClose}
+            isOpen={FRAME_ACTIVE}
+            modalKind={MODAL_ADD}
+            guitarDetails={fakeGuitar}
+          />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await userEvent.click(screen.getByText(/Добавить в корзину/i));
+    expect(storeSpec.dispatch).toHaveBeenCalledWith(addCartContent(fakeGuitar));
+  });
+
+  it('Modal-Delete on click Delete-From-Cart dispatch actions', async () => {
+    const FRAME_ACTIVE = true;
+    const MODAL_DELETE = ModalKind.CartDelete;
+
+    const storeSpec = configureMockStore()(mockState);
+
+    const fakeOnClose = jest.fn();
+    storeSpec.dispatch = jest.fn();
+
+    render(
+      <Provider store={storeSpec}>
+        <MemoryRouter>
+          <ModalFrame
+            onClose={fakeOnClose}
+            isOpen={FRAME_ACTIVE}
+            modalKind={MODAL_DELETE}
+            guitarDetails={fakeGuitar}
+          />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await userEvent.click(screen.getByText(/Удалить товар/i));
+    expect(storeSpec.dispatch).toHaveBeenCalledWith(removeCartContent({guitarId: fakeGuitar.id}));
+    expect(storeSpec.dispatch).toHaveBeenCalledWith(removeCartContentNumber({guitarId: fakeGuitar.id}));
   });
 });
