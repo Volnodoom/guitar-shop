@@ -3,42 +3,49 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { datatype } from 'faker';
 import { Provider } from 'react-redux';
-import { Link, MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { AppRoutes, NameSpace } from '../../../../const';
+import { GuitarType } from '../../../../types/general.types';
 import { createMockState, makeMockReviewsForSpecificGuitar, mockGuitar } from '../../../../utils/mock-faker';
 import { mockEntity } from '../../../../utils/utils-components';
 import CardPreview from './card-preview';
 
 const ARRAY_LENGTH = 5;
 const SPECIFIC_PRICE = 40520;
+const IDENTIFICATION = 11;
+
+const guitarData: GuitarType = {
+  ...mockGuitar(),
+  price: SPECIFIC_PRICE,
+  id: IDENTIFICATION,
+};
+
+const reviews = makeMockReviewsForSpecificGuitar(ARRAY_LENGTH, guitarData.id);
+const fakeIds = Array.from({length: ARRAY_LENGTH}, () => String(datatype.number()));
+const reviewsEntities = mockEntity(fakeIds, reviews);
+
+const mockState = createMockState();
+const updatedState = {
+  ...mockState,
+  [NameSpace.DataReviews]: {
+    ...mockState[NameSpace.DataReviews],
+    ids: fakeIds,
+    entities: reviewsEntities,
+  }
+};
+
+const store = configureMockStore()(updatedState);
 
 describe('Component: CardPreview', () => {
-  it('render correctly', () => {
-    const guitarData = {
-      ...mockGuitar(),
-      price: SPECIFIC_PRICE,
-    };
-
-    const reviews = makeMockReviewsForSpecificGuitar(ARRAY_LENGTH, guitarData.id);
-    const fakeIds = Array.from({length: ARRAY_LENGTH}, () => String(datatype.number()));
-    const reviewsEntities = mockEntity(fakeIds, reviews);
+  it('Render correctly', () => {
     const nameWithDotAtTheEnd = `${guitarData.name}.`;
-
-    const mockState = createMockState();
-    const updatedState = {
-      ...mockState,
-      [NameSpace.DataReviews]: {
-        ...mockState[NameSpace.DataReviews],
-        ids: fakeIds,
-        entities: reviewsEntities,
-      }
-    };
-    const store = configureMockStore()(updatedState);
+    const fakeIsModalActive = jest.fn();
+    const fakeSetGuitar = jest.fn();
 
     render(
       <Provider store={store}>
         <MemoryRouter>
-          <CardPreview itemInfo={guitarData} />
+          <CardPreview setModalFrame={fakeIsModalActive} setGuitar={fakeSetGuitar} itemInfo={guitarData} />
         </MemoryRouter>
       </Provider>
     );
@@ -53,26 +60,20 @@ describe('Component: CardPreview', () => {
     expect(screen.getByText(/Купить/i)).toBeInTheDocument();
   });
 
-  it('click on link redirect on accurate page', async () => {
+  it('Click on link "More Details" redirect to the detailed page', async () => {
     //due to scrollIntoView is not implemented in jsdom. It is working by manually adding it.
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     window.HTMLElement.prototype.scrollIntoView = function() {};
-    const IDENTIFICATION = 1;
-    const guitarData = {
-      ...mockGuitar(),
-      id: IDENTIFICATION,
-    };
-    const mockState = createMockState();
-    const store = configureMockStore()(mockState);
-    const NOT_PAGE = '/this/page/does/not/exist';
+
+    const fakeIsModalActive = jest.fn();
+    const fakeSetGuitar = jest.fn();
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[NOT_PAGE]}>
+        <MemoryRouter>
           <Routes>
-            <Route path={AppRoutes.NotExisted} element={<CardPreview itemInfo={guitarData} />} />
-            <Route path={AppRoutes.GuitarAbsolute(IDENTIFICATION)} element={<Link to={NOT_PAGE}>On product details page</Link>} />
-            <Route path={AppRoutes.CartAbsolute} element={<h1>On cart page</h1>} />
+            <Route path={AppRoutes.NotExisted} element={<CardPreview setModalFrame={fakeIsModalActive} setGuitar={fakeSetGuitar} itemInfo={guitarData} />} />
+            <Route path={AppRoutes.GuitarAbsolute(IDENTIFICATION)} element={<h1>Correct redirection</h1>} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -80,16 +81,69 @@ describe('Component: CardPreview', () => {
 
     userEvent.click(screen.getByRole('link', {name: /Подробнее/i}));
     await waitFor(() => {
-      expect(screen.getByRole('link', { name: /On product details page/i })).toBeInTheDocument();
+      expect(screen.getByText(/Correct redirection/i )).toBeInTheDocument();
     });
+  });
 
-    userEvent.click(screen.getByRole('link', {name: /On product details page/i}));
-    await waitFor(() => {screen.getByRole('link', { name: /Купить/i });});
+  it('Click on link "Purchase" call modal window', async () => {
+    //due to scrollIntoView is not implemented in jsdom. It is working by manually adding it.
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    window.HTMLElement.prototype.scrollIntoView = function() {};
 
+    const fakeIsModalActive = jest.fn();
+    const fakeSetGuitar = jest.fn();
 
-    userEvent.click(screen.getByRole('link', {name: /Купить/i}));
-    await waitFor(() => {
-      expect(screen.getByText(/On cart page/i)).toBeInTheDocument();
-    });
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <Routes>
+            <Route path={AppRoutes.NotExisted} element={<CardPreview setModalFrame={fakeIsModalActive} setGuitar={fakeSetGuitar} itemInfo={guitarData} />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await userEvent.click(screen.getByRole('button', {name: /Купить/i}));
+    expect(fakeIsModalActive).toHaveBeenCalledTimes(1);
+    expect(fakeSetGuitar).toHaveBeenCalledTimes(1);
+  });
+
+  it('Click on link "In cart" call redirect to cart', async () => {
+    //due to scrollIntoView is not implemented in jsdom. It is working by manually adding it.
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    window.HTMLElement.prototype.scrollIntoView = function() {};
+
+    const updatedStateSpec = {
+      ...mockState,
+      [NameSpace.DataReviews]: {
+        ...mockState[NameSpace.DataReviews],
+        ids: fakeIds,
+        entities: reviewsEntities,
+      },
+      [NameSpace.DataCart]: {
+        ...mockState[NameSpace.DataCart],
+        cartContent: [guitarData],
+        cartContentNumber: {[guitarData.id]: 20},
+      }
+    };
+
+    const storeSpec = configureMockStore()(updatedStateSpec);
+
+    const fakeIsModalActive = jest.fn();
+    const fakeSetGuitar = jest.fn();
+
+    render(
+      <Provider store={storeSpec}>
+        <MemoryRouter>
+          <Routes>
+            <Route path={AppRoutes.NotExisted} element={<CardPreview setModalFrame={fakeIsModalActive} setGuitar={fakeSetGuitar} itemInfo={guitarData} />} />
+            <Route path={AppRoutes.CartAbsolute} element={<h1>On cart page</h1>} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await userEvent.click(screen.getByRole('link', {name: /В Корзине/i}));
+    expect(screen.getByText(/On cart page/i )).toBeInTheDocument();
   });
 });

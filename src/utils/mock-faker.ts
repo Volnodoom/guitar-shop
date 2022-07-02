@@ -1,5 +1,6 @@
 import { address, datatype, image, internet, lorem } from 'faker';
 import { KindOfGuitars, NameSpace } from '../const';
+import { initialState as initialStateCart } from '../store/data-cart/data-cart';
 import { initialState as initialStateGuitars } from '../store/data-guitars/data-guitars';
 import { initialState as initialStateReviews } from '../store/data-reviews/data-reviews';
 import { initialState as initialStateQuery } from '../store/query-params/query-params';
@@ -15,6 +16,9 @@ export const createMockState = () => ({
   [NameSpace.QueryParams]: {
     ...initialStateQuery,
   },
+  [NameSpace.DataCart]: {
+    ...initialStateCart,
+  },
 });
 
 const fakeName = () => address.cityName();
@@ -27,7 +31,7 @@ export const mockGuitar = (): GuitarType => ({
   id: datatype.number(),
   name: address.cityName(),
   vendorCode: datatype.hexaDecimal(10),
-  type: lorem.word(),
+  type: Object.values(KindOfGuitars)[datatype.number({max: 2})],
   description: lorem.text(),
   previewImg: image.imageUrl(),
   stringCount: datatype.number(),

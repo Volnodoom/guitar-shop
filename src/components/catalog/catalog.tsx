@@ -1,20 +1,21 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import {  GENERAL_ERROR_MESSAGE, LIMIT_GUITARS_PER_PAGE, PagesName } from '../../const';
+import {  GENERAL_ERROR_MESSAGE, LIMIT_GUITARS_PER_PAGE, ModalKind, PagesName } from '../../const';
 import { useAppDispatch } from '../../hooks/hook';
 import { useCustomSearchParams } from '../../hooks/use-custom-search-params/use-custom-search-params';
 import { useSetCatalogPageState } from '../../hooks/use-set-catalog-page-state/use-set-catalog-page-state';
 import { fetchProductsAction } from '../../store/data-guitars/actions-guitars';
 import * as selectorGuitar from '../../store/data-guitars/selectors-guitars';
 import * as selectorQuery from '../../store/query-params/selector-query';
+import { GuitarType } from '../../types/general.types';
 import { checkStatusFailed, checkStatusIdl, checkStatusLoading } from '../../utils/utils-components';
-import { Breadcrumbs } from '../common/common';
+import { Breadcrumbs, ModalFrame } from '../common/common';
 import LoadingScreen from '../loading-screen/loading-screen';
 import PageOnError from '../page-on-error/page-on-error';
 import { Filtration, Pagination, Sorting, CardPreview } from './components/components';
 
-function Catalog():JSX.Element {
+function Catalog(): JSX.Element {
   const { pageNumber } = useParams<{pageNumber: string}>();
   const dispatch = useAppDispatch();
   const isDataLoading = checkStatusLoading(useSelector(selectorGuitar.getGuitarsStatus));
@@ -26,8 +27,9 @@ function Catalog():JSX.Element {
 
   const getCurrentPriceStart = useSelector(selectorQuery.getPriceRangeStart);
   const getCurrentPriceEnd = useSelector(selectorQuery.getPriceRangeEnd);
-  // const getFilterStringNumber = useSelector(selectorQuery.getFilterStringNumber);
-  // const getCurrentFilterType = useSelector(selectorQuery.getFilterByType);
+
+  const [isModalActive, setIsModalActive] = useState(false);
+  const [activeGuitar, setActiveGuitar] = useState<GuitarType | undefined>(undefined);
 
   const [setPageState] = useSetCatalogPageState();
 
@@ -42,9 +44,6 @@ function Catalog():JSX.Element {
       if(totalGuitarsFromServer === null || !guitarsAccordingToPage) {
         dispatch(fetchProductsAction());
       }
-      // if(priceRange === null) {
-      //   dispatch(fetchPriceExtreme());
-      // }
     }
   },[
     dispatch,
@@ -54,10 +53,13 @@ function Catalog():JSX.Element {
     setPageState,
     getCurrentPriceStart,
     getCurrentPriceEnd,
-    // getFilterStringNumber,
-    // getCurrentFilterType,
     priceRange
   ]);
+
+  const handleModalFrameCloseClick = () => {
+    setIsModalActive(false);
+    setActiveGuitar(undefined);
+  };
 
   if(isDataLoading && totalGuitarsFromServer === null && priceRange === null) {
     return <LoadingScreen />;
@@ -97,27 +99,48 @@ function Catalog():JSX.Element {
         <div className="catalog">
           <Filtration />
           <Sorting />
+
           {
             guitarsAccordingToPage
             &&
             guitarsAccordingToPage.length > 0
             &&
             guitarsAccordingToPage.every((line) => line !== undefined)
+
               ?
+
               <div className="cards catalog__cards">
                 {
                   guitarsAccordingToPage
-                    .map((line) => (line && <CardPreview itemInfo={line} key={line.id}/>))
+                    .map((line) => (line
+                      &&
+                      <CardPreview
+                        setModalFrame={setIsModalActive}
+                        setGuitar={setActiveGuitar}
+                        itemInfo={line}
+                        key={line.id}
+                      />))
                 }
               </div>
+
               :
+
               <div className='catalog__cards'>
                 <b>Товаров по вашему запросу не найдено</b>
               </div>
           }
+
           <Pagination />
         </div>
       </div>
+
+
+      <ModalFrame
+        onClose={handleModalFrameCloseClick}
+        isOpen={isModalActive}
+        modalKind={ModalKind.CartAdd}
+        guitarDetails={activeGuitar}
+      />
     </main>
   );
 }

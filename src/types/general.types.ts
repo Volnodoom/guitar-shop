@@ -1,12 +1,12 @@
 import { AxiosInstance } from 'axios';
-import { KeyBoardNames, ReviewFormField, SortingOrder, SortingSort } from '../const';
+import { KeyBoardNames, KindOfGuitars, ReviewFormField, SortingOrder, SortingSort } from '../const';
 import { AppDispatch, State } from './state.types';
 
 export type GuitarType = {
   id: number,
   name: string,
   vendorCode: string,
-  type: string,
+  type: KindOfGuitars,
   description: string,
   previewImg: string,
   stringCount: number,
@@ -95,3 +95,9 @@ export type NoNullParamObject = {
 }
 
 export type QueryParamsWithArrayData = 'stringCount' | 'type';
+
+export type CartContentNumber = {[key: string]: number};
+
+export type CartContentNumberOneType = {id: string, value: number};
+
+export type CouponPost = {coupon: string};

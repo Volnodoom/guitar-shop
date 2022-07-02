@@ -1,10 +1,9 @@
-import { datatype, lorem } from 'faker';
+import { datatype } from 'faker';
 import { LoadingStatus } from '../../const';
-import { clearGuitarsIdPerPage, dataGuitars, initialState as initialStateGuitars, setActiveTab, setCurrentPage, setGuitarsDetails, setGuitarsIdPerPage, setGuitarsStatus, setOneGuitarDetails, setOneGuitarStatus, setPriceExtremes, setTotalGuitars } from '../data-guitars/data-guitars';
+import { clearGuitarsIdPerPage, dataGuitars, initialState as initialStateGuitars, setCurrentPage, setGuitarsDetails, setGuitarsIdPerPage, setGuitarsStatus, setOneGuitarDetails, setOneGuitarStatus, setPriceExtremes, setTotalGuitars } from '../data-guitars/data-guitars';
 import { makeMockGuitarArray, makeMockOneGuitarWitId } from '../../utils/mock-faker';
 
 const fakeNumber = datatype.number();
-const fakeWord = lorem.word();
 
 const ARRAY_LENGTH = 10;
 const mockIds = Array.from({length: ARRAY_LENGTH}, () => datatype.number());
@@ -30,11 +29,6 @@ describe('Store: DATA_GUITARS', () => {
     it('setCurrentPage -- update state field: currentPage', () => {
       expect(dataGuitars.reducer(initialStateGuitars, setCurrentPage(fakeNumber)))
         .toEqual({...initialStateGuitars, currentPage: fakeNumber});
-    });
-
-    it('setActiveTab -- update state field: activeTab', () => {
-      expect(dataGuitars.reducer(initialStateGuitars, setActiveTab(fakeWord)))
-        .toEqual({...initialStateGuitars, activeTab: fakeWord});
     });
 
     it('setGuitarsDetails -- normalize data (by using RTK normalizer) for guitars and updating state field: ids and entities', () => {

@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { LoadingStatus, NameSpace, ONE, PagesName } from '../../const';
+import { LoadingStatus, NameSpace, ONE } from '../../const';
 import { GuitarsIdsLineType, GuitarsPriceRange, GuitarType } from '../../types/general.types';
 import { GuitarState, State } from '../../types/state.types';
 import { fetchOneGuitarAction, fetchPriceExtreme, fetchProductsAction } from './actions-guitars';
@@ -15,7 +15,6 @@ export const initialState: GuitarState = guitarsAdapter.getInitialState({
   currentPage: ONE,
   userGuitarSearch: [],
   priceExtremes: null,
-  activeTab: PagesName.Catalog.en,
   guitarsStatus: LoadingStatus.Idle,
   oneGuitarStatus: LoadingStatus.Idle,
   priceStatus: LoadingStatus.Idle,
@@ -33,9 +32,6 @@ export const dataGuitars = createSlice({
     },
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
-    },
-    setActiveTab: (state, action: PayloadAction<string>) => {
-      state.activeTab = action.payload;
     },
     setGuitarsDetails: (state, action: PayloadAction<GuitarType[]>) => {
       guitarsAdapter.addMany(state, action.payload);
@@ -99,7 +95,6 @@ export const dataGuitars = createSlice({
 export const {
   setTotalGuitars,
   setCurrentPage,
-  setActiveTab,
   setGuitarsDetails,
   setOneGuitarDetails,
   setGuitarsIdPerPage,

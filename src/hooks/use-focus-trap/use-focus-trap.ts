@@ -1,11 +1,9 @@
 import { MutableRefObject, useEffect, useRef } from 'react';
-import { ModalStatus, DOUBLE_STEP, ONE, KeyBoardNames, EventListenerType } from '../../const';
+import { DOUBLE_STEP, ONE, KeyBoardNames, EventListenerType } from '../../const';
 import { DiveRef, KeyLogType } from '../../types/general.types';
 
 export const useFocusTrap = (
   elementContainer: MutableRefObject<DiveRef>,
-  statusOfModal: ModalStatus,
-  isHookActive: boolean,
 ): void => {
   const targetedElements = useRef<Element[]>([]);
   const activeFocus = useRef({currentValue:0, previousValue: 0});
@@ -26,7 +24,7 @@ export const useFocusTrap = (
 
       elementContainer.current.focus();
     }
-  },[elementContainer, statusOfModal]);
+  },);
 
   useEffect(() => {
     const focusNexElement = () => {
@@ -59,7 +57,6 @@ export const useFocusTrap = (
       activeFocus.current.currentValue = activeFocus.current.currentValue - ONE;
     };
 
-
     const keyLog = {} as KeyLogType;
     const handleKeyDown = (evt: KeyboardEvent) => {
       const occasion = evt.key;
@@ -85,17 +82,12 @@ export const useFocusTrap = (
       }
     };
 
-    if(isHookActive) {
-      document.addEventListener(EventListenerType.KeyDown, handleKeyDown);
-      document.addEventListener(EventListenerType.KeyUp, handleKeyUp);
-    } else {
-      document.removeEventListener(EventListenerType.KeyDown, handleKeyDown);
-      document.removeEventListener(EventListenerType.KeyUp, handleKeyUp);
-    }
+    document.addEventListener(EventListenerType.KeyDown, handleKeyDown);
+    document.addEventListener(EventListenerType.KeyUp, handleKeyUp);
 
     return () => {
       document.removeEventListener(EventListenerType.KeyDown, handleKeyDown);
       document.removeEventListener(EventListenerType.KeyUp, handleKeyUp);
     };
-  },[isHookActive, statusOfModal]);
+  },);
 };

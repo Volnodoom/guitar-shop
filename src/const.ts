@@ -2,6 +2,7 @@ export const JPG_ENDING_FORMAT ='.jpg';
 export const JPG_DOUBLE_DENSITY = '@2x.jpg 2x';
 export const LOCAL_RU = 'ru-RU';
 export const ONE = 1;
+export const TWO = 2;
 export const NEGATIVE_ONE = -1;
 export const DOUBLE_STEP = 2;
 export const REVIEW_SHOW_OFF_LIMITS = 3;
@@ -14,6 +15,8 @@ export const SERVER_IMG_BASE = 'guitar';
 export const COUPLED_DATA = 'comments';
 export const HEADER_TOTAL_NUMBER = 'x-total-count';
 export const BAD_REQUEST = 400;
+export const NOT_FOUND = 404;
+export const BAD_REQUEST_COUPON = 'Invalid Value';
 export const UNDEFINED_ERROR = 'Возникли проблемы, при обработке вашего запроса. Пожалуйста, проверьте ваше интернет соединение и попробуйте повторить ваш запрос.';
 export const LINK_CURRENT = 'link--current';
 export const NAV_LINK = 'link main-nav__link';
@@ -26,6 +29,9 @@ export const ERROR_404 = '404.';
 export const PAGE_NOT_FOUND = 'Page not found';
 export const GENERAL_ERROR_MESSAGE = 'Проверьте правильность ввода запроса, наличие интернет соединения и повторите попытку. Если данная проблема повторилась, значит мы работаем над её устранением. Пожалуйста, повторите свой запрос позже.';
 export const SEARCH_BAR_PLACEHOLDER = 'Что вы ищите?';
+export const PAGE = 'page';
+export const PRODUCT = 'guitar';
+export const GUITAR_CART_LIMIT = 99;
 
 export const STRING_NUMBERS = [
   4,
@@ -114,15 +120,17 @@ export const KeyBoardCode = {
 } as const;
 
 export enum ModalStatus {
-  Initial = 'initial',
-  OpenReview = 'openReview',
-  Close = 'close',
-  Success = 'success',
+  Idl = 'idl',
+  SuccessReview = 'success-review',
+  SuccessCart = 'success-cart',
   Fail = 'fail',
 }
 
 export enum ModalKind {
   Review = 'review',
+  Cart = 'cart',
+  CartAdd = 'cart-add',
+  CartDelete = 'cart-delete',
   Null = 'null',
 }
 
@@ -139,6 +147,7 @@ export enum EventListenerType {
 export enum NameSpace {
   DataGuitars = 'DATA_GUITARS',
   DataReviews = 'DATA_REVIEWS',
+  DataCart = 'DATA_CART',
   QueryParams = 'QUERY_PARAMS',
 }
 
@@ -150,6 +159,7 @@ export enum ApiAction {
   FetchReviews = 'reviews/fetchReviews',
   SaveComment = 'reviews/saveComment',
   GetProduct = 'data/fetchProduct',
+  FetchCouponCheck = 'cart/fetchCouponCheck',
 }
 
 export const ApiRoutes = {
