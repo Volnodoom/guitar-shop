@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { useRef} from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import { useFocusTrap } from './use-focus-trap';
-import { ModalStatus } from '../../const';
 
 describe('Custom hook: use-focus-trap', () => {
   it('Pressing tab button focus element', async () => {
@@ -17,7 +16,7 @@ describe('Custom hook: use-focus-trap', () => {
       </div>
     );
 
-    renderHook(() => useFocusTrap(resultRef.current, ModalStatus.OpenReview, true));
+    renderHook(() => useFocusTrap(resultRef.current));
 
     userEvent.keyboard('{Tab}');
     await waitFor(() => expect(screen.getByRole('button', {name: /Button1/i})).toHaveFocus());
