@@ -45,7 +45,7 @@ function Cart(): JSX.Element {
                 <div></div>
                 <div></div>
                 <div className="car__footer">
-                  <p className="product-info__title">В вашей корзине нет товаров</p>
+                  <p className="product-info__title">В корзине нет товаров</p>
                   <Link className="link" to={redirectUrl}>перейти в каталог товаров</Link>
                 </div>
               </div>

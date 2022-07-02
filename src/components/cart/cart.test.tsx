@@ -5,9 +5,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { createMockState } from '../../utils/mock-faker';
 import Cart from './cart';
 
-
-describe('Component: CartCardPreview', () => {
-  it('render correctly', () => {
+describe('Component: Cart', () => {
+  it('Render correctly when no items in cart', () => {
     const mockState = createMockState();
     const mockStore = configureMockStore()(mockState);
 
@@ -19,6 +18,7 @@ describe('Component: CartCardPreview', () => {
       </Provider>
     );
 
-    expect(screen.getAllByText(/Корзина/i)).toHaveLength(2);
+    expect(screen.getByText(/В корзине нет товаров/i)).toBeInTheDocument();
+    expect(screen.getByText(/перейти в каталог товаров/i)).toBeInTheDocument();
   });
 });
