@@ -67,7 +67,7 @@ function CartCardPreview({guitarInfo, setModalFrame, setGuitar}: CartCardPreview
   const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const value = Number(evt.target.value);
 
-    if(value > 0 && value <= GUITAR_CART_LIMIT) {
+    if(value >= 0 && value <= GUITAR_CART_LIMIT) {
       dispatch(updateCartContentNumber({id: String(id), value: value}));
       setCurrentValue(value);
     } else if (value > GUITAR_CART_LIMIT) {
@@ -76,6 +76,13 @@ function CartCardPreview({guitarInfo, setModalFrame, setGuitar}: CartCardPreview
     } else {
       dispatch(updateCartContentNumber({id: String(id), value: ONE}));
       setCurrentValue(ONE);
+    }
+  };
+
+  const handleInputOutClick = () => {
+    if(currentValue === 0) {
+      setCurrentValue(ONE);
+      dispatch(updateCartContentNumber({id: String(id), value: ONE}));
     }
   };
 
@@ -123,9 +130,10 @@ function CartCardPreview({guitarInfo, setModalFrame, setGuitar}: CartCardPreview
         <input
           className="quantity__input"
           type="number"
-          value={currentValue ? currentValue : 0}
-          placeholder={currentValue ? String(currentValue) : String(0)}
+          value={currentValue ? currentValue : ''}
+          placeholder={currentValue ? String(currentValue) : ''}
           onChange={handleInputChange}
+          onBlur={handleInputOutClick}
           id="2-count"
           name="2-count"
           max="99"
